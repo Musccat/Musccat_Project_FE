@@ -144,11 +144,23 @@ const handleChange = (e) => {
 };
 const handleSubmit = (e) => {
     e.preventDefault();
-    if (passwordsMatch) {
+
+    // 모든 필드가 채워졌는지 확인
+    const allFieldsFilled = 
+        formData.email && 
+        formData.password && 
+        formData.confirmPassword && 
+        formData.name && 
+        formData.nickname && 
+        formData.birthYear && 
+        formData.birthMonth && 
+        formData.birthDay;
+
+    if (passwordsMatch && allFieldsFilled) {
         console.log(formData);
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
-        console.log("Passwords do not match");
+        console.log("Passwords do not match or some fields are empty");
     }
 };
 
