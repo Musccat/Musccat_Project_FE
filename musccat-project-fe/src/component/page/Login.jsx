@@ -206,17 +206,6 @@ const SocialLoginWrap = styled.div`
     }
 `;
 
-const RegisterLink = styled.a`
-    display: block;
-    margin-top: 30px;
-    font-size: 15px;
-    color: #2f6877;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-`;
-
-
 const Space = styled.div`
     margin-top: 32px;
 `;
@@ -331,6 +320,8 @@ export default function Login() {
                     <a href="#!">아이디 찾기</a>
                     <span className="separator">|</span>
                     <a href="#!">비밀번호 찾기</a>
+                    <span className="separator">|</span>
+                    <a href="#!" onClick={handleSignUpClick} >회원가입</a>
                 </FindInfoWrap>
                 </OptionsWrap>
                 
@@ -342,7 +333,6 @@ export default function Login() {
                 <img src={googleLogo} alt="Google" />
                 <img src={kakaoLogo} alt="Kakao" />
                 </SocialLoginWrap>
-                <RegisterLink onClick={handleSignUpClick}>회원가입</RegisterLink>
             </ContentWrap>
 
         </Page>
