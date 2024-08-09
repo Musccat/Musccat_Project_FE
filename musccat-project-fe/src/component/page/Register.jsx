@@ -133,7 +133,7 @@ const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 const navigate = useNavigate();
 
-const handleChange = (e) => {
+const handleChange = (e) => { // 사용자 입력값 업데이트
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
@@ -142,7 +142,7 @@ const handleChange = (e) => {
         setPasswordsMatch(formData.password === value || formData.confirmPassword === value);
     }
 };
-const handleSubmit = (e) => {
+const handleSubmit = (e) => { 
     e.preventDefault();
 
     // 모든 필드가 채워졌는지 확인
