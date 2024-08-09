@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 import logo from '../ui/SCHOLLI_logo.jpeg';
-import appleLogo from '../ui/AppleId_Logo.jpeg';
+import appleLogo from '../ui/Apple.jpeg';
+import googleLogo from '../ui/Google.jpeg';
+import kakaoLogo from '../ui/Kakao.jpeg';
 
 const User = {
     email: 'kimkt@ewhain.net',
@@ -19,7 +21,8 @@ const Page = styled.div`
     padding: 0 20px;
     left: 50%;
     transform: translate(-50%, 0);
-    background-color: #f7f7f7;
+    background-color: #fffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -196,11 +199,21 @@ const SocialLoginWrap = styled.div`
     }
 
     img {
-        width: 36px;
-        height: 36px;
+        width: 50px;
+        height: 50px;
         margin: 0 8px;
         cursor: pointer;
     }
+`;
+
+const RegisterLink = styled.a`
+    display: block;
+    margin-top: 30px;
+    font-size: 15px;
+    color: #2f6877;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
 `;
 
 
@@ -265,6 +278,10 @@ export default function Login() {
         setNotAllow(true);
     }, [emailValid, pwValid]);
 
+    const handleSignUpClick = () => {
+        navigate('/register');  // 회원가입 페이지로 이동
+    }
+
     return (
         <Page>
             <TitleWrap>
@@ -322,9 +339,10 @@ export default function Login() {
                 <p>sign up with</p>
                 <Space />
                 <img src={appleLogo} alt="Apple" />
-                <img src="google-logo.png" alt="Google" />
-                <img src="kakao-logo.png" alt="Kakao" />
+                <img src={googleLogo} alt="Google" />
+                <img src={kakaoLogo} alt="Kakao" />
                 </SocialLoginWrap>
+                <RegisterLink onClick={handleSignUpClick}>회원가입</RegisterLink>
             </ContentWrap>
 
         </Page>

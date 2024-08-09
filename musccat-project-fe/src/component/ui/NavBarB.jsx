@@ -50,11 +50,11 @@ const NavLinks = styled.div`
     }
 `;
 
-function NavBar() {
+function NavBarB() {
     const navigate = useNavigate();
 
     const handleLogoClick = () => {
-        navigate('/main');
+        navigate('');
     };
 
     return (
@@ -63,14 +63,10 @@ function NavBar() {
                 <img src={logo} alt="Logo" />
             </Logo>
             <NavLinks>
-            <Link to={"/entirescholar"}>전체 장학금 목록</Link>
-                <Link to={"/recomscholar"}>추천 장학금 목록</Link>
-                <Link to={"/interestlist"}>내 관심 목록</Link>
-                <Link to={"/mypage"}>마이페이지</Link>
-                <Link to={"/points"}>포인트</Link>
+                <Link to={"/login"}>로그인/회원가입</Link>
             </NavLinks>
         </NavBarWrapper>
     );
 }
 
-export default NavBar;
+export default NavBarB;

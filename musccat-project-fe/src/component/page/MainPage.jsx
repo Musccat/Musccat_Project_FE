@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
+import NavBarB from "../ui/NavBarB";
 import Button from "../ui/Button";
 import { useAuth } from '../contexts/AuthContext';
 
@@ -87,7 +88,7 @@ function MainPage(props) {
 
     return (
         <>
-            <NavBar />
+            {isAuthenticated ? <NavBar /> : <NavBarB />}
             <Wrapper>
                 <Space />
                 <Space />
