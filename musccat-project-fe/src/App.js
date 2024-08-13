@@ -31,20 +31,22 @@ const MainTitleText = styled.p`
 function App() {
 
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <div className="flex flex-col min-h-screen overflow-hidden">
+      <AuthProvider>
         <Routes>
           <Route index element={<MainPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/users/login" element={<Login />} />
+          <Route path="/users/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/entirescholar" element={<EntireScholar />} />
           <Route path="/recomscholar" element={<RecomScholar />} />
           <Route path="/notice" element={<Notice />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+        </AuthProvider>
+        </div>
+    </Router>
   );
 }
 

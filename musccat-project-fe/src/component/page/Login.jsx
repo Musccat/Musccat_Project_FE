@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
@@ -6,7 +6,6 @@ import logo from '../ui/SCHOLLI_logo.jpeg';
 import appleLogo from '../ui/Apple.jpeg';
 import googleLogo from '../ui/Google.jpeg';
 import kakaoLogo from '../ui/Kakao.jpeg';
-import axios from "axios";
 
 const User = {
     username: 'kimkt',
@@ -213,62 +212,42 @@ const Space = styled.div`
 
 export default function Login() {
     const [username, setUsername] = useState('');
-    const [pw, setPw] = useState('');
+    const [password, setPassword] = useState('');
 
     const [usernameValid, setUsernameValid] = useState(false);
-    const [pwValid, setPwValid] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
     const [notAllow, setNotAllow] = useState(false);
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { loginUser } = useAuth(); // useAuth에서 loginUser 가져오기
 
     const handleUsername = (e) => {
         setUsername(e.target.value);
         const regex = /^[a-zA-Z0-9]{4,}$/;
-        if (regex.test(e.target.value)) {
-            setUsernameValid(true);
-        }
-        else {
-            setUsernameValid(false);
-        }
+        setUsernameValid(regex.test(e.target.value));
     }
 
     const handlePassword = (e) => {
-        setPw(e.target.value);
+        setPassword(e.target.value);
         const regex = 
             /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-        if (regex.test(e.target.value)) {
-            setPwValid(true);
-        }
-        else {
-            setPwValid(false);
-        }
+        setPasswordValid(regex.test(e.target.value));
     }
 
-    const onClickConfirmButton = async () => {
-        if(username === User.username && pw === User.pw) {
-            alert('로그인에 성공했습니다.');
-            login();
+    const  handleSubmit = async (e) => {
+        e.preventDefault();
+        if (usernameValid && passwordValid) {
+            await loginUser(username, password); // loginUser 함수 호출
             navigate('/main');
-        }
-        else if (username === User.username && pw !== User.pw) {
-            alert('비밀번호가 맞지 않습니다.');
-        }
-        else {
-            alert('등록되지 않은 회원입니다.');
         }
     }
 
     useEffect(() => {
-        if(usernameValid && pwValid) {
-            setNotAllow(false);
-            return;
-        }
-        setNotAllow(true);
-    }, [usernameValid, pwValid]);
+        setNotAllow(!(usernameValid && passwordValid));
+    }, [usernameValid, passwordValid]);
 
     const handleSignUpClick = () => {
-        navigate('/register');  // 회원가입 페이지로 이동
+        navigate('/users/register');  // 회원가입 페이지로 이동
     }
 
     return (
@@ -278,6 +257,7 @@ export default function Login() {
                 
             </TitleWrap>
             <ContentWrap>
+                <form onSubmit={handleSubmit}>
             <InputTitle>아이디</InputTitle>
                 <InputWrap>
                     <input 
@@ -297,18 +277,19 @@ export default function Login() {
                     <input 
                         type='password'
                         placeholder="password"
-                        value={pw}
+                        value={password}
                         onChange={handlePassword}/>
                 </InputWrap>
                 <ErrorMessageWrap>
-                    {!pwValid && pw.length > 0 && (
+                    {!passwordValid && password.length > 0 && (
                         <div> 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
                     )}
                 </ErrorMessageWrap>
 
-                <BottomButton style={{ marginTop: "26px" }} onClick={onClickConfirmButton} disabled={notAllow}>
+                <BottomButton style={{ marginTop: "26px" }} type="submit" disabled={notAllow}>
                     로그인
                 </BottomButton>
+                </form>
                 <OptionsWrap>
                 <AutoLoginWrap>
                     <label>

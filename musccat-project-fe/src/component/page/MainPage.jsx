@@ -157,7 +157,7 @@ function MainPage(props) {
                             <Space />
                             <Space />
                             <FirstButton
-                                onClick={() => navigate('/login')}
+                                onClick={() => navigate('/users/login')}
                             >
                                 전체 장학금 목록 보기
                             </FirstButton>
@@ -179,7 +179,7 @@ function MainPage(props) {
                             <Space />
                             <Space />
                             <SecondButton
-                                onClick={() => navigate('/login')}
+                                onClick={() => navigate('/users/login')}
                             >
                                 추천 장학금 목록 보기
                             </SecondButton>

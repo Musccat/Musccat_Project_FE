@@ -63,7 +63,7 @@ function NavBarB() {
                 <img src={logo} alt="Logo" />
             </Logo>
             <NavLinks>
-                <Link to={"/login"}>로그인/회원가입</Link>
+                <Link to={"/users/login"}>로그인/회원가입</Link>
             </NavLinks>
         </NavBarWrapper>
     );
