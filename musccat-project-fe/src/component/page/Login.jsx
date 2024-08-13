@@ -8,7 +8,7 @@ import googleLogo from '../ui/Google.jpeg';
 import kakaoLogo from '../ui/Kakao.jpeg';
 
 const User = {
-    email: 'kimkt@ewhain.net',
+    username: 'kimkt',
     pw: 'ewha1234@@'
 }
 
@@ -211,25 +211,24 @@ const Space = styled.div`
 `;
 
 export default function Login() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [pw, setPw] = useState('');
 
-    const [emailValid, setEmailValid] = useState(false);
+    const [usernameValid, setUsernameValid] = useState(false);
     const [pwValid, setPwValid] = useState(false);
     const [notAllow, setNotAllow] = useState(false);
 
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const handleEmail = (e) => {
-        setEmail(e.target.value);
-        const regex = 
-            /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    const handleUsername = (e) => {
+        setUsername(e.target.value);
+        const regex = /^[a-zA-Z0-9]{4,}$/;
         if (regex.test(e.target.value)) {
-            setEmailValid(true);
+            setUsernameValid(true);
         }
         else {
-            setEmailValid(false);
+            setUsernameValid(false);
         }
     }
 
@@ -246,12 +245,12 @@ export default function Login() {
     }
 
     const onClickConfirmButton = () => {
-        if(email === User.email && pw === User.pw) {
+        if(username === User.username && pw === User.pw) {
             alert('로그인에 성공했습니다.');
             login();
             navigate('/main');
         }
-        else if (email === User.email && pw != User.pw) {
+        else if (username === User.username && pw !== User.pw) {
             alert('비밀번호가 맞지 않습니다.');
         }
         else {
@@ -260,12 +259,12 @@ export default function Login() {
     }
 
     useEffect(() => {
-        if(emailValid && pwValid) {
+        if(usernameValid && pwValid) {
             setNotAllow(false);
             return;
         }
         setNotAllow(true);
-    }, [emailValid, pwValid]);
+    }, [usernameValid, pwValid]);
 
     const handleSignUpClick = () => {
         navigate('/register');  // 회원가입 페이지로 이동
@@ -278,17 +277,17 @@ export default function Login() {
                 
             </TitleWrap>
             <ContentWrap>
-                <InputTitle>이메일 주소</InputTitle>
+            <InputTitle>아이디</InputTitle>
                 <InputWrap>
                     <input 
                         type='text'
-                        placeholder="user@example.com"
-                        value={email}
-                        onChange={handleEmail}/>
+                        placeholder="username"
+                        value={username}
+                        onChange={handleUsername}/>
                 </InputWrap>
                 <ErrorMessageWrap>
-                    {!emailValid && email.length > 0 && (
-                        <div>올바른 이메일을 입력해주세요.</div>
+                    {!usernameValid && username.length > 0 && (
+                        <div>영문, 숫자 포함 4자 이상 입력해주세요.</div>
                     )}
                 </ErrorMessageWrap>
 

@@ -33,42 +33,33 @@ const Divider = styled.hr`
 
 const FormGroup = styled.div`
     display: flex;
-    align-items: center;
-    margin-bottom: 30px;
+    flex-direction: center;
 
     label {
         flex: 1;
         font-size: 14px;
         font-weight: bold;
         color: #348a8c;
-        margin-bottom: 8px;
+        text-align: left;
     }
 
-    input,
-    select {
+    input {
         flex: 2;
         padding: 10px;
         border: 1px solid #348a8c;
         border-radius: 4px;
         font-size: 14px;
         outline: none;
-        margin-bottom: 5px;
     }
 `;
+
+
 const ErrorMessage = styled.div`
     color: #ef0000;
     font-size: 12px;
-    margin: -15px 0 15px 0;
-    text-align: left;
-    width: 100%;
-`;
-
-const Timer = styled.div`
-    display: flex;
-    align-items: center;
-    color: #348a8c;
-    font-size: 14px;
-    font-weight: bold;
+    height: 16px;
+    text-align: right;
+    margin-bottom: 20px;
 `;
 
 const BirthDateGroup = styled.div`
@@ -117,9 +108,13 @@ const SubmitButton = styled.button`
     margin-top: 20px;
 `;
 
+const Space = styled.div`
+    margin-top: 20px;
+`;
+
 function Register() {
     const [formData, setFormData] = useState({
-        email: "",
+        username: "",
         password: "",
         confirmPassword: "",
         name: "",
@@ -129,6 +124,8 @@ function Register() {
         birthDay: "01",
 });
 
+const [usernameValid, setUsernameValid] = useState(true);
+const [passwordValid, setPasswordValid] = useState(true);
 const [passwordsMatch, setPasswordsMatch] = useState(true);
 
 const navigate = useNavigate();
@@ -137,17 +134,33 @@ const handleChange = (e) => { // 사용자 입력값 업데이트
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
+    // 아이디 형식 확인 (영문과 숫자만 포함)
+    if (name === "username") {
+        const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
+        setUsernameValid(usernamePattern.test(value));
+    }
+
+    // 비밀번호 형식 확인(영문, 숫자, 특수문자 포함 8자 이상 입력)
+    if (name === "password") {
+        const passwordPattern =
+        /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
+        setPasswordValid(passwordPattern.test(value));
+    }
+
     // 비밀번호와 비밀번호 확인 일치 여부 확인
     if (name === "password" || name === "confirmPassword") {
         setPasswordsMatch(formData.password === value || formData.confirmPassword === value);
     }
+
+
+
 };
 const handleSubmit = (e) => { 
     e.preventDefault();
 
     // 모든 필드가 채워졌는지 확인
     const allFieldsFilled = 
-        formData.email && 
+        formData.username && 
         formData.password && 
         formData.confirmPassword && 
         formData.name && 
@@ -156,7 +169,7 @@ const handleSubmit = (e) => {
         formData.birthMonth && 
         formData.birthDay;
 
-    if (passwordsMatch && allFieldsFilled) {
+    if (usernameValid && passwordValid && passwordsMatch && allFieldsFilled) {
         console.log(formData);
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
@@ -186,16 +199,20 @@ const years = [];
             <Divider />
             <form onSubmit={handleSubmit}>
             <FormGroup>
-                <label>이메일 주소</label>
+                <label>아이디</label>
                 <input
-                    type="email"
-                    name="email"
-                    placeholder="이메일 입력"
-                    value={formData.email}
+                    type="text"
+                    name="username"
+                    placeholder="영문, 숫자 포함 4자 이상 입력"
+                    value={formData.username}
                     onChange={handleChange}
                     required
                 />
             </FormGroup>
+            {!usernameValid && formData.username && (
+                <ErrorMessage>올바른 아이디 형식이 아닙니다</ErrorMessage>
+            )}
+            <Space/>
 
             <FormGroup>
                 <label>비밀번호</label>
@@ -208,6 +225,10 @@ const years = [];
                 required
                 />
             </FormGroup>
+            {!passwordValid && formData.password && (
+                <ErrorMessage>올바른 비밀번호 형식이 아닙니다</ErrorMessage>
+            )}
+            <Space />
 
             <FormGroup>
                 <label>비밀번호 확인</label>
@@ -220,7 +241,10 @@ const years = [];
                 required
                 />
             </FormGroup>
-        
+            {!passwordsMatch && formData.confirmPassword && (
+                <ErrorMessage>비밀번호가 일치하지 않습니다</ErrorMessage>
+            )}
+            <Space />
 
             <FormGroup>
                 <label>이름</label>
@@ -234,6 +258,8 @@ const years = [];
                 />
             </FormGroup>
 
+            <Space />
+
             <FormGroup>
                 <label>닉네임</label>
                 <input
@@ -245,6 +271,8 @@ const years = [];
                 required
                 />
             </FormGroup>
+
+            <Space />
 
             <FormGroup>
                 <label>생년월일</label>
