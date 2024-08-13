@@ -6,6 +6,7 @@ import logo from '../ui/SCHOLLI_logo.jpeg';
 import appleLogo from '../ui/Apple.jpeg';
 import googleLogo from '../ui/Google.jpeg';
 import kakaoLogo from '../ui/Kakao.jpeg';
+import axios from "axios";
 
 const User = {
     username: 'kimkt',
@@ -244,7 +245,7 @@ export default function Login() {
         }
     }
 
-    const onClickConfirmButton = () => {
+    const onClickConfirmButton = async () => {
         if(username === User.username && pw === User.pw) {
             alert('로그인에 성공했습니다.');
             login();

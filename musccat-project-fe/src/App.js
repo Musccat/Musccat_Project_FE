@@ -1,5 +1,6 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-import React from 'react';
 import {
   BrowserRouter as
   Router,
@@ -27,20 +28,20 @@ const MainTitleText = styled.p`
 `;
 
 
-function App(props) {
+function App() {
 
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route index element={<MainPage />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="main" element={<MainPage />} />
-          <Route path="mypage" element={<MyPage />} />
-          <Route path="entirescholar" element={<EntireScholar />} />
-          <Route path="recomscholar" element={<RecomScholar />} />
-          <Route path="notice" element={<Notice />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/entirescholar" element={<EntireScholar />} />
+          <Route path="/recomscholar" element={<RecomScholar />} />
+          <Route path="/notice" element={<Notice />} />
         </Routes>
       </Router>
     </AuthProvider>
