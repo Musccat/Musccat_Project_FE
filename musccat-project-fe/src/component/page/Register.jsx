@@ -173,7 +173,7 @@ const handleSubmit = (e) => {
         console.log(formData);
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
-        console.log("Passwords do not match or some fields are empty");
+        console.log("InValid username or password / Passwords don't match / Some fields are empty");
     }
 };
 
