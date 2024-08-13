@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../contexts/AuthContext";
 
 const Page = styled.div`
     display: flex;
@@ -113,6 +114,7 @@ const Space = styled.div`
 `;
 
 function Register() {
+    const { registerUser } = useAuth();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -170,7 +172,7 @@ const handleSubmit = (e) => {
         formData.birthDay;
 
     if (usernameValid && passwordValid && passwordsMatch && allFieldsFilled) {
-        console.log(formData);
+        registerUser(formData.username, formData.password, formData.confirmPassword);
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
         console.log("InValid username or password / Passwords don't match / Some fields are empty");

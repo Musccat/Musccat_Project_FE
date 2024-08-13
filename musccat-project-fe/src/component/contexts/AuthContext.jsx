@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     );
     const [user, setUser] = useState(() =>
         localStorage.getItem("authTokens")
-            ? jwtDecode(localStorage.getItem("authTokens"))
+            ? jwtDecode(JSON.parse(localStorage.getItem("authTokens")).access)
             : null
     );
     const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     
     const loginUser = async (username, password) => {
-        const response = await fetch("http://127.0.0.1:8000/api/token/", {
+        const response = await fetch("http://127.0.0.1:8000/users/token/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }) => {
     const data = await response.json();
 
     if (response.status === 200) {
-        setAuthTokens(data);
-        setUser(jwtDecode(data.access));
+        setAuthTokens(response.data);
+        setUser(jwtDecode(response.data.access));
         localStorage.setItem("authTokens", JSON.stringify(data));
         navigate("/");
     } else {
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 const registerUser = async (username, password, password2) => {
-    const response = await fetch("http://127.0.0.1:8000/api/register/", {
+    const response = await fetch("http://127.0.0.1:8000/users/register/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -97,7 +97,7 @@ const contextData = {
 */
 
     return (
-        <AuthContext.Provider value={{ contextData }}>
+        <AuthContext.Provider value={ contextData }>
             {children}
         </AuthContext.Provider>
     );
