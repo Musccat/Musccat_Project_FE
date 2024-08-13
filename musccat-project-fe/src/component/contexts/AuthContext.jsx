@@ -59,7 +59,7 @@ const registerUser = async (username, password, password2) => {
     });
 
     if (response.status === 201) {
-        navigate("/login");
+        navigate("/users/login");
     } else {
         alert("회원가입에 실패했습니다!");
     }
@@ -69,7 +69,7 @@ const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    navigate("/login");
+    navigate("/users/login");
 };
 
 useEffect(() => {
