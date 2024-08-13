@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useAxios from "../utils/useAxios";
+import useAxios from "../../utils/useAxios";
 
 function ProtectedPage() {
   const [res, setRes] = useState("");
