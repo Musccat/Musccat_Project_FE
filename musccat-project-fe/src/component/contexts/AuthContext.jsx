@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     
     const loginUser = async (username, password) => {
+        try {
         const response = await fetch("http://127.0.0.1:8000/users/token/", {
             method: "POST",
             headers: {
@@ -33,15 +34,20 @@ export const AuthProvider = ({ children }) => {
             })
         });
 
-    const data = await response.json();
 
-    if (response.status === 200) {
-        setAuthTokens(response.data);
-        setUser(jwtDecode(response.data.access));
-        localStorage.setItem("authTokens", JSON.stringify(data));
-        navigate("/");
-    } else {
-        alert("로그인에 실패했습니다!");
+        const data = await response.json();
+
+        if (response.status === 200 && data.access) {
+            setAuthTokens(data);
+            setUser(jwtDecode(data.access));
+            localStorage.setItem("authTokens", JSON.stringify(data));
+            navigate("/");
+        } else {
+            alert("로그인에 실패했습니다. 서버 응답을 확인하세요.");
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        alert("로그인 중 오류가 발생했습니다. 서버 상태를 확인하세요.");
     }
 };
 
