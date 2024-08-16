@@ -62,52 +62,79 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate) => {
-    try {
-        const response = await axios.post("http://127.0.0.1:8000/users/register/", {
-            username,
-            password,
-            password2,
-            nickname: userNickname,
-            birth: userBirthdate,
-            first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
-            last_name: fullName.split(' ').slice(1).join(' ') // Assuming last name is the rest
-        });
+    const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate) => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/users/register/", {
+                username,
+                password,
+                password2,
+                nickname: userNickname,
+                birth: userBirthdate,
+                first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
+                last_name: fullName.split(' ').slice(1).join(' ') // Assuming last name is the rest
+            });
 
-        if (response.status === 201) {
-            navigate("/users/login");
-        } else {
-            alert("회원가입에 실패했습니다!");
+            if (response.status === 201) {
+                navigate("/users/login");
+            } else {
+                alert("회원가입에 실패했습니다!");
+            }
+        } catch (error) {
+            console.error("Failed to register user", error);
+            alert("회원가입 중 오류가 발생했습니다. 서버 상태를 확인하세요.");
         }
-    } catch (error) {
-        console.error("Failed to register user", error);
-        alert("회원가입 중 오류가 발생했습니다. 서버 상태를 확인하세요.");
-    }
-};
+    };
 
-const logoutUser = () => {
-    setAuthTokens(null);
-    setUser(null);
-    localStorage.removeItem("authTokens");
-    navigate("/users/login");
-};
+    const mypageUser = async (fullName, userNickname, userBirthdate) => {
+        try {
+            const response = await axios.put("http://127.0.0.1:8000/users/update/", {
+                first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
+                last_name: fullName.split(' ').slice(1).join(' '), // Assuming last name is the rest
+                nickname: userNickname,
+                birth: userBirthdate,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
 
-useEffect(() => {
-    if (authTokens) {
-        fetchUserData();
-    }
-    setLoading(false);
-}, [authTokens]);
+            if (response.status === 200) {
+                // Update user state with new data
+                await fetchUserData();  // Refetch user data to update the state
+                alert("User details updated successfully!");
+            } else {
+                alert("Failed to update user details.");
+            }
+        } catch (error) {
+            console.error("Failed to update user details", error);
+            alert("Updating user details failed. Please check the server status.");
+        }
+    };
+
+    const logoutUser = () => {
+        setAuthTokens(null);
+        setUser(null);
+        localStorage.removeItem("authTokens");
+        navigate("/users/login");
+    };
+
+    useEffect(() => {
+        if (authTokens) {
+            fetchUserData();
+        }
+        setLoading(false);
+    }, [authTokens]);
 
 
-const contextData = {
-    user,
-    authTokens,
-    loginUser,
-    registerUser,
-    logoutUser,
-    isAuthenticated: !!user,
-};
+    const contextData = {
+        user,
+        authTokens,
+        loginUser,
+        registerUser,
+        mypageUser,
+        logoutUser,
+        isAuthenticated: !!user,
+    };
 
 /*
     const [isAuthenticated, setIsAuthenticated] = useState(false);

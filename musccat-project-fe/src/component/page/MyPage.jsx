@@ -155,22 +155,23 @@ const ActionButton = styled.button`
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, mypageUser } = useAuth();
 
-    // 정보 입력 버튼 클릭 여부를 확인
-    const [isFirstClick, setIsFirstClick] = useState(
-        () => localStorage.getItem('isFirstClick') !== 'false'
-    );
+    const [fullName, setFullName] = useState(user?.fullName || '');
+    const [userNickname, setUserNickname] = useState(user?.userNickname || '');
+    const [userBirthdate, setUserBirthdate] = useState(user?.userBirthdate || '');
 
-    // 정보 입력 버튼 클릭 핸들러
-    const handleInfoButtonClick = () => {
-        if (isFirstClick) {
-            navigate('/meminfofirst'); // '장학 정보 신규 입력 페이지'로 이동
-            setIsFirstClick(false);
-            localStorage.setItem('isFirstClick', 'false'); // 상태를 로컬 스토리지에 저장
-        } else {
-            navigate('/meminfo'); // '기존 정보 수정 페이지'로 이동
+    useEffect(() => {
+        if (user) {
+            setFullName(user.fullName);
+            setUserNickname(user.userNickname);
+            setUserBirthdate(user.userBirthdate);
         }
+    }, [user]);
+
+    const handleUpdate = () => {
+        // Call the mypageUser function to update user information
+        mypageUser(fullName, userNickname, userBirthdate);
     };
 
     return (
@@ -180,16 +181,15 @@ const MyPage = () => {
                 <Header>
                     <ProfileContainer>
                         <ProImage src={ProfileImage} alt="Profile" />
-                        <UserNickname>strgurl</UserNickname>
+                        <UserNickname>{userNickname}</UserNickname>
                 </ProfileContainer>
                 <UserInfo>
                     <UserName>
-                        <BoldText>strgurl</BoldText>
+                        <BoldText>{fullName}</BoldText>
                         <NormalText> 님의 마이페이지</NormalText>
                         </UserName>
                     <ButtonGroup>
-                        <Button onClick={handleInfoButtonClick}>
-                            {isFirstClick ? '신규 정보 입력' : '기본 정보 수정'}</Button>
+                        <Button >기본 정보 수정</Button>
                         <Button>수혜 정보 제출</Button>
                         <Button>내 관심목록</Button>
                     </ButtonGroup>
@@ -201,17 +201,17 @@ const MyPage = () => {
                     <InfoList>
                         <InfoItem>
                             <span>닉네임</span>
-                            <span>{user?.userNickname || 'Nickname'}</span>
+                            <span>{userNickname}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>성명</span>
-                            <span>{user?.fullName || 'Full Name'}</span>
+                            <span>{fullName}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>생년월일</span>
-                            <span>{user?.userBirthdate || 'YYYY.MM.DD'}</span> 
+                            <span>{userBirthdate}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
