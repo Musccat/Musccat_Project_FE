@@ -207,7 +207,7 @@ const MyPage = () => {
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>성명</span>
+                            <span>이름</span>
                             <span>{fullName}</span>
                             <Space />
                         </InfoItem>
