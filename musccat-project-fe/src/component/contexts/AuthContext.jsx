@@ -89,9 +89,8 @@ export const AuthProvider = ({ children }) => {
 
     const mypageUser = async (fullName, userNickname, userBirthdate) => {
         try {
-            const response = await axios.put("http://127.0.0.1:8000/users/update/", {
-                first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
-                last_name: fullName.split(' ').slice(1).join(' '), // Assuming last name is the rest
+            const response = await axios.put("http://127.0.0.1:8000/users/mypage/", {
+                fullName,
                 nickname: userNickname,
                 birth: userBirthdate,
             }, {
