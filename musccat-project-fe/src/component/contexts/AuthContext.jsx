@@ -29,9 +29,10 @@ export const AuthProvider = ({ children }) => {
                 }
             });
             setUser({
-                name: response.data.fullName,
-                nickname: response.data.userNickname,
-                birthdate: response.data.userBirthdate,
+                username: response.data.username,
+                fullName: `${response.data.first_name} ${response.data.last_name}`,
+                userNickname: response.data.nickname,
+                userBirthdate: response.data.userBirthdate,
                 email: response.data.email, 
                 phone: response.data.phone,
             });
@@ -62,25 +63,25 @@ export const AuthProvider = ({ children }) => {
     };
 
 const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate) => {
-    const response = await axios.post("http://127.0.0.1:8000/users/register/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+    try {
+        const response = await axios.post("http://127.0.0.1:8000/users/register/", {
             username,
             password,
             password2,
-            name: fullName,
             nickname: userNickname,
-            birthdate: userBirthdate
-        })
-    });
+            birth: userBirthdate,
+            first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
+            last_name: fullName.split(' ').slice(1).join(' ') // Assuming last name is the rest
+        });
 
-    if (response.status === 201) {
-        navigate("/users/login");
-    } else {
-        alert("회원가입에 실패했습니다!");
+        if (response.status === 201) {
+            navigate("/users/login");
+        } else {
+            alert("회원가입에 실패했습니다!");
+        }
+    } catch (error) {
+        console.error("Failed to register user", error);
+        alert("회원가입 중 오류가 발생했습니다. 서버 상태를 확인하세요.");
     }
 };
 
@@ -93,7 +94,7 @@ const logoutUser = () => {
 
 useEffect(() => {
     if (authTokens) {
-        setUser(jwtDecode(authTokens.access));
+        fetchUserData();
     }
     setLoading(false);
 }, [authTokens]);
