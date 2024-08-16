@@ -31,11 +31,10 @@ export const AuthProvider = ({ children }) => {
             });
             setUser({
                 username: response.data.username,
-                fullName: `${response.data.first_name} ${response.data.last_name}`,
+                fullName: response.data.fullname,
                 userNickname: response.data.nickname,
-                userBirthdate: response.data.userBirthdate,
-                email: response.data.email, 
-                phone: response.data.phone,
+                userBirthdate: response.data.birth,
+                email: response.data.email,
             });
         } catch (error) {
             console.error("Failed to fetch user data", error);
@@ -72,8 +71,7 @@ export const AuthProvider = ({ children }) => {
                 password2,
                 nickname: userNickname,
                 birth: userBirthdate,
-                first_name: fullName.split(' ')[0], // Assuming first name is the first part of fullName
-                last_name: fullName.split(' ').slice(1).join(' ') // Assuming last name is the rest
+                fullName
             });
 
             if (response.status === 201) {
