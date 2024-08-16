@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import NavBar from '../ui/NavBar';
@@ -156,14 +156,19 @@ const MyPage = () => {
     const navigate = useNavigate();
 
     // 정보 입력 버튼 클릭 여부를 확인
-    const [isFirstClick, setIsFirstClick] = useState(true);
+    const [isFirstClick, setIsFirstClick] = useState(
+        () => localStorage.getItem('isFirstClick') !== 'false'
+    );
 
     // 정보 입력 버튼 클릭 핸들러
     const handleInfoButtonClick = () => {
         if (isFirstClick) {
+            navigate('/meminfofirst'); // '장학 정보 신규 입력 페이지'로 이동
             setIsFirstClick(false);
+            localStorage.setItem('isFirstClick', 'false'); // 상태를 로컬 스토리지에 저장
+        } else {
+            navigate('/meminfo'); // '기존 정보 수정 페이지'로 이동
         }
-        navigate('/meminfo'); // '장학 정보 입력 페이지'로 이동
     };
 
     return (

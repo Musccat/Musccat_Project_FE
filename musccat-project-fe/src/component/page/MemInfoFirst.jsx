@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import NavBar from "../ui/NavBar";
 import { useAuth } from "../contexts/AuthContext"; 
@@ -77,6 +78,7 @@ const Space = styled.div`
 
 const MemInfoFirst = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: user?.name || '',
         dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
@@ -104,8 +106,11 @@ const MemInfoFirst = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
-        // Handle form submission logic here
+        // 신규 정보 입력을 완료했음을 로컬 스토리지에 저장
+        localStorage.setItem('isFirstClick', 'false');
+
+        // 마이페이지로 이동
+        navigate('/mypage');
     };
 
 
