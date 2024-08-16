@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
             : null
     );
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
     const navigate = useNavigate();
 
@@ -52,7 +53,8 @@ export const AuthProvider = ({ children }) => {
                 setAuthTokens(response.data);
                 localStorage.setItem("authTokens", JSON.stringify(response.data));
                 await fetchUserData();  // Fetch and set the full user data after login
-                navigate("/");
+                setIsAuthenticated(true);
+                navigate("/main");
             } else {
                 alert("로그인에 실패했습니다. 서버 응답을 확인하세요.");
             }
@@ -115,6 +117,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem("authTokens");
+        setIsAuthenticated(false);
         navigate("/users/login");
     };
 
@@ -133,7 +136,7 @@ export const AuthProvider = ({ children }) => {
         registerUser,
         mypageUser,
         logoutUser,
-        isAuthenticated: !!user,
+        isAuthenticated,
     };
 
 /*
