@@ -7,31 +7,67 @@ import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 
 const styles = {
+    wrapper: {  
+        display: "flex",
+        justifyContent: "center",  
+        alignItems: "center",  
+        minHeight: "100vh",  
+        padding: "20px",  
+        boxSizing: "border-box"  
+    },
+    outerContainer: {  
+        border: "2px solid #348a8c", 
+        borderRadius: "8px", 
+        padding: "20px", 
+        maxWidth: "1200px", 
+        marginTop: "50px",
+        backgroundColor: "#f9f9f9", 
+        boxSizing: "border-box"
+    },
     container: {
         margin: "20px",
         fontFamily: "Arial, sans-serif"
     },
     searchBarContainer: {
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "center",
         alignItems: "center",
+        marginTop: "10px", 
         marginBottom: "20px",
-        position: "relative", // 상대 위치를 기준으로 설정
-        zIndex: 1 // 드롭다운 메뉴와 겹치지 않도록 설정
+        zIndex: 1 
     },
     searchBar: {
         marginBottom: "30px",
         display: "flex",
-        width: "100%", // Set to 100% for better alignment
-        maxWidth: "600px", // Limit the maximum width
+        width: "100%", 
+        maxWidth: "600px", 
         position: "relative"
     },
     searchInput: {
         flex: 1,
-        padding: "10px 40px 10px 20px", // 왼쪽과 오른쪽 여백 추가
+        padding: "10px 40px 10px 20px", 
         fontSize: "16px",
-        border: "3px solid #2f4f5f", // 검색창 테두리 색상
-        borderRadius: "25px" // 검색창 모서리 둥글게
+        border: "3px solid #2f4f5f", 
+        borderRadius: "25px" 
+    },
+    dropdown: {  
+        position: "absolute",
+        top: "100%", 
+        left: "50%",
+        transform: "translateX(-50%)",  
+        backgroundColor: "white",
+        boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+        borderRadius: "4px",
+        zIndex: 1000,  
+        width: "max-content",
+    },
+    tableContainer: {  
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center", 
+        margin: "20px auto", 
+        padding: "0 50px", 
+        maxWidth: "1200px", 
     },
     table: {
         width: "100%",
@@ -99,6 +135,13 @@ const styles = {
         textDecoration: "none",
         color: "#000",
         cursor: "pointer"
+    },
+    buttonContainer: {  
+        position: "relative",  
+        display: "flex",  
+        justifyContent: "flex-end",  // 오른쪽 정렬
+        marginBottom: "20px",
+        marginTop: "10px",  
     }
 };
 
@@ -110,29 +153,8 @@ const SortButton = styled.button`
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    position: relative; // For dropdown positioning
+    position: relative; 
     z-index: 2;
-`;
-
-const DropdownContainer = styled.div`
-    position: absolute;
-    top: 160px; // 네비게이션으로부터 아래 위치
-    right: 100px; // 오른쪽 여백
-    z-index: 1000; // ensure it appears above other elements
-`;
-
-const Dropdown = styled.div`
-    position: absolute;
-    top: calc(100% + 4px); // 버튼 바로 아래에 위치하도록 설정
-    left: 50%;
-    transform: translateX(-50%); // 중앙 정렬
-    background-color: white;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    z-index: 3;
-    border-radius: 4px;
-    overflow-y: auto;
-    max-height: 200px;
-    width: max-content;
 `;
 
 const DropdownItem = styled.div`
@@ -158,7 +180,6 @@ function EntireScholar(props) {
         setDropdownVisible(false);
     };
 
-    // 좋아요 버튼 클릭 핸들러
     const handleLikeClick = (index) => {
         const newLikes = [...likes];
         newLikes[index] = !newLikes[index];
@@ -168,12 +189,19 @@ function EntireScholar(props) {
     return (
         <>
             <NavBar />
-            <DropdownContainer>
+            <div style={styles.wrapper}>
+            <div style={styles.outerContainer}>
+                <div style={styles.searchBarContainer}>
+                    <div style={styles.searchBar}>
+                        <input type="text" placeholder="검색" style={styles.searchInput} />
+                    </div>
+                </div>
+            <div style={styles.buttonContainer}>
                 <SortButton onClick={toggleDropdown}>
                     {sortOption} ▼
                 </SortButton>
                 {dropdownVisible && (
-                    <Dropdown>
+                    <div style={styles.dropdown}>
                         {otherOptions.map((option, index) => (
                             <DropdownItem
                                 key={index}
@@ -182,15 +210,11 @@ function EntireScholar(props) {
                                 {option}
                             </DropdownItem>
                         ))}
-                    </Dropdown>
-                )}
-            </DropdownContainer>
-            <div style={styles.container}>
-                <div style={styles.searchBarContainer}>
-                    <div style={styles.searchBar}>
-                        <input type="text" placeholder="검색" style={styles.searchInput} />
                     </div>
-                </div>
+                )}
+            </div>
+            <div style={styles.container}>
+                <div style={styles.tableContainer}>
                 <table style={styles.table}>
                     <thead>
                         <tr>
@@ -232,10 +256,13 @@ function EntireScholar(props) {
                         </tr>
                     </tfoot>
                 </table>
+                </div>
                 <div style={styles.pagination}>
                     <span style={styles.paginationSpan}>1 2 3 4 5</span>
                 </div>
             </div>
+            </div>
+        </div>
         </>
     );
 }

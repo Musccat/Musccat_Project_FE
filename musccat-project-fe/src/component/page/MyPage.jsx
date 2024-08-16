@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import NavBar from '../ui/NavBar';
 import ProfileImage from '../ui/ProfileImage.jpeg'; 
@@ -152,6 +153,19 @@ const ActionButton = styled.button`
 `;
 
 const MyPage = () => {
+    const navigate = useNavigate();
+
+    // 정보 입력 버튼 클릭 여부를 확인
+    const [isFirstClick, setIsFirstClick] = useState(true);
+
+    // 정보 입력 버튼 클릭 핸들러
+    const handleInfoButtonClick = () => {
+        if (isFirstClick) {
+            setIsFirstClick(false);
+        }
+        navigate('/meminfo'); // '장학 정보 입력 페이지'로 이동
+    };
+
     return (
         <>
             <NavBar />
@@ -167,7 +181,8 @@ const MyPage = () => {
                         <NormalText> 님의 마이페이지</NormalText>
                         </UserName>
                     <ButtonGroup>
-                        <Button>기본 정보 수정</Button>
+                        <Button onClick={handleInfoButtonClick}>
+                            {isFirstClick ? '신규 정보 입력' : '기본 정보 수정'}</Button>
                         <Button>수혜 정보 제출</Button>
                         <Button>내 관심목록</Button>
                     </ButtonGroup>

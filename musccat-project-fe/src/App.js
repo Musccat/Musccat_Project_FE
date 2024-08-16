@@ -18,6 +18,8 @@ import EntireScholar from './component/page/EntireScholar';
 import RecomScholar from './component/page/RecomScholar';
 import Notice from './component/page/Notice';
 import MyPage from './component/page/MyPage';
+import MemInfo from './component/page/MemInfo';
+import MemInfoFirst from './component/page/MemInfoFirst';
 
 
 const MainTitleText = styled.p`
@@ -40,6 +42,8 @@ function App() {
           <Route path="/users/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/meminfo" element={<MemInfo />}/>
+          <Route path="/meminfofirst" element={<MemInfoFirst />}/>
           <Route path="/entirescholar" element={<EntireScholar />} />
           <Route path="/recomscholar" element={<RecomScholar />} />
           <Route path="/notice" element={<Notice />} />
