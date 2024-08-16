@@ -41,7 +41,7 @@ function App() {
           <Route path="/users/login" element={<Login />} />
           <Route path="/users/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="users/mypage" element={<MyPage />} />
           <Route path="/meminfo" element={<MemInfo />}/>
           <Route path="/meminfofirst" element={<MemInfoFirst />}/>
           <Route path="/entirescholar" element={<EntireScholar />} />
