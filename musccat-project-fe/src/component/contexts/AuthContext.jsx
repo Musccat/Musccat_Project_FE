@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     
     const loginUser = async (username, password) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/users/token/", {
+            const response = await axios.post("http://127.0.0.1:8000/users/login/", {
                 username,
                 password
             });
