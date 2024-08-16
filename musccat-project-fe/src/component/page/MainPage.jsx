@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
@@ -84,13 +84,7 @@ const BottomButton = styled.button`
 
 function MainPage(props) {
     const navigate = useNavigate();
-    const { isAuthenticated, user } = useAuth(); // 로그인 상태 확인
-
-    useEffect(() => {
-        if (user) {
-            window.location.reload();  // This forces the page to reload completely
-        }
-    }, [user]);
+    const { isAuthenticated} = useAuth(); // 로그인 상태 확인
 
     return (
         <>
