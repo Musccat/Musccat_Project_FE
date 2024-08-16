@@ -201,17 +201,17 @@ const MyPage = () => {
                     <InfoList>
                         <InfoItem>
                             <span>닉네임</span>
-                            <span>{user?.nickname || 'Nickname'}</span>
+                            <span>{user?.userNickname || 'Nickname'}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>성명</span>
-                            <span>{user?.name || 'Full Name'}</span>
+                            <span>{user?.fullName || 'Full Name'}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>생년월일</span>
-                            <span>{user?.birthdate || 'YYYY.MM.DD'}</span> 
+                            <span>{user?.userBirthdate || 'YYYY.MM.DD'}</span> 
                             <Space />
                         </InfoItem>
                         <InfoItem>
