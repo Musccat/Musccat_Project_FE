@@ -155,11 +155,18 @@ const ActionButton = styled.button`
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const { user, mypageUser } = useAuth();
+    const { user, fetchUserData } = useAuth();
 
-    const [fullName, setFullName] = useState(user?.fullName || '');
-    const [userNickname, setUserNickname] = useState(user?.userNickname || '');
-    const [userBirthdate, setUserBirthdate] = useState(user?.userBirthdate || '');
+    const [fullName, setFullName] = useState('');
+    const [userNickname, setUserNickname] = useState('');
+    const [userBirthdate, setUserBirthdate] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
+        };
+        fetchData();
+    }, [fetchUserData]);
 
     useEffect(() => {
         if (user) {
@@ -168,11 +175,6 @@ const MyPage = () => {
             setUserBirthdate(user.userBirthdate);
         }
     }, [user]);
-
-    const handleUpdate = () => {
-        // Call the mypageUser function to update user information
-        mypageUser(fullName, userNickname, userBirthdate);
-    };
 
     return (
         <>

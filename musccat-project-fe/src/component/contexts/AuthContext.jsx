@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/users/me/', {
+            const response = await axios.get('http://127.0.0.1:8000/users/mypage/', {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -87,6 +87,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    /*
     const mypageUser = async (fullName, userNickname, userBirthdate) => {
         try {
             const response = await axios.put("http://127.0.0.1:8000/users/mypage/", {
@@ -111,6 +112,7 @@ export const AuthProvider = ({ children }) => {
             alert("Updating user details failed. Please check the server status.");
         }
     };
+    */
 
     const logoutUser = () => {
         setAuthTokens(null);
@@ -133,7 +135,6 @@ export const AuthProvider = ({ children }) => {
         authTokens,
         loginUser,
         registerUser,
-        mypageUser,
         logoutUser,
         isAuthenticated,
     };
