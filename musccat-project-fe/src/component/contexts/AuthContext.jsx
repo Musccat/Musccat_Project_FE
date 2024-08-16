@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     }
 };
 
-const registerUser = async (username, password, password2) => {
+const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate) => {
     const response = await fetch("http://127.0.0.1:8000/users/register/", {
         method: "POST",
         headers: {
@@ -60,7 +60,10 @@ const registerUser = async (username, password, password2) => {
         body: JSON.stringify({
             username,
             password,
-            password2
+            password2,
+            name: fullName,
+            nickname: userNickname,
+            birthdate: userBirthdate
         })
     });
 

@@ -171,8 +171,12 @@ const handleSubmit = (e) => {
         formData.birthMonth && 
         formData.birthDay;
 
+    const fullName = formData.name;
+    const userNickname = formData.nickname;
+    const userBirthdate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`;
+
     if (usernameValid && passwordValid && passwordsMatch && allFieldsFilled) {
-        registerUser(formData.username, formData.password, formData.confirmPassword);
+        registerUser(formData.username, formData.password, formData.confirmPassword,fullName, userNickname, userBirthdate );
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
         console.log("InValid username or password / Passwords don't match / Some fields are empty");

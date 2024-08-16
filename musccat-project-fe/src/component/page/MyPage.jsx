@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
+import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
 import ProfileImage from '../ui/ProfileImage.jpeg'; 
 
@@ -154,6 +155,7 @@ const ActionButton = styled.button`
 
 const MyPage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     // 정보 입력 버튼 클릭 여부를 확인
     const [isFirstClick, setIsFirstClick] = useState(
@@ -199,17 +201,17 @@ const MyPage = () => {
                     <InfoList>
                         <InfoItem>
                             <span>닉네임</span>
-                            <span>strgurl</span>
+                            <span>{user?.nickname || 'Nickname'}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>성명</span>
-                            <span>김키티</span>
+                            <span>{user?.name || 'Full Name'}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>생년월일</span>
-                            <span>2001.04.07</span>
+                            <span>{user?.birthdate || 'YYYY.MM.DD'}</span> 
                             <Space />
                         </InfoItem>
                         <InfoItem>
