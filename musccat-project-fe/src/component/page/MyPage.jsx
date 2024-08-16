@@ -221,10 +221,6 @@ const MyPage = () => {
                             <span>strgurl47@ewhain.net</span>
                             <Space />
                         </InfoItem>
-                        <InfoItem>
-                            <span>전화번호</span>
-                            <span>010-1234-5678</span>
-                        </InfoItem>
                     </InfoList>
                 </Section>
 
