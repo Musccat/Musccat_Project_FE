@@ -54,7 +54,7 @@ const styles = {
         position: "absolute",
         top: "100%", 
         left: "50%",
-        transform: "translateX(-50%)",  
+        transform: "translateX(-50%)",
         backgroundColor: "white",
         boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
         borderRadius: "4px",
@@ -145,6 +145,10 @@ const styles = {
     }
 };
 
+const SortButtonContainer = styled.div`
+    position: relative;
+`;
+
 const SortButton = styled.button`
     padding: 10px 20px;
     font-size: 16px;
@@ -197,21 +201,23 @@ function EntireScholar(props) {
                     </div>
                 </div>
             <div style={styles.buttonContainer}>
-                <SortButton onClick={toggleDropdown}>
-                    {sortOption} ▼
-                </SortButton>
-                {dropdownVisible && (
-                    <div style={styles.dropdown}>
-                        {otherOptions.map((option, index) => (
-                            <DropdownItem
-                                key={index}
-                                onClick={() => handleSortOptionClick(option)}
-                            >
-                                {option}
-                            </DropdownItem>
-                        ))}
-                    </div>
-                )}
+                <SortButtonContainer>
+                    <SortButton onClick={toggleDropdown}>
+                        {sortOption} ▼
+                    </SortButton>
+                    {dropdownVisible && (
+                        <div style={styles.dropdown}>
+                            {otherOptions.map((option, index) => (
+                                <DropdownItem
+                                    key={index}
+                                    onClick={() => handleSortOptionClick(option)}
+                                >
+                                    {option}
+                                </DropdownItem>
+                            ))}
+                        </div>
+                    )}
+                </SortButtonContainer>
             </div>
             <div style={styles.container}>
                 <div style={styles.tableContainer}>
