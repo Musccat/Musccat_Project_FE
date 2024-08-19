@@ -5,7 +5,8 @@ import {
   BrowserRouter as
   Router,
   Routes,
-  Route
+  Route,
+  Switch
 } from "react-router-dom";
 import { AuthProvider } from './component/contexts/AuthContext';
 import styled from 'styled-components';
@@ -21,6 +22,7 @@ import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
 import MemInfoFirst from './component/page/MemInfoFirst';
 import BenefitInfo from './component/page/BenefitInfo';
+import BeneInfoRegister from './component/page/BeneInfoRegister';
 
 const MainTitleText = styled.p`
     font-size: 24px;
@@ -47,7 +49,8 @@ function App() {
           <Route path="/entirescholar" element={<EntireScholar />} />
           <Route path="/recomscholar" element={<RecomScholar />} />
           <Route path="/notice" element={<Notice />} />
-          <Route path="/benefitinfo" element={<BenefitInfo />} />
+          <Route path="/benefitinfo/:id" element={<BenefitInfo />} />
+          <Route path="/beneinforegister" element={<BeneInfoRegister />} />
         </Routes>
         </AuthProvider>
         </div>

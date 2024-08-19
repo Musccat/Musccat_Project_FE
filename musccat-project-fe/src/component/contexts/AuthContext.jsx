@@ -20,6 +20,9 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
+    // benefit information
+    const [benefitInfos, setBenefitInfos] = useState({});
+
     const navigate = useNavigate();
 
     const fetchUserData = async () => {
@@ -85,6 +88,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const addBenefitInfo = async (id, info) => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/benefitinfo/${id}/", info, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+    
+            if (response.status === 201) {
+                setBenefitInfos(prevState => ({
+                    ...prevState,
+                    [id]: [...(prevState[id] || []), response.data]
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to add benefit information:", error);
+        }
+    };
+
     /*
     const mypageUser = async (fullName, userNickname, userBirthdate) => {
         try {
@@ -136,6 +158,7 @@ export const AuthProvider = ({ children }) => {
         fetchUserData,
         logoutUser,
         isAuthenticated,
+        addBenefitInfo,
     };
 
 /*
