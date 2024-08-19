@@ -21,7 +21,7 @@ const styles = {
         padding: "20px", 
         maxWidth: "1200px", 
         marginTop: "50px",
-        backgroundColor: "#f9f9f9", 
+        backgroundColor: "white", 
         boxSizing: "border-box"
     },
     container: {
