@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../ui/NavBar";
-import scholarships from "../data";
+import scholarships from "../data/scholarshipdata";
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
@@ -249,12 +250,14 @@ return (
                                     <tr key={index}>
                                         <td style={styles.thTd}>{scholarship.scholarname}</td>
                                         <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                            {scholarship.businessname}
+                                            <Link to={`/notice/${scholarship.id}`} style={{ ...styles.link, textDecoration: 'none', color: 'inherit'}}>{scholarship.businessname}</Link>
                                         </td>
                                         <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.period}</td>
                                         <td style={styles.thTd}>
                                             <div style={styles.flexContainer}>
+                                            <Link to={`/benefitinfo/${scholarship.id}`} style={{ textDecoration: 'none' }}>
                                                 <button style={styles.infoButton}>정보 보러가기</button>
+                                            </Link>
                                                 <button
                                                     style={styles.heartButton}
                                                     onClick={() => handleLikeClick(index)}

@@ -20,7 +20,7 @@ import Notice from './component/page/Notice';
 import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
 import MemInfoFirst from './component/page/MemInfoFirst';
-
+import BenefitInfo from './component/page/BenefitInfo';
 
 const MainTitleText = styled.p`
     font-size: 24px;
@@ -47,6 +47,7 @@ function App() {
           <Route path="/entirescholar" element={<EntireScholar />} />
           <Route path="/recomscholar" element={<RecomScholar />} />
           <Route path="/notice" element={<Notice />} />
+          <Route path="/benefitinfo" element={<BenefitInfo />} />
         </Routes>
         </AuthProvider>
         </div>
