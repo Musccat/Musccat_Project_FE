@@ -169,10 +169,14 @@ const DropdownItem = styled.div`
 
 function EntireScholar(props) {
     // 상태 관리
-    const { scholarships, likes, setLikes } = useAuth();
+    const { fetchScholarships, likes, setLikes, scholarships } = useAuth();
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [sortOption, setSortOption] = useState('기한 순');
     const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
+
+    useEffect(() => {
+        fetchScholarships();
+    }, [fetchScholarships]);
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
