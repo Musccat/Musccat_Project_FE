@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -71,54 +71,73 @@ const ButtonContainer = styled.div`
 `;
 
 const SubmitButton = styled.button`
-    background-color: #348a8c;
+    background-color: ${(props) => (props.disabled ? "#ccc" : "#348a8c")};
     color: white;
     border: none;
     padding: 10px 20px;
     font-size: 14px;
-    cursor: pointer;
+    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     border-radius: 4px;
 `;
 
 const BeneInfoRegister = () => {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchScholar, setSearchScholar] = useState("");
     const [scholarshipName, setScholarshipName] = useState([]);
     const [businessName, setBusinessName] = useState("");
     const [year, setYear] = useState("");
     const [advice, setAdvice] = useState("");
     const [interviewTip, setInterviewTip] = useState("");
+    const [isFormValid, setIsFormValid] = useState(false); 
 
     const { addBenefitInfo } = useAuth();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
+        const isValid = searchScholar.trim() !== "" &&
+                        businessName.trim() !== "" &&
+                        year.trim() !== "" &&
+                        advice.trim() !== "" &&
+                        interviewTip.trim() !== "";
+
+        setIsFormValid(isValid);
+    }, [searchScholar, businessName, year, advice, interviewTip]); 
 
     const handleSearch = () => {
         const filtered = scholarships.filter(scholarship =>
-            scholarship.scholarname.toLowerCase().includes(searchTerm.toLowerCase())
+            scholarship.foundation_name.toLowerCase().includes(searchScholar.toLowerCase())
         );
         setScholarshipName(filtered);
         if (filtered.length > 0) {
-            setBusinessName(filtered[0].businessname); // Automatically select the first matching business name
+            setBusinessName(filtered[0].name); // Automatically select the first matching business name
         } else {
             setBusinessName("");
         }
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
+
         const info = {
-            scholarname: searchTerm,
-            businessname: businessName,
+            foundation_name: searchScholar,
+            name: businessName,
             year,
             basicInfo: "", 
             advice,
             interviewTip,
         };
 
-        const id = scholarshipName.length > 0 ? scholarshipName[0].id : ""; // 첫 번째 장학금 ID 사용
+        const product_id = scholarshipName.length > 0 ? scholarshipName[0].product_id : ""; // 첫 번째 장학금 ID 사용
 
-        addBenefitInfo(id, info);
-        navigate(-1);  // 이전 페이지로 이동
+        if (product_id) {
+            await addBenefitInfo(product_id, info); // addBenefitInfo 함수 호출
+            navigate(-1);  // 이전 페이지로 이동
+        } else {
+            alert("장학 수혜 정보를 모두 입력해주세요.");
+        }
+
     };
+
 
     return (
         <>
@@ -131,8 +150,8 @@ const BeneInfoRegister = () => {
                         <Input
                             id="scholarshipSearch"
                             type="text"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={searchScholar}
+                            onChange={(e) => setSearchScholar(e.target.value)}
                             placeholder="장학 재단명을 입력하세요"
                         />
                         <SubmitButton type="button" onClick={handleSearch}>검색</SubmitButton>
@@ -147,8 +166,8 @@ const BeneInfoRegister = () => {
                     onChange={(e) => setBusinessName(e.target.value)}
                 >
                     {scholarshipName.map(scholarship => (
-                    <option key={scholarship.id} value={scholarship.businessname}>
-                    {scholarship.businessname}
+                    <option key={scholarship.product_id} value={scholarship.name}>
+                    {scholarship.name}
                     </option>
                 ))}
                 </Select>
@@ -157,6 +176,7 @@ const BeneInfoRegister = () => {
             <FormRow>
             <Label htmlFor="year">수혜 년도</Label>
             <Select id="year" name="year" value={year} onChange={(e) => setYear(e.target.value)}>
+                <option value="">수혜 년도 선택</option>  {/* 기본 빈 옵션 추가 */}
                 <option value="2021">2021</option>
             </Select>
             </FormRow>
@@ -172,7 +192,13 @@ const BeneInfoRegister = () => {
             </FormRow>
 
             <ButtonContainer>
-            <SubmitButton type="button" onClick={handleSubmit}>입력 완료</SubmitButton>
+            <SubmitButton 
+                type="button" 
+                onClick={handleSubmit}
+                disabled={!isFormValid} 
+            >
+                입력 완료
+            </SubmitButton>
             </ButtonContainer>
         </FormContainer>
         </PageWrapper>
