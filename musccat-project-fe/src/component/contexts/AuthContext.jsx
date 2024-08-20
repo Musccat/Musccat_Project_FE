@@ -23,6 +23,9 @@ export const AuthProvider = ({ children }) => {
     // benefit information
     const [benefitInfos, setBenefitInfos] = useState({});
 
+    const [scholarships, setScholarships] = useState([]);
+    const [likes, setLikes] = useState([]);
+
     const navigate = useNavigate();
 
     const fetchUserData = async () => {
@@ -41,6 +44,16 @@ export const AuthProvider = ({ children }) => {
             });
         } catch (error) {
             console.error("Failed to fetch user data", error);
+        }
+    };
+
+    const fetchScholarships = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/api/scholarships/");
+            setScholarships(response.data);
+            setLikes(Array(response.data.length).fill(false));  // 좋아요 상태 초기화
+        } catch (error) {
+            console.error("Failed to fetch scholarships", error);
         }
     };
     
@@ -145,6 +158,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (authTokens) {
             fetchUserData();
+            fetchScholarships();
         }
         setLoading(false);
     }, [authTokens]);
@@ -159,6 +173,10 @@ export const AuthProvider = ({ children }) => {
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
+        benefitInfos,
+        scholarships,
+        likes,
+        setLikes,
     };
 
 /*

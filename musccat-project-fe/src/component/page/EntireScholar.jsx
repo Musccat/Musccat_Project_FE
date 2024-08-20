@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../ui/NavBar";
-import scholarships from "../data/scholarshipdata";
+import { useAuth } from "../contexts/AuthContext";
 import styled from "styled-components";
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
@@ -169,7 +169,7 @@ const DropdownItem = styled.div`
 
 function EntireScholar(props) {
     // 상태 관리
-    const [likes, setLikes] = useState(Array(scholarships.length).fill(false));
+    const { scholarships, likes, setLikes } = useAuth();
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [sortOption, setSortOption] = useState('기한 순');
     const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
@@ -231,32 +231,32 @@ function EntireScholar(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {scholarships.map((scholarship, index) => (
-                            <tr key={index}>
-                                <td style={styles.thTd}>{scholarship.scholarname}</td>
-                                <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                    <Link to={`/notice/${scholarship.id}`} style={styles.link}>{scholarship.businessname}</Link>
-                                </td>
-                                <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.period}</td>
-                                <td style={styles.thTd}>
-                                    <div style={styles.flexContainer}>
-                                    <Link to={`/benefitinfo/${scholarship.id}`} style={{ textDecoration: 'none' }}>
-                                        <button style={styles.infoButton}>정보 보러가기</button>
-                                    </Link>
-                                        <button
-                                            style={styles.heartButton}
-                                            onClick={() => handleLikeClick(index)}
-                                        >
-                                            <img
-                                                src={likes[index] ? filledheart : emptyheart}
-                                                alt="heart"
-                                                style={styles.heartImage}
-                                            />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                    {scholarships.map((scholarship, index) => (
+                        <tr key={scholarship.id}>
+                            <td style={styles.thTd}>{scholarship.scholarname}</td>
+                            <td style={{ ...styles.thTd, paddingRight: "20px" }}>
+                                <Link to={`/notice/${scholarship.id}`} style={styles.link}>{scholarship.businessname}</Link>
+                            </td>
+                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.period}</td>
+                            <td style={styles.thTd}>
+                                <div style={styles.flexContainer}>
+                                <Link to={`/benefitinfo/${scholarship.id}`} style={{ textDecoration: 'none' }}>
+                                    <button style={styles.infoButton}>정보 보러가기</button>
+                                </Link>
+                                    <button
+                                        style={styles.heartButton}
+                                        onClick={() => handleLikeClick(index)}
+                                    >
+                                        <img
+                                            src={likes[index] ? filledheart : emptyheart}
+                                            alt="heart"
+                                            style={styles.heartImage}
+                                        />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                     <tfoot>
                         <tr>

@@ -4,6 +4,7 @@ import NavBar from "../ui/NavBar";
 import { Link, useParams } from "react-router-dom";
 import scholarships from "../data/scholarshipdata";
 import benefitinfo from "../data/benefitinfo";
+import { useAuth } from "../contexts/AuthContext";
 
 const PageWrapper = styled.div`
     padding: 20px;
@@ -96,6 +97,7 @@ const InfoDetail = styled.div`
 
 const BenefitInfo = () => {
     const { id } = useParams();  // URL에서 id 파라미터 가져오기
+    const { benefitInfos } = useAuth();
 
     // id에 따라 benefitinfo 데이터 필터링
     const benefitInfoData = benefitinfo.filter(benefitinfo => benefitinfo.id === id);
