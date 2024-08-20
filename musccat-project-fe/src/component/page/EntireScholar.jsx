@@ -176,7 +176,7 @@ function EntireScholar(props) {
 
     useEffect(() => {
         fetchScholarships();
-    }, [fetchScholarships]);
+    }, []);
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
