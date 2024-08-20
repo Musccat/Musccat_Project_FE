@@ -96,17 +96,13 @@ const InfoDetail = styled.div`
 `;
 
 const BenefitInfo = () => {
-    const { id } = useParams();  // URL에서 id 파라미터 가져오기
-    const { benefitInfos } = useAuth();
+    const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
 
     // id에 따라 benefitinfo 데이터 필터링
-    const benefitInfoData = benefitinfo.filter(benefitinfo => benefitinfo.id === id);
+    const benefitInfoData = benefitinfo.filter(info => info.product_id === product_id);
 
-    const scholarship = scholarships.find(scholar => scholar.id === id);
-    
-    if (!benefitInfoData || benefitInfoData.length === 0) {
-        return <div>해당 장학금에 대한 수혜 정보가 없습니다.</div>;
-    }
+    const scholarship = scholarships.find(scholar => scholar.product_id === product_id);
+
 
     return (
         <>
@@ -123,35 +119,38 @@ const BenefitInfo = () => {
             </RegisterButton>
         </RegisterButtonContainer>
 
-        {benefitInfoData.map((info, index) => (
-            <Card key={index}>
-            <CardHeader>
-                {info.username}님의 정보
-                <LikeButton>좋아요</LikeButton>
-            </CardHeader>
-            <CardContent>
-                <InfoSection>
-                <InfoLabel>{info.year}년 수혜자</InfoLabel>
-                </InfoSection>
-                <InfoSection>
-                <InfoLabel>기본 정보</InfoLabel>
-                <InfoDetail>{info.basicInfo}</InfoDetail>
-                </InfoSection>
-                <InfoSection>
-                <InfoLabel>합격 팁</InfoLabel>
-                <InfoDetail>{info.advice}</InfoDetail>
-                </InfoSection>
-                <InfoSection>
-                <InfoLabel>면접 팁</InfoLabel>
-                <InfoDetail>{info.interviewTip}</InfoDetail>
-                </InfoSection>
-            </CardContent>
-        </Card>
-    ))}
-    </PageWrapper>
-    </>
+        {benefitInfoData.length > 0 ? (
+                    benefitInfoData.map((info, index) => (
+                        <Card key={index}>
+                            <CardHeader>
+                                {info.username}님의 정보
+                                <LikeButton>좋아요</LikeButton>
+                            </CardHeader>
+                            <CardContent>
+                                <InfoSection>
+                                    <InfoLabel>{info.year}년 수혜자</InfoLabel>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>기본 정보</InfoLabel>
+                                    <InfoDetail>{info.basicInfo}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>합격 팁</InfoLabel>
+                                    <InfoDetail>{info.advice}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>면접 팁</InfoLabel>
+                                    <InfoDetail>{info.interviewTip}</InfoDetail>
+                                </InfoSection>
+                            </CardContent>
+                        </Card>
+                    ))
+                ) : (
+                    <div>해당 장학금에 대한 수혜 정보가 없습니다.</div>
+                )}
+            </PageWrapper>
+        </>
     );
-
 };
 
 export default BenefitInfo;

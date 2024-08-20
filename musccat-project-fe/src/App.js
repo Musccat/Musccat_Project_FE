@@ -49,7 +49,7 @@ function App() {
           <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/notice" element={<Notice />} /> {/*장학금 공고 페이지 */}
-          <Route path="/benefitinfo/:id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
+          <Route path="/benefitinfo/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
           <Route path="/beneinforegister" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
         </Routes>
         </AuthProvider>
