@@ -65,7 +65,7 @@ const LogoutButton = styled.button`
     cursor: pointer;
     border-radius: 4px;
     margin-left: 8px; 
-    transform: translateY(-6px);
+    transform: translateY(-8px);
 
     &:hover {
         background-color: #348a8c; 
