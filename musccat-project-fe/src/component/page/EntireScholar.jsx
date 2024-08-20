@@ -232,15 +232,15 @@ function EntireScholar(props) {
                     </thead>
                     <tbody>
                     {scholarships.map((scholarship, index) => (
-                        <tr key={scholarship.id}>
-                            <td style={styles.thTd}>{scholarship.scholarname}</td>
+                        <tr key={scholarship.product_id}>
+                            <td style={styles.thTd}>{scholarship.foundation_name}</td>
                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                <Link to={`/notice/${scholarship.id}`} style={styles.link}>{scholarship.businessname}</Link>
+                                <Link to={`/notice/${scholarship.product_id}`} style={styles.link}>{scholarship.name}</Link>
                             </td>
-                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.period}</td>
+                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.recruitment_end}</td>
                             <td style={styles.thTd}>
                                 <div style={styles.flexContainer}>
-                                <Link to={`/benefitinfo/${scholarship.id}`} style={{ textDecoration: 'none' }}>
+                                <Link to={`/benefitinfo/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
                                     <button style={styles.infoButton}>정보 보러가기</button>
                                 </Link>
                                     <button

@@ -101,9 +101,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const addBenefitInfo = async (id, info) => {
+    const addBenefitInfo = async (product_id, info) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/benefitinfo/${id}/", info, {
+            const response = await axios.post("http://127.0.0.1:8000/benefitinfo/${product_id}/", info, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }) => {
             if (response.status === 201) {
                 setBenefitInfos(prevState => ({
                     ...prevState,
-                    [id]: [...(prevState[id] || []), response.data]
+                    [product_id]: [...(prevState[product_id] || []), response.data]
                 }));
             }
         } catch (error) {
