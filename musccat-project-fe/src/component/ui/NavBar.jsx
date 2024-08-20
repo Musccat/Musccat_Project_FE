@@ -43,6 +43,7 @@ const NavLinks = styled.div`
     gap: 24px;
     margin-left: auto; /* 네비게이션 링크를 오른쪽으로 밀어줌 */
     padding-right: 50px; /* 오른쪽 여백 추가 */
+    margin-top: 8px;
 
     a {
         text-decoration: none;
@@ -64,7 +65,7 @@ const LogoutButton = styled.button`
     cursor: pointer;
     border-radius: 4px;
     margin-left: 8px; 
-    transform: translateY(-8px);
+    transform: translateY(-6px);
 
     &:hover {
         background-color: #348a8c; 
