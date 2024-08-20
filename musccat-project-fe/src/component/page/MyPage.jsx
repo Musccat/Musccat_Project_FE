@@ -166,7 +166,7 @@ const MyPage = () => {
             await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
         };
         fetchData();
-    }, [fetchUserData]);
+    }, []);
 
     useEffect(() => {
         if (user) {
