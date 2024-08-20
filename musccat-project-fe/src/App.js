@@ -40,17 +40,17 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route index element={<MainPage />} />
-          <Route path="/users/login" element={<Login />} />
-          <Route path="/users/register" element={<Register />} />
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/users/mypage" element={<MyPage />} />
-          <Route path="/meminfo" element={<MemInfo />}/>
-          <Route path="/meminfofirst" element={<MemInfoFirst />}/>
-          <Route path="/entirescholar" element={<EntireScholar />} />
-          <Route path="/recomscholar" element={<RecomScholar />} />
-          <Route path="/notice" element={<Notice />} />
-          <Route path="/benefitinfo/:id" element={<BenefitInfo />} />
-          <Route path="/beneinforegister" element={<BeneInfoRegister />} />
+          <Route path="/users/login" element={<Login />} /> {/*로그인 페이지 */}
+          <Route path="/users/register" element={<Register />} /> {/*회원가입 페이지 */}
+          <Route path="/main" element={<MainPage />} /> {/*메인 페이지 */}
+          <Route path="/users/mypage" element={<MyPage />} /> {/*마이 페이지 */}
+          <Route path="/meminfo" element={<MemInfo />}/> {/*개인정보 신규 입력 페이지 */}
+          <Route path="/meminfofirst" element={<MemInfoFirst />}/> {/*장학 정보 신규 입력 페이지 */}
+          <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
+          <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
+          <Route path="/notice" element={<Notice />} /> {/*장학금 공고 페이지 */}
+          <Route path="/benefitinfo/:id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
+          <Route path="/beneinforegister" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
         </Routes>
         </AuthProvider>
         </div>
