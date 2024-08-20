@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
                 password2,
                 nickname: userNickname,
                 birth: userBirthdate,
-                fullName
+                fullname: fullName
             });
 
             if (response.status === 201) {
