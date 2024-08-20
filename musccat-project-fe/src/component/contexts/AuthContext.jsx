@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         localStorage.removeItem("authTokens");
         setIsAuthenticated(false);
-        navigate("/users/login");
+        navigate("/");
     };
 
     useEffect(() => {
