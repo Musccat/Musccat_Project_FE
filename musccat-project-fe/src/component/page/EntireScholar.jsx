@@ -241,7 +241,7 @@ function EntireScholar(props) {
                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
                                 <Link to={`/notice/${scholarship.product_id}`} style={styles.link}>{scholarship.name}</Link>
                             </td>
-                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>{scholarship.recruitment_end}</td>
+                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
                             <td style={styles.thTd}>
                                 <div style={styles.flexContainer}>
                                 <Link to={`/benefitinfo/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
