@@ -86,6 +86,14 @@ function MainPage(props) {
     const navigate = useNavigate();
     const { isAuthenticated} = useAuth(); // 로그인 상태 확인
 
+    const handleBottomButtonClick = () => {
+        if (isAuthenticated) {
+            navigate('/beneinforegister'); // 로그인 상태이면 /beneinforegister로 이동
+        } else {
+            navigate('/users/login'); // 로그인 상태가 아니면 /users/login로 이동
+        }
+    };
+    
     return (
         <>
             {isAuthenticated ? <NavBar /> : <NavBarB />}
@@ -196,7 +204,7 @@ function MainPage(props) {
                 <Space />
                 <Space />
                 <BottomButton
-                    onClick={() => navigate('/somepage')}
+                    onClick={handleBottomButtonClick}
                 >
                     장학 수혜 정보 입력하고{"\n"}포인트 받기
                 </BottomButton>
