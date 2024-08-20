@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 import LightBulb from '../ui/LightBulb.jpeg';
+import { useAuth } from '../contexts/AuthContext';
 
 const styles = {
     wrapper: {  
@@ -191,6 +192,9 @@ const [dropdownVisible, setDropdownVisible] = useState(false);
 const [sortOption, setSortOption] = useState('기한 순');
 const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
 
+const { user } = useAuth(); // Retrieve user from the context
+const userNickname = user ? user.userNickname : '사용자';
+
 const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
 };
@@ -214,7 +218,7 @@ return (
         <NavBar />
             <div style={styles.wrapper}>
                 <div style={styles.outerContainer}>
-                    <h1 style={styles.header}><span style={styles.highlight}>김키티</span> 님의 추천 장학금</h1>
+                    <h1 style={styles.header}><span style={styles.highlight}>{userNickname}</span> 님의 추천 장학금</h1>
                     <div style={styles.buttonContainer}>
                         <SortButtonContainer>
                             <SortButton onClick={toggleDropdown}>
