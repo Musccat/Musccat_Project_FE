@@ -144,6 +144,14 @@ const styles = {
         marginTop: "10px",  
     }
 };
+const ScholarshipLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+        color: #007bff;  /* 파란색으로 변경 */
+    }
+`;
 
 const SortButtonContainer = styled.div`
     position: relative;
@@ -239,7 +247,7 @@ function EntireScholar(props) {
                         <tr key={scholarship.product_id}>
                             <td style={styles.thTd}>{scholarship.foundation_name}</td>
                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                <Link to={`/notice/${scholarship.product_id}`} style={styles.link}>{scholarship.name}</Link>
+                                <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
                             </td>
                             <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
                             <td style={styles.thTd}>
