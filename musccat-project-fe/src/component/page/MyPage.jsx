@@ -223,37 +223,6 @@ const MyPage = () => {
                         </InfoItem>
                     </InfoList>
                 </Section>
-
-                <Section>
-                    <Title>장학금 지원서 작성 현황</Title>
-                    <Separator />
-                    <Table>
-                        <thead>
-                            <tr>
-                                <Th>재단명</Th>
-                                <Th>장학금명</Th>
-                                <Th>수정</Th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <Td>재단명1</Td>
-                                <Td>장학금명1</Td>
-                                <Td><ActionButton>수정</ActionButton></Td>
-                            </tr>
-                            <tr>
-                                <Td>재단명2</Td>
-                                <Td>장학금명2</Td>
-                                <Td><ActionButton>수정</ActionButton></Td>
-                            </tr>
-                            <tr>
-                                <Td>재단명3</Td>
-                                <Td>장학금명3</Td>
-                                <Td><ActionButton>수정</ActionButton></Td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Section>
             </Container>
         </>
     );
