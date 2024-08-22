@@ -166,30 +166,23 @@ const Dropdown = styled.div`
 
 
 const WarningBox = styled.div`
-    background-color: #e0e0e0 ;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 5px;
     margin-top: 20px; /* 상단 마진 추가 */
+    border: 3px solid #e0e0e0;
+
+    p {
+        color: #bfbfbf;
+        margin: 0;
+    }
 `;
 
 const Title = styled.h2`
     font-size: 1.2em;
     margin-bottom: 10px;
+    color: #bfbfbf;
 `;
-
-const TitleWithIcon = styled.div`
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-`;
-
-const Icon2 = styled.img`
-    margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
-    width: 15px; 
-    height: 20px; 
-`;
-
-
 
 
 function RecomScholar(props) {
@@ -226,6 +219,7 @@ return (
     <>
         <NavBar />
             <div style={styles.wrapper}>
+                <div style={styles.container}>
                 <div style={styles.outerContainer}>
                     <h1 style={styles.header}><span style={styles.highlight}>{userNickname}</span> 님의 추천 장학금</h1>
                     <div style={styles.buttonContainer}>
@@ -297,7 +291,12 @@ return (
                         <span style={styles.paginationSpan}>1 2 3 4 5</span>
                     </div>
                 </div>
+                <WarningBox>
+                        <Title> 신청할 때는 각 장학금의 세부적인 기준과 마감일을 다시 한번 확인하시기 바랍니다.</Title>
+                    <p>사용자가 확인하지 않아 발생하는 문제에 대해서는 Scholli 측에서 책임을 지지 않으며, 모든 책임은 전적으로 사용자에게 있습니다.</p>
+                </WarningBox>
             </div>
+        </div>
     </>
 );
 
