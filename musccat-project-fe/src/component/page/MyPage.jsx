@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
-import ProfileImage from '../ui/ProfileImage.jpeg'; 
+import DefaultProfileImage from '../ui/ProfileImage.jpeg';
 
 const Container = styled.div`
     margin: 20px;
@@ -182,7 +182,7 @@ const MyPage = () => {
             <Container>
                 <Header>
                     <ProfileContainer>
-                        <ProImage src={ProfileImage} alt="Profile" />
+                        <ProImage src={DefaultProfileImage} alt="Profile" />
                         <UserNickname>{userNickname}</UserNickname>
                 </ProfileContainer>
                 <UserInfo>
