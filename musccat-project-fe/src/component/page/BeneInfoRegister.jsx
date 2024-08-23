@@ -136,7 +136,7 @@ const BeneInfoRegister = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!selectedFoundation || !selectedScholarship) {
+        if (!isFormValid) {
             alert("모든 필드를 입력해주세요.");
             return;
         }
