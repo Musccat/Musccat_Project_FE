@@ -41,6 +41,18 @@ export const AuthProvider = ({ children }) => {
                 userNickname: response.data.nickname,
                 userBirthdate: response.data.birth,
                 email: response.data.email,
+                region: response.data.region,
+                district: response.data.district,
+                incomeBracket: response.data.incomeBracket,
+                applicantCategory: response.data.applicantCategory,
+                school: response.data.school,
+                major: response.data.major,
+                year: response.data.year,
+                semester: response.data.semester,
+                currentGPA: response.data.currentGPA,
+                totalGPA: response.data.totalGPA,
+                familyStatus: response.data.familyStatus,
+                additionalInfo: response.data.additionalInfo,
             });
         } catch (error) {
             console.error("Failed to fetch user data", error);

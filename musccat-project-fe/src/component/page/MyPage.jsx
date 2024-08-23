@@ -139,20 +139,6 @@ const Space = styled.div`
     margin-top: 20px;
 `;
 
-const ActionButton = styled.button`
-    background-color: #348a8c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #2d7374;
-    }
-
-`;
-
 const MyPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -161,6 +147,19 @@ const MyPage = () => {
     const [fullName, setFullName] = useState('');
     const [userNickname, setUserNickname] = useState('');
     const [userBirthdate, setUserBirthdate] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [region, setRegion] = useState('');
+    const [district, setDistrict] = useState('');
+    const [incomeBracket, setIncomeBracket] = useState('');
+    const [applicantCategory, setApplicantCategory] = useState('');
+    const [school, setSchool] = useState('');
+    const [major, setMajor] = useState('');
+    const [year, setYear] = useState('');
+    const [semester, setSemester] = useState('');
+    const [currentGPA, setCurrentGPA] = useState('');
+    const [totalGPA, setTotalGPA] = useState('');
+    const [familyStatus, setFamilyStatus] = useState('');
+    const [additionalInfo, setAdditionalInfo] = useState('');
     const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
 
     useEffect(() => {
@@ -175,6 +174,19 @@ const MyPage = () => {
             setFullName(user.fullName);
             setUserNickname(user.userNickname);
             setUserBirthdate(user.userBirthdate);
+            setUserEmail(user.email);
+            setRegion(user.region);
+            setDistrict(user.district);
+            setIncomeBracket(user.incomeBracket);
+            setApplicantCategory(user.applicantCategory);
+            setSchool(user.school);
+            setMajor(user.major);
+            setYear(user.year);
+            setSemester(user.semester);
+            setCurrentGPA(user.currentGPA);
+            setTotalGPA(user.totalGPA);
+            setFamilyStatus(user.familyStatus);
+            setAdditionalInfo(user.additionalInfo);
         }
     }, [user]);
 
@@ -185,7 +197,7 @@ const MyPage = () => {
     }, [location.state]);
 
     const handleNewInfoClick = () => {
-        navigate("/users/meminfo");
+        navigate("/users/meminfo", { state: { isInfoSubmitted } });
     };
 
     return (
@@ -213,7 +225,7 @@ const MyPage = () => {
                 </Header>
 
                 <Section>
-                    <Title>기본 정보</Title>
+                    <Title>장학 기본 정보</Title>
                     <InfoList>
                         <InfoItem>
                             <span>닉네임</span>
@@ -232,11 +244,79 @@ const MyPage = () => {
                         </InfoItem>
                         <InfoItem>
                             <span>이메일</span>
-                            <span>strgurl47@ewhain.net</span>
+                            <span>{userEmail}</span>
                             <Space />
                         </InfoItem>
                     </InfoList>
                 </Section>
+                
+            {isInfoSubmitted && (
+                <Section>
+                    <Title>추가 정보</Title>
+                    <InfoList>
+                        <InfoItem>
+                            <span>거주 지역</span>
+                            <span>{region}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>구/군</span>
+                            <span>{district}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>소득 분위</span>
+                            <span>{incomeBracket}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>지원 계열</span>
+                            <span>{applicantCategory}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>학교</span>
+                            <span>{school}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>학과</span>
+                            <span>{major}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>학년</span>
+                            <span>{year}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>수료 학기</span>
+                            <span>{semester}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>직전 학기 성적</span>
+                            <span>{currentGPA}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>전체 성적</span>
+                            <span>{totalGPA}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>가족 상태</span>
+                            <span>{familyStatus}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>추가 정보</span>
+                            <span>{additionalInfo}</span>
+                            <Space />
+                        </InfoItem>
+                    </InfoList>
+                </Section>
+                )}
             </Container>
         </>
     );

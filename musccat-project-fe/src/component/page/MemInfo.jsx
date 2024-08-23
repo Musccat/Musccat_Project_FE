@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import NavBar from "../ui/NavBar";
 import { useAuth } from "../contexts/AuthContext"; 
@@ -127,7 +127,10 @@ const Space = styled.div`
 
 const MemInfo = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const isInfoSubmitted = state?.isInfoSubmitted || false;
     const { user, fetchUserData, updateUser } = useAuth();
+    const [formValid, setFormValid] = useState(false);
     const [formData, setFormData] = useState({
         fullname: user?.fullname || '',
         dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
@@ -148,6 +151,36 @@ const MemInfo = () => {
     });
 
     useEffect(() => {
+        const isFormValid = () => {
+            // Check all fields in formData are not empty or invalid
+            const requiredFields = [
+                'nickname',
+                'region',
+                'district',
+                'incomeBracket',
+                'applicantCategory',
+                'school',
+                'major',
+                'year',
+                'semester',
+                'currentGPA',
+                'totalGPA',
+                'familyStatus'
+            ];
+            
+            return requiredFields.every(field => {
+                if (Array.isArray(formData[field])) {
+                    return formData[field].length > 0;
+                }
+                return formData[field]?.trim() !== '';
+            });
+        };
+    
+        setFormValid(isFormValid());
+    }, [formData]);
+    
+
+    useEffect(() => {
         const fetchData = async () => {
             await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
             if (user) {
@@ -156,7 +189,19 @@ const MemInfo = () => {
                     fullname: user.fullName,
                     dob: user.userBirthdate,
                     email: user.email,
-                    nickname: user.userNickname
+                    nickname: user.userNickname,
+                    region: user.region || '',
+                    district: user.district || '',
+                    incomeBracket: user.incomeBracket || '',
+                    applicantCategory: user.applicantCategory || '',
+                    school: user.school || '',
+                    major: user.major || '',
+                    year: user.year || '',
+                    semester: user.semester || '',
+                    currentGPA: user.currentGPA || '',
+                    totalGPA: user.totalGPA || '',
+                    familyStatus: user.familyStatus || '',
+                    additionalInfo: user.additionalInfo || '',
                 });
             }
         };
@@ -201,7 +246,7 @@ const MemInfo = () => {
         <>
         <NavBar />
         <Container>
-            <Title>기존 정보 수정</Title>
+            <Title>{isInfoSubmitted ? "기존 정보 수정" : "신규 정보 입력"}</Title>
             <Space />
             <form onSubmit={handleSubmit}>
             <FormGroup>
@@ -419,7 +464,7 @@ const MemInfo = () => {
                     </RadioGroup>
                 </FormGroup>
 
-                <SubmitButton type="submit">입력 완료</SubmitButton>
+                <SubmitButton type="submit" disabled={!formValid}>입력 완료</SubmitButton>
             </form>
         </Container>
         </>
