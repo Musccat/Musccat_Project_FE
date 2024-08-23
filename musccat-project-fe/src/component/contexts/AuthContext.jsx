@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
 
     const addBenefitInfo = async (product_id, info) => {
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/reviews/${product_id}/`, info, {
+            const response = await axios.post(`http://127.0.0.1:8000/reviews/`, info, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -178,6 +178,22 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error("Failed to add benefit information:", error);
+        }
+    };
+
+    const fetchBenefitInfos = async (product_id) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/reviews/${product_id}/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            setBenefitInfos(prevState => ({
+                ...prevState,
+                [product_id]: response.data,
+            }));
+        } catch (error) {
+            console.error("Failed to fetch benefit information:", error);
         }
     };
 
@@ -235,6 +251,7 @@ export const AuthProvider = ({ children }) => {
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
+        fetchBenefitInfos,
         benefitInfos,
         scholarships,
         likes,

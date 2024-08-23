@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { Link, useParams } from "react-router-dom";
-import scholarships from "../data/scholarshipdata";
-import benefitinfo from "../data/benefitinfo";
 import { useAuth } from "../contexts/AuthContext";
 
 const PageWrapper = styled.div`
@@ -97,10 +95,17 @@ const InfoDetail = styled.div`
 
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
+    const { benefitInfos, fetchBenefitInfos, scholarships } = useAuth();
 
-    // id에 따라 benefitinfo 데이터 필터링
-    const benefitInfoData = benefitinfo.filter(info => info.product_id === product_id);
+    useEffect(() => {
+        // 해당 product_id로 관련된 수혜 정보를 불러옴
+        fetchBenefitInfos(product_id);
+    }, [product_id, fetchBenefitInfos]);
 
+    // benefitInfos에서 해당 product_id에 대한 정보 가져오기
+    const benefitInfoData = benefitInfos[product_id] || [];
+
+    // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
     const scholarship = scholarships.find(scholar => scholar.product_id === product_id);
 
 
