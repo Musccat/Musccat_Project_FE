@@ -97,6 +97,11 @@ const SubmitButton = styled.button`
     &:hover {
         background-color: #267073;
     }
+    
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 `;
 const Note = styled.p`
     font-size: 0.8em;
@@ -209,18 +214,18 @@ const MemInfo = () => {
     }, [user, fetchUserData]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
 
-        if (name === "familyStatus") {
+        if (type === "checkbox") {
             let updatedFamilyStatus = [...formData.familyStatus];
-            if (e.target.checked) {
+            if (checked) {
                 updatedFamilyStatus.push(value); // 체크된 항목 추가
             } else {
                 updatedFamilyStatus = updatedFamilyStatus.filter(status => status !== value); // 체크 해제된 항목 제거
             }
             setFormData({
                 ...formData,
-                [name]: updatedFamilyStatus
+                familyStatus: updatedFamilyStatus
             });
         } else {
             setFormData({
@@ -236,7 +241,19 @@ const MemInfo = () => {
 
         // 수정된 사용자 정보를 서버에 업데이트
         await updateUser({
-            nickname: formData.nickname // 수정된 닉네임 반영
+            nickname: formData.nickname, // 수정된 닉네임 반영
+            region: formData.region,
+            district: formData.district,
+            incomeBracket: formData.incomeBracket,
+            applicantCategory: formData.applicantCategory,
+            school: formData.school,
+            major: formData.major,
+            year: formData.year,
+            semester: formData.semester,
+            currentGPA: formData.currentGPA,
+            totalGPA: formData.totalGPA,
+            familyStatus: formData.familyStatus,
+            additionalInfo: formData.additionalInfo
         });
         
         navigate("/users/mypage", { state: { infoSubmitted: true } });
