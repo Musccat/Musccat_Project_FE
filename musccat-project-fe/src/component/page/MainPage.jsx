@@ -88,7 +88,7 @@ function MainPage(props) {
 
     const handleBottomButtonClick = () => {
         if (isAuthenticated) {
-            navigate('/beneinforegister'); // 로그인 상태이면 /beneinforegister로 이동
+            navigate('/reviews'); // 로그인 상태이면 /reviews로 이동
         } else {
             navigate('/users/login'); // 로그인 상태가 아니면 /users/login로 이동
         }
