@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/users/mypage/', {
+            const response = await axios.get("http://127.0.0.1:8000/users/mypage/", {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
-            const response = await axios.put('http://127.0.0.1:8000/users/mypage/', updatedData, {
+            const response = await axios.put("http://127.0.0.1:8000/users/mypage/", updatedData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -79,10 +79,23 @@ export const AuthProvider = ({ children }) => {
             console.error("사용자 정보 업데이트 중 오류 발생", error);
         }
     };
+    const fetchFoundations = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/beneinforegister/", {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Failed to fetch foundations", error);
+            return [];
+        }
+    };
 
     const fetchScholarshipsByFoundation = async (foundationName) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/scholarships/${foundationName}/`, {
+            const response = await axios.get(`http://127.0.0.1:8000/beneinforegister/${foundationName}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -151,7 +164,7 @@ export const AuthProvider = ({ children }) => {
 
     const addBenefitInfo = async (product_id, info) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/benefitinfo/${product_id}/", info, {
+            const response = await axios.post(`http://127.0.0.1:8000/benefitinfo/${product_id}/`, info, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -227,6 +240,7 @@ export const AuthProvider = ({ children }) => {
         likes,
         setLikes,
         fetchScholarships,
+        fetchFoundations,
         fetchScholarshipsByFoundation,
     };
 

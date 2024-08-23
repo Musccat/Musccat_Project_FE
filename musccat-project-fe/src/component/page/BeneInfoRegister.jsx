@@ -3,7 +3,6 @@ import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import scholarships from "../data/scholarshipdata";
 import Select from 'react-select';
 
 const PageWrapper = styled.div`
@@ -78,6 +77,7 @@ const SubmitButton = styled.button`
 
 const BeneInfoRegister = () => {
     const [selectedFoundation, setSelectedFoundation] = useState("");
+    const [foundationOptions, setFoundationOptions] = useState([]);
     const [scholarshipOptions, setScholarshipOptions] = useState([]);
     const [selectedScholarship, setSelectedScholarship] = useState("");
     const [year, setYear] = useState("");
@@ -85,15 +85,28 @@ const BeneInfoRegister = () => {
     const [interviewTip, setInterviewTip] = useState("");
     const [isFormValid, setIsFormValid] = useState(false); 
 
-    const { addBenefitInfo, fetchScholarshipsByFoundation } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Fetch foundations on component mount
+        const loadFoundations = async () => {
+            const foundations = await fetchFoundations();
+            setFoundationOptions(
+                foundations.map(foundation => ({
+                    value: foundation.name,
+                    label: foundation.name,
+                }))
+            );
+        };
+        loadFoundations();
+    }, [fetchFoundations]);
 
     useEffect(() => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
         const isValid =  
                         selectedFoundation !== null &&
                         selectedFoundation.label &&
-                        selectedFoundation.label.trim() !== "" &&
                         selectedScholarship.trim() !== "" &&
                         year.trim() !== "" &&
                         advice.trim() !== "" &&
@@ -137,8 +150,8 @@ const BeneInfoRegister = () => {
             interviewTip,
         };
 
-        const selectedScholarshipData = scholarships.find(
-            (scholarship) => scholarship.name === selectedScholarship
+        const selectedScholarshipData = scholarshipOptions.find(
+            (scholarship) => scholarship.value === selectedScholarship
         );
 
         if (selectedScholarshipData) {
@@ -149,17 +162,6 @@ const BeneInfoRegister = () => {
             alert("장학 수혜 정보를 모두 입력해주세요.");
         }
     };
-
-
-    const foundationOptions = [
-        ...new Set(
-            scholarships.map((scholarship) => ({
-                value: scholarship.foundation_name,
-                label: scholarship.foundation_name,
-            }))
-        ),
-    ];
-
 
     return (
         <>
