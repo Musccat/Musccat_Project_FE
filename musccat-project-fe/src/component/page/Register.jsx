@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
@@ -35,6 +35,7 @@ const Divider = styled.hr`
 const FormGroup = styled.div`
     display: flex;
     flex-direction: center;
+    align-items: center;
 
     label {
         flex: 1;
@@ -42,6 +43,7 @@ const FormGroup = styled.div`
         font-weight: bold;
         color: #348a8c;
         text-align: left;
+        padding-top: 5px;
     }
 
     input {
@@ -124,11 +126,15 @@ function Register() {
         birthYear: "2024",
         birthMonth: "01",
         birthDay: "01",
+        email: "",
+        verificationCode: ""  // 인증번호 입력 필드
 });
 
 const [usernameValid, setUsernameValid] = useState(true);
 const [passwordValid, setPasswordValid] = useState(true);
 const [passwordsMatch, setPasswordsMatch] = useState(true);
+const [timer, setTimer] = useState(null);  // 타이머를 저장할 상태
+const [timeLeft, setTimeLeft] = useState(120);  // 2분 (120초) 타이머
 
 const navigate = useNavigate();
 
@@ -169,14 +175,16 @@ const handleSubmit = (e) => {
         formData.nickname && 
         formData.birthYear && 
         formData.birthMonth && 
-        formData.birthDay;
+        formData.birthDay &&
+        formData.email;
+
 
     const fullName = formData.name;
     const userNickname = formData.nickname;
     const userBirthdate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`;
 
     if (usernameValid && passwordValid && passwordsMatch && allFieldsFilled) {
-        registerUser(formData.username, formData.password, formData.confirmPassword,fullName, userNickname, userBirthdate );
+        registerUser(formData.username, formData.password, formData.confirmPassword,fullName, userNickname, userBirthdate, formData.email );
         navigate('/'); // 로그인 전 메인페이지로 이동
     } else {
         console.log("InValid username or password / Passwords don't match / Some fields are empty");
@@ -196,7 +204,33 @@ const years = [];
     const days = [];
     for (let i = 1; i <= 31; i++) {
         days.push(String(i).padStart(2, "0"));
+}
+
+useEffect(() => {
+    if (timeLeft > 0 && timer !== null) {
+        const countdown = setTimeout(() => {
+            setTimeLeft(timeLeft - 1);
+        }, 1000);
+        return () => clearTimeout(countdown);
     }
+}, [timeLeft, timer]);
+
+const handleSendVerificationCode = async () => {
+    try {
+        setTimer(true);
+        setTimeLeft(120);  // 타이머를 다시 2분으로 설정
+
+        console.log("인증번호가 이메일로 전송되었습니다.");
+    } catch (error) {
+        console.error("인증번호 전송 중 오류 발생:", error);
+    }
+};
+
+const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+};
 
     return (
         <Page>
@@ -320,6 +354,57 @@ const years = [];
                     ))}
                 </select>
                 </BirthDateGroup>
+            </FormGroup>
+
+            <Space />
+
+            <FormGroup>
+                <label>이메일</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="이메일 입력"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                />
+            </FormGroup>
+
+            <Space />
+
+            <FormGroup style={{ justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <input
+                    type="text"
+                    name="verificationCode"
+                    placeholder="인증번호 입력"
+                    value={formData.verificationCode}
+                    onChange={handleChange}
+                    required
+                    style={{ flex: 1, marginRight: '10px' }}  // 입력칸의 크기를 조절하여 버튼과 동일한 줄에 배치
+                />
+                {timer && (
+                    <span style={{ marginRight: '10px', fontWeight: 'bold', color: '#348a8c' }}>
+                        {formatTime(timeLeft)}
+                    </span>
+                )}
+                <button type="button" 
+                    onClick={handleSendVerificationCode} 
+                    style={{ 
+                        backgroundColor: '#2f6877', 
+                        color: '#ffffff',
+                        border: 'none', 
+                        padding: '12px 10px', 
+                        borderRadius: '4px',
+                        marginLeft: '10px', // 입력칸과 버튼 사이의 간격 추가
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                    fontWeight: 'bold'
+                    }}
+                >
+                    인증번호 받기
+                </button>
+                </div>
             </FormGroup>
 
             <SubmitButton type="submit">가입하기</SubmitButton>

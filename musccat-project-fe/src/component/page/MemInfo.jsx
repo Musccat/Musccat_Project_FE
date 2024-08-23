@@ -127,10 +127,12 @@ const Space = styled.div`
 
 const MemInfo = () => {
     const navigate = useNavigate();
-    const { user, fetchUserData } = useAuth();
+    const { user, fetchUserData, updateUser } = useAuth();
     const [formData, setFormData] = useState({
         fullname: user?.fullname || '',
         dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
+        email: user?.email || '',
+        nickname: user?.userNickname || '',
         region: '',
         district: '',
         incomeBracket: '',
@@ -152,7 +154,9 @@ const MemInfo = () => {
                 setFormData({
                     ...formData,
                     fullname: user.fullName,
-                    dob: user.userBirthdate
+                    dob: user.userBirthdate,
+                    email: user.email,
+                    nickname: user.userNickname
                 });
             }
         };
@@ -181,9 +185,14 @@ const MemInfo = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+
+        // 수정된 사용자 정보를 서버에 업데이트
+        await updateUser({
+            nickname: formData.nickname // 수정된 닉네임 반영
+        });
         
         navigate("/users/mypage", { state: { infoSubmitted: true } });
     };
@@ -197,12 +206,27 @@ const MemInfo = () => {
             <form onSubmit={handleSubmit}>
             <FormGroup>
                     <label>이름</label>
-                    <div className="valueDisplay">{formData.fullname}</div>
+                    <div className="valueDisplay">{user?.fullname}</div>
                 </FormGroup>
 
                 <FormGroup>
                     <label>생년월일</label>
-                    <div className="valueDisplay">{formData.dob}</div>
+                    <div className="valueDisplay">{user?.dob}</div>
+                </FormGroup>
+
+                <FormGroup>
+                    <label>이메일</label>
+                    <div className="valueDisplay">{user?.email}</div>
+                </FormGroup>
+
+                <FormGroup>
+                    <label>닉네임</label>
+                    <input 
+                        type="text" 
+                        name="nickname" 
+                        value={user?.nickname} 
+                        onChange={handleChange} 
+                    />
                 </FormGroup>
 
                 <FormGroup>

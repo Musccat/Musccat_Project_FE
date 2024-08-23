@@ -47,6 +47,27 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = async (updatedData) => {
+        try {
+            const response = await axios.put('http://127.0.0.1:8000/users/mypage/', updatedData, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+            if (response.status === 200) {
+                setUser({
+                    ...user,
+                    ...updatedData
+                });
+                await fetchUserData(); // 변경된 데이터로 사용자 정보 갱신
+            } else {
+                alert("사용자 정보를 업데이트하는 데 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("사용자 정보 업데이트 중 오류 발생", error);
+        }
+    };
+
     const fetchScholarships = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/entirescholar/");
@@ -79,7 +100,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate) => {
+    const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate, email) => {
         try {
             const response = await axios.post("http://127.0.0.1:8000/users/register/", {
                 username,
@@ -87,7 +108,8 @@ export const AuthProvider = ({ children }) => {
                 password2,
                 nickname: userNickname,
                 birth: userBirthdate,
-                fullname: fullName
+                fullname: fullName,
+                email: email
             });
 
             if (response.status === 201) {
@@ -170,6 +192,7 @@ export const AuthProvider = ({ children }) => {
         loginUser,
         registerUser,
         fetchUserData,
+        updateUser,
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
