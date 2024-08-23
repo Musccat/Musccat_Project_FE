@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     };
     const fetchFoundations = async () => {
         try {
-            const response = await axios.get("http://127.0.0.1:8000/beneinforegister/", {
+            const response = await axios.get("http://127.0.0.1:8000/reviews/foundations", {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchScholarshipsByFoundation = async (foundationName) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/beneinforegister/${foundationName}/`, {
+            const response = await axios.get(`http://127.0.0.1:8000/reviews/scholarships/${foundationName}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
 
     const addBenefitInfo = async (product_id, info) => {
         try {
-            const response = await axios.post(`http://127.0.0.1:8000/benefitinfo/${product_id}/`, info, {
+            const response = await axios.post(`http://127.0.0.1:8000/reviews/${product_id}/`, info, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
