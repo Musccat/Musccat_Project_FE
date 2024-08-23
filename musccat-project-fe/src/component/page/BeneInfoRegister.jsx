@@ -4,6 +4,7 @@ import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import scholarships from "../data/scholarshipdata";
+import Select from 'react-select';
 
 const PageWrapper = styled.div`
     padding: 20px;
@@ -37,13 +38,8 @@ const Label = styled.label`
     font-weight: bold;
     color: #333;
 `;
-
-const Select = styled.select`
+const StyledSelect = styled(Select)`
     flex: 1;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 14px;
 `;
 
 const TextArea = styled.textarea`
@@ -81,62 +77,88 @@ const SubmitButton = styled.button`
 `;
 
 const BeneInfoRegister = () => {
-    const [searchScholar, setSearchScholar] = useState("");
-    const [scholarshipName, setScholarshipName] = useState([]);
-    const [businessName, setBusinessName] = useState("");
+    const [selectedFoundation, setSelectedFoundation] = useState("");
+    const [scholarshipOptions, setScholarshipOptions] = useState([]);
+    const [selectedScholarship, setSelectedScholarship] = useState("");
     const [year, setYear] = useState("");
     const [advice, setAdvice] = useState("");
     const [interviewTip, setInterviewTip] = useState("");
     const [isFormValid, setIsFormValid] = useState(false); 
 
-    const { addBenefitInfo } = useAuth();
+    const { addBenefitInfo, fetchScholarshipsByFoundation } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
-        const isValid = searchScholar.trim() !== "" &&
-                        businessName.trim() !== "" &&
+        const isValid =  
+                        selectedFoundation !== null &&
+                        selectedFoundation.label &&
+                        selectedFoundation.label.trim() !== "" &&
+                        selectedScholarship.trim() !== "" &&
                         year.trim() !== "" &&
                         advice.trim() !== "" &&
                         interviewTip.trim() !== "";
 
         setIsFormValid(isValid);
-    }, [searchScholar, businessName, year, advice, interviewTip]); 
+    }, [selectedFoundation, selectedScholarship, year, advice, interviewTip]); 
 
-    const handleSearch = () => {
-        const filtered = scholarships.filter(scholarship =>
-            scholarship.foundation_name.toLowerCase().includes(searchScholar.toLowerCase())
-        );
-        setScholarshipName(filtered);
-        if (filtered.length > 0) {
-            setBusinessName(filtered[0].name); // Automatically select the first matching business name
+
+    const handleFoundationChange = async (selectedOption) => {
+        setSelectedFoundation(selectedOption);
+        setSelectedScholarship("");
+
+        if (selectedOption) {
+            const scholarships = await fetchScholarshipsByFoundation(selectedOption.value);
+            setScholarshipOptions(
+                scholarships.map(scholarship => ({
+                    value: scholarship.name,
+                    label: scholarship.name,
+                }))
+            );
         } else {
-            setBusinessName("");
+            setScholarshipOptions([]);
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!selectedFoundation || !selectedScholarship) {
+            alert("모든 필드를 입력해주세요.");
+            return;
+        }
+
         const info = {
-            foundation_name: searchScholar,
-            name: businessName,
+            foundation_name: selectedFoundation,
+            name: selectedScholarship,
             year,
             basicInfo: "", 
             advice,
             interviewTip,
         };
 
-        const product_id = scholarshipName.length > 0 ? scholarshipName[0].product_id : ""; // 첫 번째 장학금 ID 사용
+        const selectedScholarshipData = scholarships.find(
+            (scholarship) => scholarship.name === selectedScholarship
+        );
 
-        if (product_id) {
+        if (selectedScholarshipData) {
+            const product_id = selectedScholarshipData.product_id;
             await addBenefitInfo(product_id, info); // addBenefitInfo 함수 호출
-            navigate(-1);  // 이전 페이지로 이동
+            navigate(-1); // 이전 페이지로 이동
         } else {
             alert("장학 수혜 정보를 모두 입력해주세요.");
         }
-
     };
+
+
+    const foundationOptions = [
+        ...new Set(
+            scholarships.map((scholarship) => ({
+                value: scholarship.foundation_name,
+                label: scholarship.foundation_name,
+            }))
+        ),
+    ];
 
 
     return (
@@ -146,49 +168,64 @@ const BeneInfoRegister = () => {
         <Title>장학 수혜 정보 입력</Title>
         <FormContainer>
             <FormRow>
-            <Label htmlFor="scholarshipSearch">장학 재단명</Label>
-                        <Input
-                            id="scholarshipSearch"
-                            type="text"
-                            value={searchScholar}
-                            onChange={(e) => setSearchScholar(e.target.value)}
-                            placeholder="장학 재단명을 입력하세요"
-                        />
-                        <SubmitButton type="button" onClick={handleSearch}>검색</SubmitButton>
+                <Label htmlFor="foundationSelect">장학 재단명</Label>
+                <StyledSelect
+                    id="foundationSelect"
+                    value={selectedFoundation}
+                    onChange={handleFoundationChange}
+                    options={foundationOptions}
+                    placeholder="장학 재단명을 선택하세요"
+                    isSearchable
+                />
             </FormRow>
 
             <FormRow>
-            <Label htmlFor="scholarshipBusiness">장학 사업명</Label>
-                <Select
-                    id="scholarshipBusiness"
-                    name="scholarshipBusiness"
-                    value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
-                >
-                    {scholarshipName.map(scholarship => (
-                    <option key={scholarship.product_id} value={scholarship.name}>
-                    {scholarship.name}
-                    </option>
-                ))}
-                </Select>
+                <Label htmlFor="scholarshipSelect">장학 사업명</Label>
+                <StyledSelect
+                    id="scholarshipSelect"
+                    value={
+                        selectedScholarship
+                            ? { label: selectedScholarship, value: selectedScholarship }
+                            : null
+                    }
+                    onChange={(option) => setSelectedScholarship(option?.value || "")}
+                    options={scholarshipOptions}
+                    placeholder="장학 사업명을 선택하세요"
+                    isDisabled={!selectedFoundation}
+                    isSearchable
+                />
             </FormRow>
 
             <FormRow>
-            <Label htmlFor="year">수혜 년도</Label>
-            <Select id="year" name="year" value={year} onChange={(e) => setYear(e.target.value)}>
-                <option value="">수혜 년도 선택</option>  {/* 기본 빈 옵션 추가 */}
-                <option value="2021">2021</option>
-            </Select>
+                <Label htmlFor="year">수혜 년도</Label>
+                <Input
+                    id="year"
+                    name="year"
+                    type="text"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    placeholder="수혜 년도를 입력하세요"
+                />
             </FormRow>
 
             <FormRow>
-            <Label htmlFor="advice">합격 팁</Label>
-            <TextArea id="advice" name="advice" value={advice} onChange={(e) => setAdvice(e.target.value)} />
+                <Label htmlFor="advice">합격 팁</Label>
+                <TextArea
+                    id="advice"
+                    name="advice"
+                    value={advice}
+                    onChange={(e) => setAdvice(e.target.value)}
+                />
             </FormRow>
 
             <FormRow>
             <Label htmlFor="interview">면접 팁</Label>
-            <TextArea id="interview" name="interview" value={interviewTip} onChange={(e) => setInterviewTip(e.target.value)} />
+                <TextArea 
+                    id="interview"
+                    name="interview" 
+                    value={interviewTip} 
+                    onChange={(e) => setInterviewTip(e.target.value)} 
+                />
             </FormRow>
 
             <ButtonContainer>

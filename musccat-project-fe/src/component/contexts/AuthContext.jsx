@@ -80,6 +80,20 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const fetchScholarshipsByFoundation = async (foundationName) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/scholarships/${foundationName}/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Failed to fetch scholarships by foundation", error);
+            return [];
+        }
+    };
+
     const fetchScholarships = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/entirescholar/");
@@ -213,6 +227,7 @@ export const AuthProvider = ({ children }) => {
         likes,
         setLikes,
         fetchScholarships,
+        fetchScholarshipsByFoundation,
     };
 
 /*
