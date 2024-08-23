@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
@@ -155,11 +155,13 @@ const ActionButton = styled.button`
 
 const MyPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { user, fetchUserData } = useAuth();
 
     const [fullName, setFullName] = useState('');
     const [userNickname, setUserNickname] = useState('');
     const [userBirthdate, setUserBirthdate] = useState('');
+    const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -176,6 +178,16 @@ const MyPage = () => {
         }
     }, [user]);
 
+    useEffect(() => {
+        if (location.state && location.state.infoSubmitted) {
+            setIsInfoSubmitted(true);
+        }
+    }, [location.state]);
+
+    const handleNewInfoClick = () => {
+        navigate("/users/meminfo");
+    };
+
     return (
         <>
             <NavBar />
@@ -191,7 +203,9 @@ const MyPage = () => {
                         <NormalText> 님의 마이페이지</NormalText>
                         </UserName>
                     <ButtonGroup>
-                        <Button >기본 정보 수정</Button>
+                        <Button onClick={handleNewInfoClick}>
+                            {isInfoSubmitted ? '기본 정보 수정' : '신규 정보 입력'}
+                        </Button>
                         <Button>수혜 정보 제출</Button>
                         <Button>내 관심목록</Button>
                     </ButtonGroup>

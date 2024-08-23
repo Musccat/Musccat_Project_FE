@@ -20,7 +20,6 @@ import RecomScholar from './component/page/RecomScholar';
 import Notice from './component/page/Notice';
 import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
-import MemInfoFirst from './component/page/MemInfoFirst';
 import BenefitInfo from './component/page/BenefitInfo';
 import BeneInfoRegister from './component/page/BeneInfoRegister';
 
@@ -44,8 +43,7 @@ function App() {
           <Route path="/users/register" element={<Register />} /> {/*회원가입 페이지 */}
           <Route path="/main" element={<MainPage />} /> {/*메인 페이지 */}
           <Route path="/users/mypage" element={<MyPage />} /> {/*마이 페이지 */}
-          <Route path="/meminfo" element={<MemInfo />}/> {/*개인정보 신규 입력 페이지 */}
-          <Route path="/meminfofirst" element={<MemInfoFirst />}/> {/*장학 정보 신규 입력 페이지 */}
+          <Route path="/users/meminfo" element={<MemInfo />}/> {/*개인정보 신규 입력 페이지 */}
           <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/notice" element={<Notice />} /> {/*장학금 공고 페이지 */}
