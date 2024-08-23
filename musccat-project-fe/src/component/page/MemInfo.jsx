@@ -156,22 +156,26 @@ const MemInfo = () => {
     });
 
     useEffect(() => {
-        const isFormValid = () => {
-            // Check all fields in formData are not empty or invalid
-            const requiredFields = [
-                'nickname',
-                'region',
-                'district',
-                'incomeBracket',
-                'applicantCategory',
-                'school',
-                'major',
-                'year',
-                'semester',
-                'currentGPA',
-                'totalGPA',
-                'familyStatus'
-            ];
+        if (isInfoSubmitted) {
+            // 기존 정보 수정 시 이미 모든 필드가 채워져 있으므로 폼을 유효하다고 설정
+            setFormValid(true);
+        } else {
+            // 신규 정보 입력 시 모든 필드가 채워져 있는지 확인
+            const isFormValid = () => {
+                const requiredFields = [
+                    'nickname',
+                    'region',
+                    'district',
+                    'incomeBracket',
+                    'applicantCategory',
+                    'school',
+                    'major',
+                    'year',
+                    'semester',
+                    'currentGPA',
+                    'totalGPA',
+                    'familyStatus'
+                ];
             
             return requiredFields.every(field => {
                 if (Array.isArray(formData[field])) {
@@ -182,7 +186,8 @@ const MemInfo = () => {
         };
     
         setFormValid(isFormValid());
-    }, [formData]);
+        }
+    }, [formData, isInfoSubmitted]);
     
 
     useEffect(() => {
@@ -194,7 +199,7 @@ const MemInfo = () => {
                     fullname: user.fullName,
                     dob: user.userBirthdate,
                     email: user.email,
-                    nickname: user.userNickname,
+                    nickname: user.userNickname || '',
                     region: user.region || '',
                     district: user.district || '',
                     incomeBracket: user.incomeBracket || '',
