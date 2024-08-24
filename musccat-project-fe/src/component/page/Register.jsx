@@ -170,7 +170,15 @@ const handleChange = (e) => { // 사용자 입력값 업데이트
     // 이메일 형식 확인
     if (name === "email") {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const isEmailValid = emailPattern.test(value);
         setEmailValid(emailPattern.test(value));
+
+        // 이메일이 유효하지 않다면 타이머를 중지하고 초기화
+        if (!isEmailValid && timer) {
+            clearTimeout(timer);
+            setTimer(null);
+            setTimeLeft(120);
+        }
     }
 };
 
