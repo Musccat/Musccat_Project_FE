@@ -173,8 +173,7 @@ const MemInfo = () => {
                     'year',
                     'semester',
                     'currentGPA',
-                    'totalGPA',
-                    'familyStatus'
+                    'totalGPA'
                 ];
             
             return requiredFields.every(field => {
