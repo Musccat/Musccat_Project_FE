@@ -101,15 +101,20 @@ const BirthDateGroup = styled.div`
 const SubmitButton = styled.button`
     width: 100%;
     padding: 15px;
-    background-color: #348a8c;
+    background-color: ${(props) => (props.disabled ? '#b0b0b0' : '#348a8c')};
     color: white;
     border: none;
     border-radius: 4px;
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     margin-top: 20px;
+
+    &:hover {
+        background-color: ${(props) => (props.disabled ? '#b0b0b0' : '#267073')};
+    }
 `;
+
 
 const Space = styled.div`
     margin-top: 20px;
@@ -133,8 +138,10 @@ function Register() {
 const [usernameValid, setUsernameValid] = useState(true);
 const [passwordValid, setPasswordValid] = useState(true);
 const [passwordsMatch, setPasswordsMatch] = useState(true);
+const [emailValid, setEmailValid] = useState(false);
 const [timer, setTimer] = useState(null);  // 타이머를 저장할 상태
 const [timeLeft, setTimeLeft] = useState(120);  // 2분 (120초) 타이머
+const [formValid, setFormValid] = useState(false);
 
 const navigate = useNavigate();
 
@@ -157,41 +164,51 @@ const handleChange = (e) => { // 사용자 입력값 업데이트
 
     // 비밀번호와 비밀번호 확인 일치 여부 확인
     if (name === "password" || name === "confirmPassword") {
-        setPasswordsMatch(formData.password === value || formData.confirmPassword === value);
+        setPasswordsMatch(value === (name === "password" ? formData.confirmPassword : formData.password));
     }
 
-
-
-};
-const handleSubmit = (e) => { 
-    e.preventDefault();
-
-    // 모든 필드가 채워졌는지 확인
-    const allFieldsFilled = 
-        formData.username && 
-        formData.password && 
-        formData.confirmPassword && 
-        formData.name && 
-        formData.nickname && 
-        formData.birthYear && 
-        formData.birthMonth && 
-        formData.birthDay &&
-        formData.email;
-
-
-    const fullName = formData.name;
-    const userNickname = formData.nickname;
-    const userBirthdate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`;
-
-    if (usernameValid && passwordValid && passwordsMatch && allFieldsFilled) {
-        registerUser(formData.username, formData.password, formData.confirmPassword,fullName, userNickname, userBirthdate, formData.email );
-        navigate('/'); // 로그인 전 메인페이지로 이동
-    } else {
-        console.log("InValid username or password / Passwords don't match / Some fields are empty");
+    // 이메일 형식 확인
+    if (name === "email") {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setEmailValid(emailPattern.test(value));
     }
 };
 
-const years = [];
+    useEffect(() => {
+        // 모든 필드가 채워졌는지 확인
+        const allFieldsFilled = 
+            formData.username && 
+            formData.password && 
+            formData.confirmPassword && 
+            formData.name && 
+            formData.nickname && 
+            formData.birthYear && 
+            formData.birthMonth && 
+            formData.birthDay &&
+            formData.email &&
+            formData.verificationCode;
+
+        const formIsValid = usernameValid && passwordValid && passwordsMatch && emailValid && allFieldsFilled;
+
+        setFormValid(formIsValid);
+    }, [formData, usernameValid, passwordValid, passwordsMatch, emailValid]);
+
+    const handleSubmit = (e) => { 
+        e.preventDefault();
+
+        const fullName = formData.name;
+        const userNickname = formData.nickname;
+        const userBirthdate = `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`;
+
+        if (formValid) {
+            registerUser(formData.username, formData.password, formData.confirmPassword, fullName, userNickname, userBirthdate, formData.email);
+            navigate('/'); // 로그인 전 메인페이지로 이동
+        } else {
+            console.log("Invalid form submission");
+        }
+    };
+
+    const years = [];
     for (let i = 1910; i <= 2024; i++) {
         years.push(i);
     }
@@ -204,33 +221,33 @@ const years = [];
     const days = [];
     for (let i = 1; i <= 31; i++) {
         days.push(String(i).padStart(2, "0"));
-}
-
-useEffect(() => {
-    if (timeLeft > 0 && timer !== null) {
-        const countdown = setTimeout(() => {
-            setTimeLeft(timeLeft - 1);
-        }, 1000);
-        return () => clearTimeout(countdown);
     }
-}, [timeLeft, timer]);
 
-const handleSendVerificationCode = async () => {
-    try {
-        setTimer(true);
-        setTimeLeft(120);  // 타이머를 다시 2분으로 설정
+    useEffect(() => {
+        if (timeLeft > 0 && timer !== null) {
+            const countdown = setTimeout(() => {
+                setTimeLeft(timeLeft - 1);
+            }, 1000);
+            return () => clearTimeout(countdown);
+        }
+    }, [timeLeft, timer]);
 
-        console.log("인증번호가 이메일로 전송되었습니다.");
-    } catch (error) {
-        console.error("인증번호 전송 중 오류 발생:", error);
-    }
-};
+    const handleSendVerificationCode = async () => {
+        try {
+            setTimer(true);
+            setTimeLeft(120);  // 타이머를 다시 2분으로 설정
 
-const formatTime = (seconds) => {
-    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const sec = String(seconds % 60).padStart(2, '0');
-    return `${min}:${sec}`;
-};
+            console.log("인증번호가 이메일로 전송되었습니다.");
+        } catch (error) {
+            console.error("인증번호 전송 중 오류 발생:", error);
+        }
+    };
+
+    const formatTime = (seconds) => {
+        const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const sec = String(seconds % 60).padStart(2, '0');
+        return `${min}:${sec}`;
+    };
 
     return (
         <Page>
@@ -390,16 +407,17 @@ const formatTime = (seconds) => {
                 )}
                 <button type="button" 
                     onClick={handleSendVerificationCode} 
+                    disabled={!emailValid}  // 이메일 유효성에 따라 버튼 활성화 여부 결정
                     style={{ 
-                        backgroundColor: '#2f6877', 
+                        backgroundColor: emailValid ? '#2f6877' : '#b0b0b0',
                         color: '#ffffff',
                         border: 'none', 
                         padding: '12px 10px', 
                         borderRadius: '4px',
                         marginLeft: '10px', // 입력칸과 버튼 사이의 간격 추가
-                        cursor: 'pointer',
+                        cursor: emailValid ? 'pointer' : 'not-allowed',
                         fontSize: '12px',
-                    fontWeight: 'bold'
+                        fontWeight: 'bold'
                     }}
                 >
                     인증번호 받기
@@ -407,7 +425,9 @@ const formatTime = (seconds) => {
                 </div>
             </FormGroup>
 
-            <SubmitButton type="submit">가입하기</SubmitButton>
+            <SubmitButton type="submit" disabled={!formValid}>
+                가입하기
+            </SubmitButton>
             </form>
         </Container>
         </Page>
