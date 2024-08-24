@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from '../ui/SCHOLLI_logo.jpeg';
 import { useAuth } from '../contexts/AuthContext';
+import LogoutModal from './LogoutPopup';
 
 
 const NavBarWrapper = styled.div`
@@ -75,16 +76,27 @@ const LogoutButton = styled.button`
 function NavBar() {
     const navigate = useNavigate();
     const { logoutUser } = useAuth();
+    const [showModal, setShowModal] = useState(false);
 
     const handleLogoClick = () => {
         navigate('/main');
     };
 
-    const handleLogout = () => {
-        logoutUser(); // Call the logout function to log the user out
+    const handleLogoutClick = () => {
+        setShowModal(true);
+    };
+
+    const handleConfirmLogout = () => {
+        logoutUser();
+        setShowModal(false);
+    };
+
+    const handleCancelLogout = () => {
+        setShowModal(false);
     };
 
     return (
+        <>
         <NavBarWrapper>
             <Logo onClick={handleLogoClick}>
                 <img src={logo} alt="Logo" />
@@ -96,10 +108,17 @@ function NavBar() {
                 <Link to={"/interestlist"}>내 관심 목록</Link>
                 <Link to={"/users/mypage"}>마이페이지</Link>
                 <Link to={"/points"}>포인트</Link>
-                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+                <LogoutButton onClick={handleLogoutClick}>로그아웃</LogoutButton>
             </NavLinks>
             </NavContainer>
-        </NavBarWrapper>
+            </NavBarWrapper>
+            {showModal && (
+                <LogoutModal 
+                    onConfirm={handleConfirmLogout} 
+                    onCancel={handleCancelLogout} 
+                />
+            )}
+        </>
     );
 }
 
