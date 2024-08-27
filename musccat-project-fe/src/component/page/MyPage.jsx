@@ -218,7 +218,7 @@ const MyPage = () => {
                         <Button onClick={handleNewInfoClick}>
                             {isInfoSubmitted ? '기본 정보 수정' : '신규 정보 입력'}
                         </Button>
-                        <Button>수혜 정보 제출</Button>
+                        <Button onClick={() => navigate('/reviews')}>수혜 정보 제출</Button>
                         <Button>내 관심목록</Button>
                     </ButtonGroup>
                 </UserInfo>
