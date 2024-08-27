@@ -338,9 +338,13 @@ const MemInfo = () => {
                         value={formData.applicantCategory} 
                         onChange={handleChange}>
                         <option value="">지원 계열을 선택하세요</option>
-                        <option value="인문계">인문계</option>
-                        <option value="이공계">이공계</option>
-                        <option value="예체능계">예체능계</option>
+                        <option value="인문계">공학계열</option>
+                        <option value="인문계">교육계열</option>
+                        <option value="인문계">사회계열</option>
+                        <option value="인문계">예체능계열</option>
+                        <option value="인문계">의약계열</option>
+                        <option value="이공계">인문계열</option>
+                        <option value="이공계">자연계열</option>
                     </select>
                 </FormGroup>
 
@@ -389,7 +393,7 @@ const MemInfo = () => {
                         onChange={handleChange}>
                         <option value="">수료 학기 선택</option>
                         {Array.from({ length: 8 }, (_, i) => {
-                        const semester = `${i + 1}학기`;
+                        const semester = `${i + 1} 학기`;
                         if (semester) {
                             return <option key={semester} value={semester}>{semester}</option>;
                         }
