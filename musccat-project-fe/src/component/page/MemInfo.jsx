@@ -344,6 +344,7 @@ const MemInfo = () => {
                         <option value="예체능계열">예체능계열</option>
                         <option value="의약계열">의약계열</option>
                         <option value="인문계열">인문계열</option>
+                        <option value="자연계열">자연계열</option>
                     </select>
                 </FormGroup>
 
