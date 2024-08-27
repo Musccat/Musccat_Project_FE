@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
-import LightBulb from '../ui/LightBulb.jpeg';
 import { useAuth } from '../contexts/AuthContext';
 
 const styles = {
@@ -130,12 +129,13 @@ const ScholarshipLink = styled(Link)`
 
 const SortButtonContainer = styled.div`
     position: relative;
+    margin-right: 10px;
 `;
 
 const SortButton = styled.button`
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #348a8c;
+    background-color: ${props => props.bgColor || "#348a8c"};
     color: white;
     border: none;
     border-radius: 4px;
@@ -194,6 +194,10 @@ const [dropdownVisible, setDropdownVisible] = useState(false);
 const [sortOption, setSortOption] = useState('기한 순');
 const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
 
+const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
+const [typeOption, setTypeOption] = useState('장학금 전체');
+const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
+
 const { user } = useAuth(); // Retrieve user from the context
 const userNickname = user ? user.userNickname : '사용자';
 
@@ -201,10 +205,20 @@ const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
 };
 
+const toggleTypeDropdown = () => {
+    setTypeDropdownVisible(!typeDropdownVisible);
+};
+
 const handleSortOptionClick = (option) => {
     setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
     setSortOption(option);
     setDropdownVisible(false);
+};
+
+const handleTypeOptionClick = (option) => {
+    setTypeOptions([typeOption, ...typeOptions.filter(opt => opt !== option)]);
+    setTypeOption(option);
+    setTypeDropdownVisible(false);
 };
 
 // 좋아요 버튼 클릭 핸들러
@@ -223,6 +237,23 @@ return (
                 <div style={styles.outerContainer}>
                     <h1 style={styles.header}><span style={styles.highlight}>{userNickname}</span> 님의 추천 장학금</h1>
                     <div style={styles.buttonContainer}>
+                    <SortButtonContainer>
+                        <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
+                            {typeOption} ▼
+                        </SortButton>
+                        {typeDropdownVisible && (
+                            <Dropdown>
+                                {typeOptions.map((option, index) => (
+                                    <DropdownItem
+                                        key={index}
+                                        onClick={() => handleTypeOptionClick(option)}
+                                    >
+                                        {option}
+                                    </DropdownItem>
+                                 ))}
+                            </Dropdown>
+                            )}
+                        </SortButtonContainer>
                         <SortButtonContainer>
                             <SortButton onClick={toggleDropdown}>
                                 {sortOption} ▼

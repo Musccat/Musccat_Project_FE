@@ -155,12 +155,13 @@ const ScholarshipLink = styled(Link)`
 
 const SortButtonContainer = styled.div`
     position: relative;
+    margin-right: 10px;
 `;
 
 const SortButton = styled.button`
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #348a8c;
+    background-color: ${props => props.bgColor || "#348a8c"};
     color: white;
     border: none;
     border-radius: 4px;
@@ -175,12 +176,30 @@ const DropdownItem = styled.div`
     white-space: nowrap;
 `;
 
+const Dropdown = styled.div`
+    position: absolute;
+    top: calc(100% + 4px); 
+    left: 0;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 3;
+    border-radius: 4px;
+    overflow-y: auto;
+    max-height: 200px;
+    width: max-content;
+`;
+
 function EntireScholar(props) {
     // 상태 관리
     const { fetchScholarships, likes, setLikes, scholarships } = useAuth();
     const [dropdownVisible, setDropdownVisible] = useState(false);
+
     const [sortOption, setSortOption] = useState('기한 순');
     const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
+
+    const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
+    const [typeOption, setTypeOption] = useState('장학금 전체');
+    const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
 
     useEffect(() => {
         fetchScholarships();
@@ -190,10 +209,20 @@ function EntireScholar(props) {
         setDropdownVisible(!dropdownVisible);
     };
 
+    const toggleTypeDropdown = () => {
+        setTypeDropdownVisible(!typeDropdownVisible);
+    };
+
     const handleSortOptionClick = (option) => {
         setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
         setSortOption(option);
         setDropdownVisible(false);
+    };
+
+    const handleTypeOptionClick = (option) => {
+        setTypeOptions([typeOption, ...typeOptions.filter(opt => opt !== option)]);
+        setTypeOption(option);
+        setTypeDropdownVisible(false);
     };
 
     const handleLikeClick = (index) => {
@@ -213,6 +242,23 @@ function EntireScholar(props) {
                     </div>
                 </div>
             <div style={styles.buttonContainer}>
+                <SortButtonContainer>
+                    <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
+                            {typeOption} ▼
+                        </SortButton>
+                        {typeDropdownVisible && (
+                             <Dropdown>
+                                {typeOptions.map((option, index) => (
+                                    <DropdownItem
+                                        key={index}
+                                        onClick={() => handleTypeOptionClick(option)}
+                                    >
+                                        {option}
+                                    </DropdownItem>
+                                ))}
+                            </Dropdown>
+                        )}
+                </SortButtonContainer>
                 <SortButtonContainer>
                     <SortButton onClick={toggleDropdown}>
                         {sortOption} ▼

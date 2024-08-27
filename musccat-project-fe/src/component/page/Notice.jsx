@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import NavBar from '../ui/NavBar';
 import Loudspeaker from '../ui/Loudspeaker.jpeg';
-import LightBulb from '../ui/LightBulb.jpeg';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 
