@@ -50,6 +50,44 @@ const Label = styled.label`
         margin-left: 4px; /* 텍스트와 * 사이에 약간의 여백 추가 */
     }
 `;
+
+const Note = styled.p`
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 0;
+`;
+
+const NoteContainer = styled.div`
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center;
+    margin-left: 200px;
+`;
+const NoteContainer2 = styled.div`
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center;
+    margin-left: 200px;
+`;
+
+const LinkContainer = styled.div`
+    margin-top: 5px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 210px;
+`;
+
+const StyledLink = styled.a`
+    font-size: 0.8em;
+    color: #348a8c;
+    text-decoration: underline;
+`;
+
 const StyledSelect = styled(Select)`
     flex: 1;
 `;
@@ -105,7 +143,7 @@ const BeneInfoRegister = () => {
     const [interviewTip, setInterviewTip] = useState("");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false); 
 
-    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -159,6 +197,24 @@ const BeneInfoRegister = () => {
         }
     };
 
+    const handleTotalGPAChange = (e) => {
+        let value = e.target.value;
+    
+        // 음수값 또는 4.5 이상일 경우 값을 빈 값으로 설정
+        if (value < 0 || value > 4.5) {
+            setTotalGPA("");
+        } else {
+            // 소수점 둘째 자리까지만 유지
+            if (value.includes('.')) {
+                const [integerPart, decimalPart] = value.split('.');
+                if (decimalPart.length > 2) {
+                    value = `${integerPart}.${decimalPart.substring(0, 2)}`;
+                }
+            }
+            setTotalGPA(value);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -167,31 +223,69 @@ const BeneInfoRegister = () => {
             return;
         }
 
-        const info = {
-            foundation_name: selectedFoundation,
-            name: selectedScholarship,
-            incomeBracket,
-            totalGPA,
-            univCategory,
-            semesterCategory,
-            majorCategory,
-            year, 
-            advice,
-            interviewTip,
-        };
-
         const selectedScholarshipData = scholarshipOptions.find(
             (scholarship) => scholarship.value === selectedScholarship
         );
 
         if (selectedScholarshipData) {
-            const product_id = selectedScholarshipData.product_id;
-            await addBenefitInfo(product_id, info); // addBenefitInfo 함수 호출
+            const info = {
+                user: {
+                    id: user.id, // 로그인된 사용자의 ID를 사용
+                    nickname: user.nickname // 로그인된 사용자의 닉네임을 사용
+                },
+                scholarship: {
+                    id: selectedScholarshipData.product_id,
+                    foundation_name: selectedFoundation.label,
+                    name: selectedScholarshipData.value
+                },
+                incomeBracket: `${incomeBracket} 분위`,
+                totalGPA,
+                univCategory,
+                semesterCategory,
+                majorCategory,
+                year: parseInt(year, 10), 
+                advice,
+                interviewTip,
+            };
+
+            await addBenefitInfo(selectedScholarshipData.product_id, info); // addBenefitInfo 함수 호출
             navigate(-1); // 이전 페이지로 이동
         } else {
             alert("장학 수혜 정보를 모두 입력해주세요.");
         }
     };
+
+
+    const incomeBracketOptions = Array.from({length: 10}, (_, i) => ({ 
+        value: `${i + 1}`, 
+        label: `${i + 1}분위` 
+    }));
+
+    const univCategoryOptions = [
+        { value: '4년제(5~6년제)', label: '4년제(5~6년제)' },
+        { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
+        { value: '해외대학', label: '해외대학' },
+        {value: '학점은행제 대학', label: '학점은행제 대학'},
+        {value: '원격대학', label: '원격대학'},
+        {value: '기술대학', label: '기술대학'}
+        
+    ];
+
+    const semesterCategoryOptions = [
+        { value: '대학신입생', label: '대학신입생' },
+        ...Array.from({ length: 9 }, (_, i) => ({ value: `${i + 2}학기`, label: `${i + 2}학기` })),
+        { value: '대학 8학기이상', label: '대학 8학기이상' }
+    ];
+
+    const majorCategoryOptions = [
+        { value: '공학계열', label: '공학계열' },
+        { value: '교육계열', label: '교육계열' },
+        { value: '사회계열', label: '사회계열' },
+        { value: '예체능계열', label: '예체능계열' },
+        { value: '의약계열', label: '의약계열' },
+        { value: '인문계열', label: '인문계열' },
+        { value: '자연계열', label: '자연계열' }
+    ];
 
     return (
         <>
@@ -240,7 +334,7 @@ const BeneInfoRegister = () => {
                 <Input
                     id="year"
                     name="year"
-                    type="text"
+                    type="number"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     placeholder="수혜 년도를 입력하세요"
@@ -249,61 +343,72 @@ const BeneInfoRegister = () => {
 
                     <FormRow>
                         <Label htmlFor="incomeBracket">수혜 당시 소득 분위</Label>
-                        <Input
+                        <StyledSelect
                             id="incomeBracket"
-                            name="incomeBracket"
-                            type="text"
-                            value={incomeBracket}
-                            onChange={(e) => setIncomeBracket(e.target.value)}
-                            placeholder="수혜 당시 소득 분위"
+                            value={incomeBracket ? { label: `${incomeBracket} 분위`, value: incomeBracket } : null}
+                            onChange={(option) => setIncomeBracket(option?.value || "")}
+                            options={incomeBracketOptions}
+                            placeholder="소득 분위 선택"
                         />
                     </FormRow>
+
+                    <LinkContainer>
+                        <StyledLink href="https://portal.kosaf.go.kr/CO/jspAction.do?forwardOnlyFlag=Y&forwardPage=pt/sm/custdsgn/PTSMIncpSmltMngt_01P&ignoreSession=Y" target="_blank" rel="noopener noreferrer">
+                            소득 분위 정보 확인
+                        </StyledLink>
+                    </LinkContainer>
 
                     <FormRow>
                         <Label htmlFor="totalGPA">수혜 당시 전체 성적</Label>
                         <Input
                             id="totalGPA"
                             name="totalGPA"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             value={totalGPA}
-                            onChange={(e) => setTotalGPA(e.target.value)}
+                            onChange={handleTotalGPAChange}
                             placeholder="수혜 당시 전체 성적"
                         />
                     </FormRow>
 
+                    <NoteContainer>
+                        <Note>* 직전 학기 성적과 전체 성적은 4.5 만점을 기준으로 함.</Note>
+                    </NoteContainer>
+                    <NoteContainer2>
+                        <Note>* 소수점 둘째 자리까지 입력 가능</Note>
+                    </NoteContainer2>
+
                     <FormRow>
                         <Label htmlFor="univCategory">대학 유형</Label>
-                        <Input
+                        <StyledSelect
                             id="univCategory"
-                            name="univCategory"
-                            type="text"
-                            value={univCategory}
-                            onChange={(e) => setUnivCategory(e.target.value)}
-                            placeholder="대학 유형 구분"
+                            value={univCategory ? { label: univCategory, value: univCategory } : null}
+                            onChange={(option) => setUnivCategory(option?.value || "")}
+                            options={univCategoryOptions}
+                            placeholder="대학 유형 선택"
                         />
                     </FormRow>
 
                     <FormRow>
                         <Label htmlFor="semesterCategory">수혜 당시 수료 학기</Label>
-                        <Input
+                        <StyledSelect
                             id="semesterCategory"
-                            name="semesterCategory"
-                            type="text"
-                            value={semesterCategory}
-                            onChange={(e) => setSemesterCategory(e.target.value)}
-                            placeholder="수혜 당시 수료 학기 구분"
+                            value={semesterCategory ? { label: semesterCategory, value: semesterCategory } : null}
+                            onChange={(option) => setSemesterCategory(option?.value || "")}
+                            options={semesterCategoryOptions}
+                            placeholder="수료 학기 선택"
+
                         />
                     </FormRow>
 
                     <FormRow style={{ marginBottom: '50px' }}>
                         <Label htmlFor="majorCategory">학과 계열</Label>
-                        <Input
+                        <StyledSelect
                             id="majorCategory"
-                            name="majorCategory"
-                            type="text"
-                            value={majorCategory}
-                            onChange={(e) => setMajorCategory(e.target.value)}
-                            placeholder="학과 계열 구분"
+                            value={majorCategory ? { label: majorCategory, value: majorCategory } : null}
+                            onChange={(option) => setMajorCategory(option?.value || "")}
+                            options={majorCategoryOptions}
+                            placeholder="학과 계열 선택"
                         />
                     </FormRow>
 
