@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import NavBar from "../ui/NavBar";
 import { useAuth } from "../contexts/AuthContext"; 
+import Select from 'react-select';
 
 const Container = styled.div`
     max-width: 800px;
@@ -17,6 +18,7 @@ const Title = styled.h2`
     text-align: center;
     margin-bottom: 20px;
 `;
+
 
 const FormGroup = styled.div`
     margin-bottom: 15px;
@@ -58,7 +60,9 @@ const FormGroup = styled.div`
         height: 80px;
     }
 `;
-
+const StyledSelect = styled(Select)`
+    flex: 1;
+`;
 
 const RadioGroup = styled.div`
     display: grid;
@@ -81,6 +85,16 @@ const RadioLabel = styled.label`
     align-items: center;
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     font-size: 0.9em; /* 글꼴 크기 조정 */
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    margin-left: 190px;
 `;
 
 const SubmitButton = styled.button`
@@ -125,6 +139,21 @@ const NoteContainer2 = styled.div`
     padding-left: 190px;
 `;
 
+const LinkContainer = styled.div`
+    margin-top: 5px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 200px;
+`;
+
+const StyledLink = styled.a`
+    font-size: 0.8em;
+    color: #348a8c;
+    text-decoration: underline;
+`;
+
 const Space = styled.div`
     height: 20px; /* 여백 크기 설정 */
 `;
@@ -135,6 +164,7 @@ const MemInfo = () => {
     const { state } = useLocation();
     const isInfoSubmitted = state?.isInfoSubmitted || false;
     const { user, fetchUserData, updateUser } = useAuth();
+
     const [formValid, setFormValid] = useState(false);
     const [formData, setFormData] = useState({
         fullname: user?.fullname || '',
@@ -149,7 +179,6 @@ const MemInfo = () => {
         major: '',
         year: '',
         semester: '',
-        currentGPA: '',
         totalGPA: '',
         familyStatus: '',
         additionalInfo: ''
@@ -172,7 +201,6 @@ const MemInfo = () => {
                     'major',
                     'year',
                     'semester',
-                    'currentGPA',
                     'totalGPA'
                 ];
             
@@ -207,7 +235,6 @@ const MemInfo = () => {
                     major: user.major || '',
                     year: user.year || '',
                     semester: user.semester || '',
-                    currentGPA: user.currentGPA || '',
                     totalGPA: user.totalGPA || '',
                     familyStatus: user.familyStatus || '',
                     additionalInfo: user.additionalInfo || '',
@@ -218,6 +245,14 @@ const MemInfo = () => {
     }, [user, fetchUserData]);
 
     const handleChange = (e) => {
+        if (e && e.value) {
+        const { name } = e;
+        setFormData({
+            ...formData,
+            [name]: e.value,
+        });
+    } else {
+        // 일반적인 input, select, textarea 등에서 호출될 때의 처리
         const { name, value, type, checked } = e.target;
 
         if (type === "checkbox") {
@@ -237,6 +272,7 @@ const MemInfo = () => {
                 [name]: value
             });
         }
+    }
     };
 
     const handleSubmit = async (e) => {
@@ -254,7 +290,6 @@ const MemInfo = () => {
             major: formData.major,
             year: formData.year,
             semester: formData.semester,
-            currentGPA: formData.currentGPA,
             totalGPA: formData.totalGPA,
             familyStatus: formData.familyStatus,
             additionalInfo: formData.additionalInfo
@@ -262,6 +297,48 @@ const MemInfo = () => {
         
         navigate("/users/mypage", { state: { infoSubmitted: true } });
     };
+
+    const handleTotalGPAChange = (e) => {
+        let value = e.target.value;
+    
+        // 음수값 또는 4.5 이상일 경우 값을 빈 값으로 설정
+        if (value < 0 || value > 4.5) {
+            value = "";  // Clear the value
+        } else {
+            // 소수점 둘째 자리까지만 유지
+            if (value.includes('.')) {
+                const [integerPart, decimalPart] = value.split('.');
+                if (decimalPart.length > 2) {
+                    value = `${integerPart}.${decimalPart.substring(0, 2)}`;
+                }
+            }
+        }
+        setFormData({
+            ...formData,
+            totalGPA: value,
+        });
+    };
+
+    const incomeBracketOptions = Array.from({length: 10}, (_, i) => ({ 
+        value: `${i + 1}`, 
+        label: `${i + 1}분위` 
+    }));
+
+    const semesterCategoryOptions = [
+        { value: '대학신입생', label: '대학신입생' },
+        ...Array.from({ length: 7 }, (_, i) => ({ value: `${i + 2}학기`, label: `${i + 2}학기` })),
+        { value: '대학 8학기이상', label: '대학 8학기이상' }
+    ];
+
+    const majorCategoryOptions = [
+        { value: '공학계열', label: '공학계열' },
+        { value: '교육계열', label: '교육계열' },
+        { value: '사회계열', label: '사회계열' },
+        { value: '예체능계열', label: '예체능계열' },
+        { value: '의약계열', label: '의약계열' },
+        { value: '인문계열', label: '인문계열' },
+        { value: '자연계열', label: '자연계열' }
+    ];
 
     return (
         <>
@@ -320,33 +397,20 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>소득 분위</label>
-                    <select 
-                        name="incomeBracket" 
-                        value={formData.incomeBracket} 
-                        onChange={handleChange}>
-                        <option value="">소득 분위를 선택하세요</option> 
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map(value => (
-                            <option key={value} value={`${value}분위`}>{value} 분위</option>
-                        ))}
-                    </select>
+                    <StyledSelect
+                        id="incomeBracket"
+                        value={formData.incomeBracket ? { label: `${formData.incomeBracket} 분위`, value: formData.incomeBracket } : null}
+                        onChange={(option) => setFormData({ ...formData, incomeBracket: option?.value || '' })}
+                        options={incomeBracketOptions}
+                        placeholder="소득 분위 선택"
+                    />
                 </FormGroup>
 
-                <FormGroup>
-                    <label>지원 계열</label>
-                    <select 
-                        name="applicantCategory" 
-                        value={formData.applicantCategory} 
-                        onChange={handleChange}>
-                        <option value="">지원 계열을 선택하세요</option>
-                        <option value="공학계열">공학계열</option>
-                        <option value="교육계열">교육계열</option>
-                        <option value="사회계열">사회계열</option>
-                        <option value="예체능계열">예체능계열</option>
-                        <option value="의약계열">의약계열</option>
-                        <option value="인문계열">인문계열</option>
-                        <option value="자연계열">자연계열</option>
-                    </select>
-                </FormGroup>
+                <LinkContainer>
+                    <StyledLink href="https://portal.kosaf.go.kr/CO/jspAction.do?forwardOnlyFlag=Y&forwardPage=pt/sm/custdsgn/PTSMIncpSmltMngt_01P&ignoreSession=Y" target="_blank" rel="noopener noreferrer">
+                        소득 분위 정보 확인
+                    </StyledLink>
+                </LinkContainer>
 
                 <FormGroup>
                     <label>학교</label>
@@ -361,77 +425,45 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>학과/학년</label>
-                    <select 
-                        name="major" 
-                        value={formData.major} 
-                        onChange={handleChange}>
-                        <option value="">학과 선택</option>
-                        <option value="컴퓨터공학과">컴퓨터공학과</option>
-                        <option value="인공지능학과">인공지능학과</option>
-                    </select>
-                    <select 
-                        name="year" 
-                        value={formData.year} 
-                        onChange={handleChange}>
-                        <option value="">학년 선택</option> 
-                        {Array.from({ length: 6 }, (_, i) => {
-                            const year = `${i + 1}학년`;
-                            if (year) {
-                                return <option key={year} value={year}>{year}</option>;
-                            }
-                            return null;
-                        })}
-                    </select>
+                    <label>학과 계열</label>
+                    <StyledSelect
+                        name="majorCategory" 
+                        value={majorCategoryOptions.find(option => option.value === formData.majorCategory) || ''}
+                        onChange={(option) => handleChange({ name: "majorCategory", value: option.value })}
+                        options={majorCategoryOptions}
+                        placeholder="학과 계열 선택"
+                    />
                 </FormGroup>
 
                 <FormGroup>
                     <label>수료 학기</label>
-                    <select 
-                        name="semester" 
-                        value={formData.semester} 
-                        onChange={handleChange}>
-                        <option value="">수료 학기 선택</option>
-                        {Array.from({ length: 8 }, (_, i) => {
-                        const semester = `${i + 1} 학기`;
-                        if (semester) {
-                            return <option key={semester} value={semester}>{semester}</option>;
-                        }
-            return null;
-        })}
-                    </select>
+                    <StyledSelect
+                            id="semester"
+                            value={formData.semester ?{ label: formData.semester, value: formData.semester } : null}
+                            onChange={(option) => setFormData({ ...formData, semester: option?.value || '' })}
+                            options={semesterCategoryOptions}
+                            placeholder="수료 학기 선택"
+                    />
                 </FormGroup>
 
                 <FormGroup>
-                    <label>성적</label>
-                    <input 
-                        type="number" 
-                        name="currentGPA" 
-                        value={formData.currentGPA} 
-                        onChange={handleChange} 
-                        placeholder="직전 학기 성적"
-                        step="0.01"  // 소수점 둘째 자리까지 입력 가능
-                        min="0"      // 최소값 0
-                        max="4.5"    // 최대값 4.5로 설정
-                    />
+                    <label>전체 성적</label>
                     <input 
                         type="number" 
                         name="totalGPA" 
                         value={formData.totalGPA} 
-                        onChange={handleChange} 
+                        onChange={handleTotalGPAChange} 
                         placeholder="전체 성적"
-                        step="0.01"  // 소수점 둘째 자리까지 입력 가능
-                        min="0"      // 최소값 0
-                        max="4.5"    // 최대값 4.5로 설정
                     />
                 </FormGroup>
 
                 <NoteContainer>
-                    <Note>* 직전 학기 성적과 전체 성적은 4.5 만점을 기준으로 함.</Note>
+                    <Note>* 전체 성적은 4.5 만점을 기준으로 함.</Note>
                 </NoteContainer>
                 <NoteContainer2>
                     <Note>* 소수점 둘째 자리까지 입력 가능</Note>
                 </NoteContainer2>
+                <Space />
 
                 <FormGroup>
                     <label>기타</label>
@@ -440,54 +472,113 @@ const MemInfo = () => {
                             <input 
                                 type="checkbox" 
                                 name="familyStatus" 
-                                value="다문화 가정" 
-                                checked={formData.familyStatus.includes("다문화 가정")}
+                                value="차상위계층" 
+                                checked={formData.familyStatus.includes("차상위계층")}
                                 onChange={handleChange} 
                             />
-                            다문화 가정
+                            차상위계층
                         </RadioLabel>
                         <RadioLabel>
                             <input 
                                 type="checkbox" 
                                 name="familyStatus" 
-                                value="한부모 가정" 
-                                checked={formData.familyStatus.includes("한부모 가정")}
+                                value="다문화가정" 
+                                checked={formData.familyStatus.includes("다문화가정")}
                                 onChange={handleChange} 
                             />
-                            한부모 가정
+                            다문화가정
                         </RadioLabel>
                         <RadioLabel>
                             <input 
                                 type="checkbox" 
                                 name="familyStatus" 
-                                value="기초 생활 수급자" 
-                                checked={formData.familyStatus.includes("기초 생활 수급자")}
+                                value="장애인가정" 
+                                checked={formData.familyStatus.includes("장애인가정")}
                                 onChange={handleChange} 
                             />
-                            기초 생활 수급자
+                            장애인가정
                         </RadioLabel>
                         <RadioLabel>
                             <input 
                                 type="checkbox" 
                                 name="familyStatus" 
-                                value="국가(독립) 유공자" 
-                                checked={formData.familyStatus.includes("국가(독립) 유공자")}
+                                value="농어촌자녀" 
+                                checked={formData.familyStatus.includes("농어촌자녀")}
                                 onChange={handleChange} 
                             />
-                            국가(독립) 유공자
+                            농어촌자녀
                         </RadioLabel>
                         <RadioLabel>
                             <input 
                                 type="checkbox" 
                                 name="familyStatus" 
-                                value="다자녀 가정" 
-                                checked={formData.familyStatus.includes("다자녀 가정")}
+                                value="보훈대상자" 
+                                checked={formData.familyStatus.includes("보훈대상자")}
                                 onChange={handleChange} 
                             />
-                            다자녀 가정
+                            보훈대상자
                         </RadioLabel>
-                    </RadioGroup>
-                </FormGroup>
+                        <RadioLabel>
+                            <input 
+                                type="checkbox" 
+                                name="familyStatus" 
+                                value="조부모가정" 
+                                checked={formData.familyStatus.includes("조부모가정")}
+                                onChange={handleChange} 
+                            />
+                            조부모가정
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="checkbox" 
+                                name="familyStatus" 
+                                value="다자녀가정" 
+                                checked={formData.familyStatus.includes("다자녀가정")}
+                                onChange={handleChange} 
+                            />
+                            다자녀가정
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="checkbox" 
+                                name="familyStatus" 
+                                value="한부모가정" 
+                                checked={formData.familyStatus.includes("한부모가정")}
+                                onChange={handleChange} 
+                            />
+                            한부모가정
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="checkbox" 
+                                name="familyStatus" 
+                                value="기초생활수급자" 
+                                checked={formData.familyStatus.includes("기초생활수급자")}
+                                onChange={handleChange} 
+                            />
+                            기초생활수급자
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="checkbox" 
+                                name="familyStatus" 
+                                value="새터민가정(탈북이주민)" 
+                                checked={formData.familyStatus.includes("새터민가정(탈북이주민)")}
+                                onChange={handleChange} 
+                            />
+                            새터민가정(탈북이주민)
+                        </RadioLabel>
+                        </RadioGroup>
+                    </FormGroup>
+
+                    <FormGroup>
+                        <TextArea 
+                            name="additionalInfo"
+                            value={formData.additionalInfo}
+                            onChange={handleChange}
+                            placeholder="부모 직업, 연구/프로젝트/대회 성과, 종교, 봉사 시간, 자격증, 진로 및 관심분야 등을 자세히 작성할 수록 정확도가 올라갑니다!"
+                        />
+                    </FormGroup>
 
                 <SubmitButton type="submit" disabled={!formValid}>입력 완료</SubmitButton>
             </form>
