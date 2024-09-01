@@ -28,6 +28,8 @@ export const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
+
+
     const fetchUserData = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/users/mypage/", {
@@ -197,32 +199,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    /*
-    const mypageUser = async (fullName, userNickname, userBirthdate) => {
+    // 아이디 중복 확인 함수
+    const checkUsernameAvailability = async (username) => {
         try {
-            const response = await axios.put("http://127.0.0.1:8000/users/mypage/", {
-                fullName,
-                nickname: userNickname,
-                birth: userBirthdate,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${authTokens.access}`
-                }
-            });
-
-            if (response.status === 200) {
-                // Update user state with new data
-                await fetchUserData();  // Refetch user data to update the state
-                alert("User details updated successfully!");
-            } else {
-                alert("Failed to update user details.");
-            }
+            const response = await axios.get(`http://127.0.0.1:8000/users/check-username/${username}/`);
+            return response.data.available;  // true면 사용 가능, false면 이미 사용 중
         } catch (error) {
-            console.error("Failed to update user details", error);
-            alert("Updating user details failed. Please check the server status.");
+            console.error("Username availability check failed", error);
+            return false;
         }
     };
-    */
 
     const logoutUser = () => {
         setAuthTokens(null);
@@ -259,6 +245,7 @@ export const AuthProvider = ({ children }) => {
         fetchScholarships,
         fetchFoundations,
         fetchScholarshipsByFoundation,
+        checkUsernameAvailability,
     };
 
 /*

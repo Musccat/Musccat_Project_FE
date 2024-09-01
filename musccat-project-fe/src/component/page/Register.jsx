@@ -121,7 +121,7 @@ const Space = styled.div`
 `;
 
 function Register() {
-    const { registerUser } = useAuth();
+    const { registerUser, checkUsernameAvailability } = useAuth();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -136,6 +136,7 @@ function Register() {
 });
 
 const [usernameValid, setUsernameValid] = useState(true);
+const [usernameAvailable, setUsernameAvailable] = useState(true);  // 아이디 중복 체크
 const [passwordValid, setPasswordValid] = useState(true);
 const [passwordsMatch, setPasswordsMatch] = useState(true);
 const [emailValid, setEmailValid] = useState(false);
@@ -145,14 +146,22 @@ const [formValid, setFormValid] = useState(false);
 
 const navigate = useNavigate();
 
-const handleChange = (e) => { // 사용자 입력값 업데이트
+const handleChange = async (e) => { // 사용자 입력값 업데이트
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
     // 아이디 형식 확인 (영문과 숫자만 포함)
     if (name === "username") {
         const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
-        setUsernameValid(usernamePattern.test(value));
+        const isUsernameValid = usernamePattern.test(value);
+        setUsernameValid(isUsernameValid);
+
+        if (isUsernameValid) {
+            const available = await checkUsernameAvailability(value);
+            setUsernameAvailable(available);
+        } else {
+            setUsernameAvailable(true); // 형식이 틀리면 중복 체크 안함
+        }
     }
 
     // 비밀번호 형식 확인(영문, 숫자, 특수문자 포함 8자 이상 입력)
@@ -196,10 +205,10 @@ const handleChange = (e) => { // 사용자 입력값 업데이트
             formData.email &&
             formData.verificationCode;
 
-        const formIsValid = usernameValid && passwordValid && passwordsMatch && emailValid && allFieldsFilled;
+        const formIsValid = usernameValid && usernameAvailable && passwordValid && passwordsMatch && emailValid && allFieldsFilled;
 
         setFormValid(formIsValid);
-    }, [formData, usernameValid, passwordValid, passwordsMatch, emailValid]);
+    }, [formData, usernameValid, usernameAvailable, passwordValid, passwordsMatch, emailValid]);
 
     const handleSubmit = (e) => { 
         e.preventDefault();
@@ -276,6 +285,9 @@ const handleChange = (e) => { // 사용자 입력값 업데이트
             </FormGroup>
             {!usernameValid && formData.username && (
                 <ErrorMessage>올바른 아이디 형식이 아닙니다</ErrorMessage>
+            )}
+            {usernameValid && !usernameAvailable && (
+                <ErrorMessage>이미 사용 중인 아이디입니다.</ErrorMessage>
             )}
             <Space/>
 
