@@ -327,7 +327,7 @@ const BeneInfoRegister = () => {
                 />
             </FormRow>
 
-            <FormRow style={{ marginBottom: '50px' }}>
+            <FormRow>
                 <Label htmlFor="year">
                     수혜 년도<span>*</span>
                 </Label>
@@ -341,102 +341,102 @@ const BeneInfoRegister = () => {
                 />
             </FormRow>
 
-                    <FormRow>
-                        <Label htmlFor="incomeBracket">수혜 당시 소득 분위</Label>
-                        <StyledSelect
-                            id="incomeBracket"
-                            value={incomeBracket ? { label: `${incomeBracket} 분위`, value: incomeBracket } : null}
-                            onChange={(option) => setIncomeBracket(option?.value || "")}
-                            options={incomeBracketOptions}
-                            placeholder="소득 분위 선택"
-                        />
-                    </FormRow>
+            <FormRow>
+                <Label htmlFor="incomeBracket">수혜 당시 소득 분위</Label>
+                    <StyledSelect
+                        id="incomeBracket"
+                        value={incomeBracket ? { label: `${incomeBracket} 분위`, value: incomeBracket } : null}
+                        onChange={(option) => setIncomeBracket(option?.value || "")}
+                        options={incomeBracketOptions}
+                        placeholder="소득 분위 선택"
+                    />
+            </FormRow>
 
-                    <LinkContainer>
-                        <StyledLink href="https://portal.kosaf.go.kr/CO/jspAction.do?forwardOnlyFlag=Y&forwardPage=pt/sm/custdsgn/PTSMIncpSmltMngt_01P&ignoreSession=Y" target="_blank" rel="noopener noreferrer">
-                            소득 분위 정보 확인
-                        </StyledLink>
-                    </LinkContainer>
+            <LinkContainer>
+                <StyledLink href="https://portal.kosaf.go.kr/CO/jspAction.do?forwardOnlyFlag=Y&forwardPage=pt/sm/custdsgn/PTSMIncpSmltMngt_01P&ignoreSession=Y" target="_blank" rel="noopener noreferrer">
+                    소득 분위 정보 확인
+                </StyledLink>
+            </LinkContainer>
 
-                    <FormRow>
-                        <Label htmlFor="totalGPA">수혜 당시 전체 성적</Label>
-                        <Input
-                            id="totalGPA"
-                            name="totalGPA"
-                            type="number"
-                            step="0.01"
-                            value={totalGPA}
-                            onChange={handleTotalGPAChange}
-                            placeholder="수혜 당시 전체 성적"
-                        />
-                    </FormRow>
+            <FormRow>
+                <Label htmlFor="univCategory">대학 유형</Label>
+                    <StyledSelect
+                        id="univCategory"
+                        value={univCategory ? { label: univCategory, value: univCategory } : null}
+                        onChange={(option) => setUnivCategory(option?.value || "")}
+                        options={univCategoryOptions}
+                        placeholder="대학 유형 선택"
+                    />
+            </FormRow>
 
-                    <NoteContainer>
-                        <Note>* 직전 학기 성적과 전체 성적은 4.5 만점을 기준으로 함.</Note>
-                    </NoteContainer>
-                    <NoteContainer2>
-                        <Note>* 소수점 둘째 자리까지 입력 가능</Note>
-                    </NoteContainer2>
+            <FormRow>
+                <Label htmlFor="majorCategory">학과 계열</Label>
+                    <StyledSelect
+                        id="majorCategory"
+                        value={majorCategory ? { label: majorCategory, value: majorCategory } : null}
+                        onChange={(option) => setMajorCategory(option?.value || "")}
+                        options={majorCategoryOptions}
+                        placeholder="학과 계열 선택"
+                    />
+            </FormRow>
 
-                    <FormRow>
-                        <Label htmlFor="univCategory">대학 유형</Label>
-                        <StyledSelect
-                            id="univCategory"
-                            value={univCategory ? { label: univCategory, value: univCategory } : null}
-                            onChange={(option) => setUnivCategory(option?.value || "")}
-                            options={univCategoryOptions}
-                            placeholder="대학 유형 선택"
-                        />
-                    </FormRow>
+            <FormRow>
+                <Label htmlFor="semesterCategory">수혜 당시 수료 학기</Label>
+                    <StyledSelect
+                        id="semesterCategory"
+                        value={semesterCategory ? { label: semesterCategory, value: semesterCategory } : null}
+                        onChange={(option) => setSemesterCategory(option?.value || "")}
+                        options={semesterCategoryOptions}
+                        placeholder="수료 학기 선택"
+                    />
+            </FormRow>
 
-                    <FormRow>
-                        <Label htmlFor="semesterCategory">수혜 당시 수료 학기</Label>
-                        <StyledSelect
-                            id="semesterCategory"
-                            value={semesterCategory ? { label: semesterCategory, value: semesterCategory } : null}
-                            onChange={(option) => setSemesterCategory(option?.value || "")}
-                            options={semesterCategoryOptions}
-                            placeholder="수료 학기 선택"
 
-                        />
-                    </FormRow>
+            <FormRow>
+                <Label htmlFor="totalGPA">수혜 당시 전체 성적</Label>
+                    <Input
+                        id="totalGPA"
+                        name="totalGPA"
+                        type="number"
+                        step="0.01"
+                        value={totalGPA}
+                        onChange={handleTotalGPAChange}
+                        placeholder="수혜 당시 전체 성적"
+                    />
+            </FormRow>
 
-                    <FormRow style={{ marginBottom: '50px' }}>
-                        <Label htmlFor="majorCategory">학과 계열</Label>
-                        <StyledSelect
-                            id="majorCategory"
-                            value={majorCategory ? { label: majorCategory, value: majorCategory } : null}
-                            onChange={(option) => setMajorCategory(option?.value || "")}
-                            options={majorCategoryOptions}
-                            placeholder="학과 계열 선택"
-                        />
-                    </FormRow>
+            <NoteContainer>
+                <Note>* 직전 학기 성적과 전체 성적은 4.5 만점을 기준으로 함.</Note>
+            </NoteContainer>
+            <NoteContainer2>
+                <Note>* 소수점 둘째 자리까지 입력 가능</Note>
+            </NoteContainer2>
 
-                    <FormRow style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
-                        <Label htmlFor="advice" style={{ marginTop: '8px' }}>
-                            합격 팁<span>*</span>
-                        </Label>
-                        <TextArea
-                            id="advice"
-                            name="advice"
-                            value={advice}
-                            onChange={(e) => setAdvice(e.target.value)}
-                            placeholder="본인의 상황과 경험을 구체적으로 공유하세요!
+            <FormRow style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
+                <Label htmlFor="advice" style={{ marginTop: '8px' }}>
+                    합격 팁<span>*</span>
+                </Label>
+                <TextArea
+                    id="advice"
+                    name="advice"
+                    value={advice}
+                    onChange={(e) => setAdvice(e.target.value)}
+                    placeholder="본인의 상황과 경험을 구체적으로 공유하세요!
 지원 과정에서 어떤 준비를 했고, 무엇이 도움이 되었는지에 대한 실질적인 조언이 다른 지원자들에게 큰 도움이 됩니다!"
-                        />
-                    </FormRow>
+                />
+            </FormRow>
 
-                    <FormRow style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
-                    <Label htmlFor="interview" style={{ marginTop: '8px' }}>면접 팁</Label>
-                        <TextArea 
-                            id="interview"
-                            name="interview" 
-                            value={interviewTip} 
-                            onChange={(e) => setInterviewTip(e.target.value)} 
-                            placeholder="면접 준비 팁을 구체적으로 적어주세요!
+            <FormRow style={{ marginBottom: '20px', alignItems: 'flex-start' }}>
+            <Label htmlFor="interview" style={{ marginTop: '8px' }}>면접 팁</Label>
+                <TextArea 
+                    id="interview"
+                    name="interview" 
+                    value={interviewTip} 
+                    onChange={(e) => setInterviewTip(e.target.value)} 
+                    placeholder="면접 준비 팁을 구체적으로 적어주세요!
 어떤 질문을 받았고 어떻게 대처했는지, 그리고 도움이 되었던 준비 방법을 공유하면 다른 지원자들에게 큰 도움이 됩니다!"
-                        />
-                    </FormRow>
+                />
+            </FormRow>
 
             <ButtonContainer>
             <SubmitButton 
@@ -449,10 +449,7 @@ const BeneInfoRegister = () => {
             </ButtonContainer>
         </FormContainer>
         </PageWrapper>
-        
-        
         </>
-
     );
 
 };

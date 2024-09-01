@@ -9,9 +9,9 @@ const Container = styled.div`
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
-    border: 1px solid #D0D0D0;
+    border: 1px solid #348a8c;
     border-radius: 8px;
-    background-color: #F9F9F9;
+    background-color: #white;
 `;
 
 const Title = styled.h2`
@@ -19,6 +19,13 @@ const Title = styled.h2`
     margin-bottom: 20px;
 `;
 
+const NoticeText = styled.p`
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    text-align: right;
+`;
 
 const FormGroup = styled.div`
     margin-bottom: 15px;
@@ -30,8 +37,9 @@ const FormGroup = styled.div`
     & label {
         flex: 0 0 150px; 
         font-weight: bold;
-        text-align: right;
-        margin-right: 40px;
+        display: flex;
+        align-items: center;
+        margin-left: 40px;
     }
 
     & input, & select, & textarea {
@@ -54,6 +62,8 @@ const FormGroup = styled.div`
         &:hover {
             background-color: #267073;
         }
+
+    
     }
 
     & textarea {
@@ -64,12 +74,26 @@ const StyledSelect = styled(Select)`
     flex: 1;
 `;
 
+const RadioGroupWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+`;
+
+const RadioGroupLabel = styled.label`
+    flex: 0 0 150px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+`;
+
 const RadioGroup = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     align-items: center;
-
+    margin-left: 0px;
     & label {
         display: flex;
         align-items: center;
@@ -77,7 +101,7 @@ const RadioGroup = styled.div`
     }
 
     & input {
-        margin-right: 5px;
+        margin-right: 10px;
     }
 `;
 const RadioLabel = styled.label`
@@ -85,6 +109,7 @@ const RadioLabel = styled.label`
     align-items: center;
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     font-size: 0.9em; /* 글꼴 크기 조정 */
+    font-weight: bold;
 `;
 
 const TextArea = styled.textarea`
@@ -156,6 +181,11 @@ const StyledLink = styled.a`
 
 const Space = styled.div`
     height: 20px; /* 여백 크기 설정 */
+`;
+
+const RequiredIndicator = styled.span`
+    color: red;
+    margin-left: 4px;
 `;
 
 
@@ -345,6 +375,7 @@ const MemInfo = () => {
         <NavBar />
         <Container>
             <Title>{isInfoSubmitted ? "기존 정보 수정" : "신규 정보 입력"}</Title>
+            <NoticeText>* 표시 항목은 필수 항목입니다.</NoticeText>
             <Space />
             <form onSubmit={handleSubmit}>
             <FormGroup>
@@ -363,7 +394,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>닉네임</label>
+                    <label>닉네임<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
                         type="text" 
                         name="nickname" 
@@ -373,7 +404,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>거주 지역</label>
+                    <label>거주 지역<RequiredIndicator>*</RequiredIndicator></label>
                     <select 
                         name="region" 
                         value={formData.region} 
@@ -396,7 +427,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>소득 분위</label>
+                    <label>소득 분위<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
                         id="incomeBracket"
                         value={formData.incomeBracket ? { label: `${formData.incomeBracket} 분위`, value: formData.incomeBracket } : null}
@@ -413,7 +444,7 @@ const MemInfo = () => {
                 </LinkContainer>
 
                 <FormGroup>
-                    <label>학교</label>
+                    <label>학교<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
                         type="text" 
                         name="school" 
@@ -425,7 +456,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>학과 계열</label>
+                    <label>학과 계열<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
                         name="majorCategory" 
                         value={majorCategoryOptions.find(option => option.value === formData.majorCategory) || ''}
@@ -436,7 +467,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>수료 학기</label>
+                    <label>수료 학기<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
                             id="semester"
                             value={formData.semester ?{ label: formData.semester, value: formData.semester } : null}
@@ -447,7 +478,7 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
-                    <label>전체 성적</label>
+                    <label>전체 성적<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
                         type="number" 
                         name="totalGPA" 
@@ -465,8 +496,8 @@ const MemInfo = () => {
                 </NoteContainer2>
                 <Space />
 
-                <FormGroup>
-                    <label>기타</label>
+                <RadioGroupWrapper>
+                    <RadioGroupLabel>기타</RadioGroupLabel>
                     <RadioGroup>
                         <RadioLabel>
                             <input 
@@ -569,7 +600,7 @@ const MemInfo = () => {
                             새터민가정(탈북이주민)
                         </RadioLabel>
                         </RadioGroup>
-                    </FormGroup>
+                    </RadioGroupWrapper>
 
                     <FormGroup>
                         <TextArea 
