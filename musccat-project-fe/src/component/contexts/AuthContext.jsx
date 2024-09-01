@@ -210,6 +210,26 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const sendVerificationCode = async (email) => {
+        try {
+            await axios.post("http://127.0.0.1:8000/users/send-verification-code/", { email });
+        } catch (error) {
+            console.error("Failed to send verification code", error);
+            throw error;
+        }
+    };
+    
+    const verifyCode = async (email, code) => {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/users/verify-code/", { email, "verify-code": code });
+            return response.data.valid;  // true if valid, false if not
+        } catch (error) {
+            console.error("Failed to verify code", error);
+            return false;
+        }
+    };
+    
+
     const logoutUser = () => {
         setAuthTokens(null);
         setUser(null);
@@ -246,6 +266,8 @@ export const AuthProvider = ({ children }) => {
         fetchFoundations,
         fetchScholarshipsByFoundation,
         checkUsernameAvailability,
+        sendVerificationCode,
+        verifyCode,
     };
 
 /*

@@ -43,7 +43,7 @@ const FormGroup = styled.div`
         font-weight: bold;
         color: #348a8c;
         text-align: left;
-        padding-top: 5px;
+        min-width: 100px;
     }
 
     input {
@@ -53,6 +53,23 @@ const FormGroup = styled.div`
         border-radius: 4px;
         font-size: 14px;
         outline: none;
+    }
+
+    button {
+        padding: 10px 12px;
+        background-color: #348a8c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 10px;
+
+        &:disabled {
+            background-color: #b0b0b0;
+            cursor: not-allowed;
+        }
     }
 `;
 
@@ -121,7 +138,7 @@ const Space = styled.div`
 `;
 
 function Register() {
-    const { registerUser, checkUsernameAvailability } = useAuth();
+    const { registerUser, checkUsernameAvailability, sendVerificationCode, verifyCode } = useAuth();
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -140,9 +157,11 @@ const [usernameAvailable, setUsernameAvailable] = useState(true);  // 아이디 
 const [passwordValid, setPasswordValid] = useState(true);
 const [passwordsMatch, setPasswordsMatch] = useState(true);
 const [emailValid, setEmailValid] = useState(false);
+const [codeValid, setCodeValid] = useState(false);  // 인증번호 유효성
 const [timer, setTimer] = useState(null);  // 타이머를 저장할 상태
 const [timeLeft, setTimeLeft] = useState(120);  // 2분 (120초) 타이머
 const [formValid, setFormValid] = useState(false);
+const [verificationError, setVerificationError] = useState("");
 
 const navigate = useNavigate();
 
@@ -189,6 +208,12 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             setTimeLeft(120);
         }
     }
+
+    // 인증번호 형식 확인 (6자리 영문+숫자)
+    if (name === "verificationCode") {
+        const codePattern = /^[A-Za-z0-9]{6}$/;
+        setCodeValid(codePattern.test(value));
+    }
 };
 
     useEffect(() => {
@@ -205,10 +230,10 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             formData.email &&
             formData.verificationCode;
 
-        const formIsValid = usernameValid && usernameAvailable && passwordValid && passwordsMatch && emailValid && allFieldsFilled;
+        const formIsValid = usernameValid && usernameAvailable && passwordValid && passwordsMatch && emailValid  && codeValid && allFieldsFilled;
 
         setFormValid(formIsValid);
-    }, [formData, usernameValid, usernameAvailable, passwordValid, passwordsMatch, emailValid]);
+    }, [formData, usernameValid, usernameAvailable, passwordValid, passwordsMatch, emailValid, codeValid]);
 
     const handleSubmit = (e) => { 
         e.preventDefault();
@@ -240,23 +265,44 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
         days.push(String(i).padStart(2, "0"));
     }
 
+    const handleSendVerificationCode = async () => {
+        try {
+            await sendVerificationCode(formData.email);
+            setTimeLeft(120);  // 타이머를 다시 2분으로 설정
+            setTimer(true); // 타이머를 활성화
+            
+            console.log("인증번호가 이메일로 전송되었습니다.");
+        } catch (error) {
+            console.error("인증번호 전송 중 오류 발생:", error);
+        }
+    };
+    
     useEffect(() => {
-        if (timeLeft > 0 && timer !== null) {
+        if (timer && timeLeft > 0) {
             const countdown = setTimeout(() => {
                 setTimeLeft(timeLeft - 1);
             }, 1000);
             return () => clearTimeout(countdown);
+        } else if (timeLeft === 0) {
+            setTimer(false); // 타이머가 0에 도달하면 타이머를 비활성화
         }
-    }, [timeLeft, timer]);
+    }, [timer, timeLeft]);
 
-    const handleSendVerificationCode = async () => {
+    const handleVerifyCode = async () => {
         try {
-            setTimer(true);
-            setTimeLeft(120);  // 타이머를 다시 2분으로 설정
-
-            console.log("인증번호가 이메일로 전송되었습니다.");
+            const isValid = await verifyCode(formData.email, formData.verificationCode);
+            if (isValid) {
+                setVerificationError("");
+                setCodeValid(true); // 인증이 성공하면 codeValid를 true로 설정
+                console.log("인증이 완료되었습니다.");
+            } else {
+                setVerificationError("인증번호가 올바르지 않습니다.");
+                setCodeValid(false); // 인증이 실패하면 codeValid를 false로 설정
+            }
         } catch (error) {
-            console.error("인증번호 전송 중 오류 발생:", error);
+            console.error("인증번호 확인 중 오류 발생:", error);
+            setVerificationError("인증번호가 올바르지 않습니다.");
+            setCodeValid(false);
         }
     };
 
@@ -394,9 +440,11 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             </FormGroup>
 
             <Space />
+            
 
-            <FormGroup>
+            <FormGroup style={{ justifyContent: 'flex-end' }}>
                 <label>이메일</label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <input
                     type="email"
                     name="email"
@@ -404,27 +452,8 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
                     value={formData.email}
                     onChange={handleChange}
                     required
-                />
-            </FormGroup>
-
-            <Space />
-
-            <FormGroup style={{ justifyContent: 'flex-end' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                <input
-                    type="text"
-                    name="verificationCode"
-                    placeholder="인증번호 입력"
-                    value={formData.verificationCode}
-                    onChange={handleChange}
-                    required
                     style={{ flex: 1, marginRight: '10px' }}  // 입력칸의 크기를 조절하여 버튼과 동일한 줄에 배치
                 />
-                {timer && (
-                    <span style={{ marginRight: '10px', fontWeight: 'bold', color: '#348a8c' }}>
-                        {formatTime(timeLeft)}
-                    </span>
-                )}
                 <button type="button" 
                     onClick={handleSendVerificationCode} 
                     disabled={!emailValid}  // 이메일 유효성에 따라 버튼 활성화 여부 결정
@@ -443,6 +472,46 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
                     인증번호 받기
                 </button>
                 </div>
+            </FormGroup>
+            <Space />
+
+            <FormGroup style={{ justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                    type="text"
+                    name="verificationCode"
+                    placeholder="인증번호 입력"
+                    value={formData.verificationCode}
+                    onChange={handleChange}
+                    required
+                    style={{ flex: 1, marginRight: '10px' }}  // 입력칸의 크기를 조절하여 버튼과 동일한 줄에 배치
+                />
+                {timer && (
+                    <span style={{ marginRight: '10px', fontWeight: 'bold', color: '#348a8c' }}>
+                        {formatTime(timeLeft)}
+                    </span>
+                )}
+                <button type="button" 
+                    onClick={handleVerifyCode} 
+                    disabled={!codeValid}  // 인증번호 유효성에 따라 버튼 활성화 여부 결정
+                    style={{ 
+                        backgroundColor: codeValid ? '#348a8c' : '#b0b0b0',
+                        color: '#ffffff',
+                        border: 'none', 
+                        padding: '12px 10px', 
+                        borderRadius: '4px',
+                        marginLeft: '10px', // 입력칸과 버튼 사이의 간격 추가
+                        cursor: codeValid ? 'pointer' : 'not-allowed',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    인증하기
+                </button>
+                </div>
+                {verificationError && (
+                    <ErrorMessage>{verificationError}</ErrorMessage>
+                )}
             </FormGroup>
 
             <SubmitButton type="submit" disabled={!formValid}>
