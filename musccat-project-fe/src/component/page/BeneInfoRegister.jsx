@@ -127,7 +127,7 @@ const SubmitButton = styled.button`
 `;
 
 const BeneInfoRegister = () => {
-    const [selectedFoundation, setSelectedFoundation] = useState("");
+    const [selectedFoundation, setSelectedFoundation] = useState(null);
     const [foundationOptions, setFoundationOptions] = useState([]);
     const [scholarshipOptions, setScholarshipOptions] = useState([]);
     const [selectedScholarship, setSelectedScholarship] = useState("");
@@ -164,7 +164,6 @@ const BeneInfoRegister = () => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
         const isValid =  
                         selectedFoundation !== null &&
-                        selectedFoundation.label &&
                         selectedScholarship.trim() !== "" &&
                         incomeBracket.trim() !== "" &&
                         totalGPA.trim() !== "" &&

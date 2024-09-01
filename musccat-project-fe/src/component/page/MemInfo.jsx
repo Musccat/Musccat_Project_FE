@@ -307,7 +307,15 @@ const MemInfo = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+
+        // 필수 항목이 비어있지 않은지 확인
+        const requiredFields = ['nickname', 'region', 'district', 'incomeBracket', 'school', 'major', 'semester', 'totalGPA'];
+        for (const field of requiredFields) {
+            if (!formData[field] || formData[field].trim() === '') {
+                alert(`필수 항목 ${field}를(을) 입력하세요.`);
+                return;
+            }
+        }
 
         // 수정된 사용자 정보를 서버에 업데이트
         await updateUser({
