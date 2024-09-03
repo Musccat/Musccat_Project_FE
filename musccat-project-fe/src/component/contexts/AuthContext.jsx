@@ -183,6 +183,29 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateBenefitInfo = async (product_id, benefit_id, updatedInfo) => {
+        try {
+            const response = await axios.put(`http://127.0.0.1:8000/reviews/${benefit_id}/`, updatedInfo, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+    
+            if (response.status === 200) {
+                setBenefitInfos(prevState => ({
+                    ...prevState,
+                    [product_id]: prevState[product_id].map(info => 
+                        info.id === benefit_id ? { ...info, ...updatedInfo } : info
+                    )
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to update benefit information:", error);
+        }
+    };
+    
+
+
     const deleteBenefitInfo = async (product_id, benefit_id) => {
         try {
             const response = await axios.delete(`http://127.0.0.1:8000/reviews/${benefit_id}/`, {
@@ -279,6 +302,7 @@ export const AuthProvider = ({ children }) => {
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
+        updateBenefitInfo,
         deleteBenefitInfo,
         fetchBenefitInfos,
         benefitInfos,

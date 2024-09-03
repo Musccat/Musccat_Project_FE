@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Select from 'react-select';
 
@@ -127,23 +128,28 @@ const SubmitButton = styled.button`
 `;
 
 const BeneInfoRegister = () => {
-    const [selectedFoundation, setSelectedFoundation] = useState(null);
+    const location = useLocation();
+    const info = location.state?.info || {};
+
+    const [selectedFoundation, setSelectedFoundation] = useState(
+    info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : null
+    );
     const [foundationOptions, setFoundationOptions] = useState([]);
     const [scholarshipOptions, setScholarshipOptions] = useState([]);
-    const [selectedScholarship, setSelectedScholarship] = useState("");
+    const [selectedScholarship, setSelectedScholarship] = useState(info.scholarship?.name || "");
 
-    const [incomeBracket, setIncomeBracket] = useState(""); // 수혜 당시 소득 분위
-    const [totalGPA, setTotalGPA] = useState(""); // 수혜 당시 전체 성적
-    const [univCategory, setUnivCategory] = useState(""); // 대학 유형 구분
-    const [semesterCategory, setSemesterCategory] = useState(""); // 수혜 당시 수료 학기 구분 
-    const [majorCategory, setMajorCategory] = useState(""); // 학과 계열 구분
+    const [incomeBracket, setIncomeBracket] = useState(info.incomeBracket?.replace(" 분위", "") || ""); // 수혜 당시 소득 분위
+    const [totalGPA, setTotalGPA] = useState(info.totalGPA || ""); // 수혜 당시 전체 성적
+    const [univCategory, setUnivCategory] = useState(info.univCategory || ""); // 대학 유형 구분
+    const [semesterCategory, setSemesterCategory] = useState(info.semesterCategory || ""); // 수혜 당시 수료 학기 구분 
+    const [majorCategory, setMajorCategory] = useState(info.majorCategory || ""); // 학과 계열 구분
 
-    const [year, setYear] = useState(""); // 수혜 년도
-    const [advice, setAdvice] = useState(""); // 합격팁
-    const [interviewTip, setInterviewTip] = useState("");// 면접팁
-    const [isFormValid, setIsFormValid] = useState(false); 
+    const [year, setYear] = useState(info.year?.toString() || ""); // 수혜 년도
+    const [advice, setAdvice] = useState(info.advice || ""); // 합격팁
+    const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
+    const [isFormValid, setIsFormValid] = useState(false);
 
-    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -163,16 +169,16 @@ const BeneInfoRegister = () => {
     useEffect(() => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
         const isValid =  
-                        selectedFoundation !== null &&
-                        selectedScholarship.trim() !== "" &&
-                        incomeBracket.trim() !== "" &&
-                        totalGPA.trim() !== "" &&
-                        univCategory.trim() !== "" &&
-                        semesterCategory.trim() !== "" &&
-                        majorCategory.trim() !== "" &&
-                        year.trim() !== "" &&
-                        advice.trim() !== "" &&
-                        interviewTip.trim() !== "";
+                    selectedFoundation !== null &&
+                    selectedScholarship.trim() !== "" &&
+                    incomeBracket.trim() !== "" &&
+                    totalGPA.trim() !== "" &&
+                    univCategory.trim() !== "" &&
+                    semesterCategory.trim() !== "" &&
+                    majorCategory.trim() !== "" &&
+                    year.trim() !== "" &&
+                    advice.trim() !== "" &&
+                    interviewTip.trim() !== "";
 
         setIsFormValid(isValid);
     }, [selectedFoundation, selectedScholarship,  incomeBracket, totalGPA, univCategory, semesterCategory, majorCategory, year, advice, interviewTip]); 
@@ -227,7 +233,7 @@ const BeneInfoRegister = () => {
         );
 
         if (selectedScholarshipData) {
-            const info = {
+            const infoData = {
                 user: {
                     id: user.id, // 로그인된 사용자의 ID를 사용
                     nickname: user.nickname // 로그인된 사용자의 닉네임을 사용
@@ -247,8 +253,13 @@ const BeneInfoRegister = () => {
                 interviewTip,
             };
 
-            await addBenefitInfo(selectedScholarshipData.product_id, info); // addBenefitInfo 함수 호출
-            navigate(-1); // 이전 페이지로 이동
+            if (info.id) {
+                await updateBenefitInfo(selectedScholarshipData.product_id, info.id, infoData); // updateBenefitInfo 함수 호출
+            } else {
+                await addBenefitInfo(selectedScholarshipData.product_id, infoData); // 새로운 데이터 추가
+            }
+
+            navigate(`/reviews/${selectedScholarshipData.product_id}`); // 작성한 수혜 정보 페이지로 이동
         } else {
             alert("장학 수혜 정보를 모두 입력해주세요.");
         }
@@ -264,9 +275,9 @@ const BeneInfoRegister = () => {
         { value: '4년제(5~6년제)', label: '4년제(5~6년제)' },
         { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
         { value: '해외대학', label: '해외대학' },
-        {value: '학점은행제 대학', label: '학점은행제 대학'},
-        {value: '원격대학', label: '원격대학'},
-        {value: '기술대학', label: '기술대학'}
+        { value: '학점은행제 대학', label: '학점은행제 대학'},
+        { value: '원격대학', label: '원격대학'},
+        { value: '기술대학', label: '기술대학'}
         
     ];
 
@@ -290,7 +301,7 @@ const BeneInfoRegister = () => {
         <>
         <NavBar />
         <PageWrapper>
-        <Title>장학 수혜 정보 입력</Title>
+        <Title>{info.id ? "장학 수혜 정보 수정" : "장학 수혜 정보 입력"}</Title>
         <NoticeText>* 표시 항목은 필수 항목입니다.</NoticeText>
         <FormContainer>
             <FormRow>
@@ -443,7 +454,7 @@ const BeneInfoRegister = () => {
                 onClick={handleSubmit}
                 disabled={!isFormValid} 
             >
-                입력 완료
+                {info.id ? "수정 완료" : "입력 완료"}
             </SubmitButton>
             </ButtonContainer>
         </FormContainer>

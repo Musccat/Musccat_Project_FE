@@ -3,6 +3,7 @@ import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const PageWrapper = styled.div`
     padding: 20px;
@@ -134,6 +135,7 @@ const InfoDetail = styled.div`
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
     const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, user } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // 해당 product_id로 관련된 수혜 정보를 불러옴
@@ -152,6 +154,11 @@ const BenefitInfo = () => {
         if (window.confirm("정말 이 정보를 삭제하시겠습니까?")) {
             deleteBenefitInfo(product_id, benefit_id);
         }
+    };
+
+    // 장학 정보 수정
+    const handleEdit = (info) => {
+        navigate("/reviews", { state: { info } }); // 수정할 데이터를 state로 전달
     };
 
     return (
@@ -181,7 +188,7 @@ const BenefitInfo = () => {
                                 <LikeButton>좋아요</LikeButton>
                                 {user?.id === info.user.id && (
                                     <>
-                                        <EditButton>수정</EditButton>
+                                        <EditButton onClick={() => handleEdit(info)}>수정</EditButton>
                                         <DeleteButton onClick={() => handleDelete(info.id)}>삭제</DeleteButton>
                                     </>
                                 )}
