@@ -183,6 +183,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const deleteBenefitInfo = async (product_id, benefit_id) => {
+        try {
+            const response = await axios.delete(`http://127.0.0.1:8000/reviews/${benefit_id}/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+    
+            if (response.status === 204) {
+                setBenefitInfos(prevState => ({
+                    ...prevState,
+                    [product_id]: prevState[product_id].filter(info => info.id !== benefit_id)
+                }));
+            }
+        } catch (error) {
+            console.error("Failed to delete benefit information:", error);
+        }
+    };    
+
     const fetchBenefitInfos = async (product_id) => {
         try {
             const response = await axios.get(`http://127.0.0.1:8000/reviews/${product_id}/`, {
@@ -190,9 +209,12 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
+
+            const data = Array.isArray(response.data) ? response.data : [response.data];
+
             setBenefitInfos(prevState => ({
                 ...prevState,
-                [product_id]: response.data,
+                [product_id]: data,
             }));
         } catch (error) {
             console.error("Failed to fetch benefit information:", error);
@@ -257,6 +279,7 @@ export const AuthProvider = ({ children }) => {
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
+        deleteBenefitInfo,
         fetchBenefitInfos,
         benefitInfos,
         scholarships,

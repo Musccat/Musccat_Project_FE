@@ -17,6 +17,16 @@ const Title = styled.h1`
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+`;
+
+const FoundationName  = styled.span`
+    font-size: 18px;
+    font-weight: normal;
+    color: #888; 
+    margin-left: 60px; 
+    margin-top: 5px;
 `;
 const RegisterButtonContainer = styled.div`
     display: flex;
@@ -118,6 +128,10 @@ const InfoLabel = styled.div`
     min-width: 50px;
 `;
 
+const DarkGrayInfoLabel = styled(InfoLabel)`
+    color: #555;  
+`;
+
 const InfoDetail = styled.div`
     color: #666;
     flex-grow: 1;
@@ -152,7 +166,12 @@ const BenefitInfo_c = () => {
         <>
         <NavBar />
         <PageWrapper>
-        <Title>{benefitInfoData[0]?.scholarship.foundation_name || "장학재단"}</Title>
+        <Title>
+            {benefitInfoData[0]?.scholarship.name || "장학명"}
+            {benefitInfoData[0]?.scholarship.foundation_name && (
+                <FoundationName>{benefitInfoData[0].scholarship.foundation_name}</FoundationName>
+            )}
+        </Title>
         
         <RegisterButtonContainer>
             <RegisterButton to="/reviews">
@@ -176,7 +195,7 @@ const BenefitInfo_c = () => {
                             </CardHeader>
                             <CardContent>
                                 <InfoSection>
-                                    <InfoLabel>{info.year}년 수혜자</InfoLabel>
+                                <DarkGrayInfoLabel>{info.year}년 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>소득 분위</InfoLabel>

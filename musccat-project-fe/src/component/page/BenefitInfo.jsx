@@ -17,6 +17,13 @@ const Title = styled.h1`
     color: #333;
     margin-bottom: 20px;
 `;
+const FoundationName  = styled.span`
+    font-size: 18px;
+    font-weight: normal;
+    color: #888; 
+    margin-left: 60px; 
+    margin-top: 5px;
+`;
 const RegisterButtonContainer = styled.div`
     display: flex;
     justify-content: flex-end;  // 우측 정렬
@@ -60,17 +67,44 @@ const CardContent = styled.div`
     color: #666;
     line-height: 1.5;
 `;
+const ButtonGroup = styled.div`
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+`;
 
 const LikeButton = styled.button`
-    background-color: #f1f1f1;
+    background-color: #348a8c;
     color: #348a8c;
     border: none;
     padding: 4px 8px;
     font-size: 12px;
+    color: white;
     cursor: pointer;
     border-radius: 4px;
     margin-left: 10px;
 `;
+
+const EditButton = styled.button`
+    background-color: white;
+    color: #348a8c;
+    border: 1px solid #348a8c;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+`;
+
+const DeleteButton = styled.button`
+    background-color: white;
+    color: #2f6877;
+    border: 1px solid #2f6877;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+`;
+
 
 const InfoSection = styled.div`
     display: flex;
@@ -87,6 +121,10 @@ const InfoLabel = styled.div`
     min-width: 50px;
 `;
 
+const DarkGrayInfoLabel = styled(InfoLabel)`
+    color: #555;  
+`;
+
 const InfoDetail = styled.div`
     color: #666;
     flex-grow: 1;
@@ -95,7 +133,7 @@ const InfoDetail = styled.div`
 
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
-    const { benefitInfos, fetchBenefitInfos, scholarships } = useAuth();
+    const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, user } = useAuth();
 
     useEffect(() => {
         // 해당 product_id로 관련된 수혜 정보를 불러옴
@@ -106,14 +144,24 @@ const BenefitInfo = () => {
     const benefitInfoData = benefitInfos[product_id] || [];
 
     // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
-    const scholarship = scholarships.find(scholar => scholar.product_id === product_id);
+    const scholarship = scholarships.find(scholar => scholar.id === parseInt(product_id));
 
+    // 장학 정보 삭제 핸들러 함수
+    // benefit_id(수혜 정보 고유 id)
+    const handleDelete = (benefit_id) => {
+        if (window.confirm("정말 이 정보를 삭제하시겠습니까?")) {
+            deleteBenefitInfo(product_id, benefit_id);
+        }
+    };
 
     return (
         <>
         <NavBar />
         <PageWrapper>
-        <Title>{scholarship?.businessname}</Title>
+        <Title>
+            {scholarship?.name || "장학금명"}
+            <FoundationName>{scholarship?.foundation_name || "장학재단명"}</FoundationName>
+        </Title>
         
         <RegisterButtonContainer>
             <RegisterButton to="/reviews">
@@ -128,12 +176,20 @@ const BenefitInfo = () => {
                     benefitInfoData.map((info, index) => (
                         <Card key={index}>
                             <CardHeader>
-                                {info.username}님의 정보
+                                {info.user.username}님의 정보
+                                <ButtonGroup>
                                 <LikeButton>좋아요</LikeButton>
+                                {user?.id === info.user.id && (
+                                    <>
+                                        <EditButton>수정</EditButton>
+                                        <DeleteButton onClick={() => handleDelete(info.id)}>삭제</DeleteButton>
+                                    </>
+                                )}
+                                </ButtonGroup>
                             </CardHeader>
                             <CardContent>
                                 <InfoSection>
-                                    <InfoLabel>{info.year}년 수혜자</InfoLabel>
+                                    <DarkGrayInfoLabel>{info.year}년 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>기본 정보</InfoLabel>
