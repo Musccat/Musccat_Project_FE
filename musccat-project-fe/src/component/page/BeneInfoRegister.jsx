@@ -3,7 +3,6 @@ import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Select from 'react-select';
 
@@ -233,40 +232,44 @@ const BeneInfoRegister = () => {
             (scholarship) => scholarship.value === selectedScholarship
         );
 
-        if (selectedScholarshipData) {
-            const infoData = {
-                user: {
-                    id: user.id, // 로그인된 사용자의 ID를 사용
-                    nickname: user.nickname // 로그인된 사용자의 닉네임을 사용
-                },
-                scholarship: {
-                    id: selectedScholarshipData.product_id,
-                    foundation_name: selectedFoundation.label,
-                    name: selectedScholarshipData.value
-                },
-                incomeBracket: `${incomeBracket} 분위`,
-                totalGPA,
-                univCategory,
-                semesterCategory,
-                majorCategory,
-                year: parseInt(year, 10), 
-                advice,
-                interviewTip,
-            };
-
-            // product_id가 존재하는지 확인
-            if (info.id) {
-                await updateBenefitInfo(selectedScholarshipData.product_id, info.id, infoData); // updateBenefitInfo 함수 호출
-            } else if (selectedScholarshipData.product_id) {
-                await addBenefitInfo(selectedScholarshipData.product_id, infoData); // 새로운 데이터 추가
-            } else {
-                console.error("product_id가 유효하지 않습니다.");
-                return;
-            }
-
-            navigate(`/reviews/${selectedScholarshipData.product_id}`); // 작성한 수혜 정보 페이지로 이동
-        } else {
+        if (!selectedScholarshipData || !selectedScholarshipData.product_id) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
+            console.error("장학 수혜 정보가 올바르지 않습니다.", selectedScholarshipData);
+            return;
+        }
+
+        const infoData = {
+            user: {
+                id: user.id,
+                nickname: user.nickname
+            },
+            scholarship: {
+                id: selectedScholarshipData.product_id,
+                foundation_name: selectedFoundation.label,
+                name: selectedScholarshipData.value
+            },
+            incomeBracket: `${incomeBracket} 분위`,
+            totalGPA,
+            univCategory,
+            semesterCategory,
+            majorCategory,
+            year: parseInt(year, 10),
+            advice,
+            interviewTip,
+        };
+    
+
+        // 수혜 정보가 이미 존재하면 업데이트, 아니면 새로 추가
+        try {
+            if (info.id) {
+                await updateBenefitInfo(selectedScholarshipData.product_id, info.id, infoData); // 수정
+            } else {
+                await addBenefitInfo(selectedScholarshipData.product_id, infoData); // 추가
+            }
+            navigate(`/reviews/${selectedScholarshipData.product_id}`); // 페이지 이동
+        } catch (error) {
+            console.error("정보 저장에 실패했습니다.", error);
+            alert("정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
     };
 
