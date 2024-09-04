@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { Link, useParams } from "react-router-dom";
@@ -135,11 +135,16 @@ const InfoDetail = styled.div`
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
     const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, fetchScholarships, user } = useAuth();
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 해당 product_id로 관련된 수혜 정보를 불러옴
-        fetchBenefitInfos(product_id);
+        fetchBenefitInfos(product_id)
+            .finally(() => setLoading(false)); // 데이터를 가져온 후 로딩 상태 해제
+        
+        if (!product_id) {
+            setLoading(false);  // product_id가 없을 경우에도 로딩 상태 해제
+        }
     }, [product_id, fetchBenefitInfos]);
 
     useEffect(() => {
@@ -148,6 +153,10 @@ const BenefitInfo = () => {
             fetchScholarships(); // fetchScholarships를 호출하여 scholarships 데이터를 가져옴
         }
     }, [fetchScholarships, scholarships]);
+
+    if (loading) {
+        return <div>Loading...</div>;  // 로딩 중일 때 표시
+    }
 
     // benefitInfos에서 해당 product_id에 대한 정보 가져오기
     const benefitInfoData = Array.isArray(benefitInfos[product_id]) ? benefitInfos[product_id] : [];
