@@ -20,16 +20,10 @@ import RecomScholar from './component/page/RecomScholar';
 import Notice from './component/page/Notice';
 import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
+import MyInterest from './component/page/MyInterest';
 import BenefitInfo from './component/page/BenefitInfo';
 import BeneInfoRegister from './component/page/BeneInfoRegister';
 import BenefitInfo_c from './component/page/BenefitInfo_c';
-
-const MainTitleText = styled.p`
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-
-`;
 
 
 function App() {
@@ -45,6 +39,7 @@ function App() {
           <Route path="/main" element={<MainPage />} /> {/*메인 페이지 */}
           <Route path="/users/mypage" element={<MyPage />} /> {/*마이 페이지 */}
           <Route path="/users/meminfo" element={<MemInfo />}/> {/*개인정보 신규 입력 페이지 */}
+          <Route path="/users/myinterst" element={<MyInterest />}/> {/*나의 관심목록 페이지 */} 
           <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/notice" element={<Notice />} /> {/*장학금 공고 페이지 */}

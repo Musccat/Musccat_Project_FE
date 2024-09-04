@@ -134,7 +134,7 @@ const InfoDetail = styled.div`
 
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
-    const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, user } = useAuth();
+    const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, fetchScholarships, user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -142,11 +142,20 @@ const BenefitInfo = () => {
         fetchBenefitInfos(product_id);
     }, [product_id, fetchBenefitInfos]);
 
+    useEffect(() => {
+        // 장학금 정보를 불러오는 함수가 필요하다면 추가적으로 호출
+        if (!scholarships || scholarships.length === 0) {
+            fetchScholarships(); // fetchScholarships를 호출하여 scholarships 데이터를 가져옴
+        }
+    }, [fetchScholarships, scholarships]);
+
     // benefitInfos에서 해당 product_id에 대한 정보 가져오기
-    const benefitInfoData = benefitInfos[product_id] || [];
+    const benefitInfoData = Array.isArray(benefitInfos[product_id]) ? benefitInfos[product_id] : [];
 
     // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
-    const scholarship = scholarships.find(scholar => scholar.id === parseInt(product_id));
+    const scholarship = Array.isArray(scholarships)
+        ? scholarships.find(scholar => scholar.id === parseInt(product_id))
+        : null;
 
     // 장학 정보 삭제 핸들러 함수
     // benefit_id(수혜 정보 고유 id)
