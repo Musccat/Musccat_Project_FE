@@ -46,7 +46,6 @@ function App() {
           <Route path="/reviews/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
           <Route path="/reviews" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
           <Route path="/reviewstest/:product_id" element={<BenefitInfo_c />} /> {/*이전 수혜자 정보 페이지 */}
-
         </Routes>
         </AuthProvider>
         </div>

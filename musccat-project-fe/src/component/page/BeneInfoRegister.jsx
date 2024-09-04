@@ -3,6 +3,7 @@ import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Select from 'react-select';
 
@@ -253,10 +254,14 @@ const BeneInfoRegister = () => {
                 interviewTip,
             };
 
+            // product_id가 존재하는지 확인
             if (info.id) {
                 await updateBenefitInfo(selectedScholarshipData.product_id, info.id, infoData); // updateBenefitInfo 함수 호출
-            } else {
+            } else if (selectedScholarshipData.product_id) {
                 await addBenefitInfo(selectedScholarshipData.product_id, infoData); // 새로운 데이터 추가
+            } else {
+                console.error("product_id가 유효하지 않습니다.");
+                return;
             }
 
             navigate(`/reviews/${selectedScholarshipData.product_id}`); // 작성한 수혜 정보 페이지로 이동

@@ -139,11 +139,12 @@ const BenefitInfo = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchBenefitInfos(product_id)
-            .finally(() => setLoading(false)); // 데이터를 가져온 후 로딩 상태 해제
-        
-        if (!product_id) {
-            setLoading(false);  // product_id가 없을 경우에도 로딩 상태 해제
+        // product_id가 존재할 때만 API 호출
+        if (product_id) {
+            fetchBenefitInfos(product_id).finally(() => setLoading(false)); 
+        } else {
+            console.error("product_id is undefined");
+            setLoading(false);  // 로딩 상태 해제
         }
     }, [product_id, fetchBenefitInfos]);
 
