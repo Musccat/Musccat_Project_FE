@@ -170,7 +170,7 @@ const BeneInfoRegister = () => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
         const isValid =  
                     selectedFoundation !== null &&
-                    selectedScholarship.trim() !== "" &&
+                    selectedScholarship !== "" &&
                     incomeBracket.trim() !== "" &&
                     totalGPA.trim() !== "" &&
                     univCategory.trim() !== "" &&
@@ -185,11 +185,13 @@ const BeneInfoRegister = () => {
 
 
     const handleFoundationChange = async (selectedOption) => {
+        console.log("Selected Foundation:", selectedOption);
         setSelectedFoundation(selectedOption);
         setSelectedScholarship("");
 
         if (selectedOption) {
             const scholarships = await fetchScholarshipsByFoundation(selectedOption.value);
+            console.log("Scholarships:", scholarships);
             setScholarshipOptions(
                 scholarships.map(scholarship => ({
                     value: scholarship.name,
