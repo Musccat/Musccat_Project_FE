@@ -199,6 +199,7 @@ const BeneInfoRegister = () => {
                     product_id: scholarship.id,
                 }))
             );
+            console.log("Scholarship Options:", scholarshipOptions);
         } else {
             setScholarshipOptions([]);
         }
@@ -233,6 +234,7 @@ const BeneInfoRegister = () => {
         const selectedScholarshipData = scholarshipOptions.find(
             (scholarship) => scholarship.value === selectedScholarship
         );
+        console.log("Selected Scholarship Data:", selectedScholarshipData);
 
         if (!selectedScholarshipData || !selectedScholarshipData.product_id) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
