@@ -192,6 +192,11 @@ const Dropdown = styled.div`
 function EntireScholar(props) {
     // 상태 관리
     const { fetchScholarships, likes, setLikes, scholarships } = useAuth();
+
+    const [searchTerm, setSearchTerm] = useState(''); // 사용자가 입력한 검색어
+    const [suggestions, setSuggestions] = useState([]); // 자동완성 제안 목록
+    const [filteredScholarships, setFilteredScholarships] = useState(scholarships); // 필터링된 장학금 목록
+
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
     const [sortOption, setSortOption] = useState('기한 순');
@@ -204,6 +209,33 @@ function EntireScholar(props) {
     useEffect(() => {
         fetchScholarships();
     }, []);
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+    
+        // 검색어가 있는 경우에만 자동완성 제안
+        if (value.length > 0) {
+            const filteredSuggestions = scholarships
+                .map(s => s.foundation_name)
+                .filter(name => name.toLowerCase().includes(value.toLowerCase()))
+                .filter((name, index, self) => self.indexOf(name) === index); // 중복 제거
+    
+            setSuggestions(filteredSuggestions);
+        } else {
+            setSuggestions([]);
+        }
+    };
+    
+    // 제안 목록에서 항목을 선택했을 때 필터링된 장학금 목록을 설정
+    const handleSuggestionClick = (foundationName) => {
+        setSearchTerm(foundationName); // 선택된 제안으로 검색창을 업데이트
+        setSuggestions([]); // 제안을 숨김
+    
+        // 선택된 재단명에 해당하는 장학금만 필터링
+        const filtered = scholarships.filter(s => s.foundation_name === foundationName);
+        setFilteredScholarships(filtered);
+    };
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
@@ -231,6 +263,8 @@ function EntireScholar(props) {
         setLikes(newLikes);
     };
 
+    const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
+
     return (
         <>
             <NavBar />
@@ -238,7 +272,24 @@ function EntireScholar(props) {
             <div style={styles.outerContainer}>
                 <div style={styles.searchBarContainer}>
                     <div style={styles.searchBar}>
-                        <input type="text" placeholder="검색" style={styles.searchInput} />
+                        <input type="text" 
+                        placeholder="장한 재단명 검색" 
+                        style={styles.searchInput}
+                        value={searchTerm} 
+                        onChange={handleSearchChange} 
+                        />
+                    {suggestions.length > 0 && (
+                        <div style={styles.dropdown}>
+                            {suggestions.map((suggestion, index) => (
+                                <div 
+                                    key={index} 
+                                    onClick={() => handleSuggestionClick(suggestion)} 
+                                    style={{ padding: "10px", cursor: "pointer" }}>
+                                    {suggestion}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     </div>
                 </div>
             <div style={styles.buttonContainer}>
@@ -247,7 +298,7 @@ function EntireScholar(props) {
                             {typeOption} ▼
                         </SortButton>
                         {typeDropdownVisible && (
-                             <Dropdown>
+                            <Dropdown>
                                 {typeOptions.map((option, index) => (
                                     <DropdownItem
                                         key={index}
@@ -289,32 +340,40 @@ function EntireScholar(props) {
                         </tr>
                     </thead>
                     <tbody>
-                    {scholarships.map((scholarship, index) => (
-                        <tr key={scholarship.product_id}>
-                            <td style={styles.thTd}>{scholarship.foundation_name}</td>
-                            <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
-                            </td>
-                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
-                            <td style={styles.thTd}>
-                                <div style={styles.flexContainer}>
-                                <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
-                                    <button style={styles.infoButton}>정보 보러가기</button>
-                                </Link>
-                                    <button
-                                        style={styles.heartButton}
-                                        onClick={() => handleLikeClick(index)}
-                                    >
-                                        <img
-                                            src={likes[index] ? filledheart : emptyheart}
-                                            alt="heart"
-                                            style={styles.heartImage}
-                                        />
-                                    </button>
-                                </div>
+                    {scholarshipsToDisplay.length > 0 ? (
+                        scholarshipsToDisplay.map((scholarship, index) => (
+                            <tr key={scholarship.product_id}>
+                                <td style={styles.thTd}>{scholarship.foundation_name}</td>
+                                <td style={{ ...styles.thTd, paddingRight: "20px" }}>
+                                    <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
+                                </td>
+                                <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
+                                <td style={styles.thTd}>
+                                    <div style={styles.flexContainer}>
+                                        <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
+                                            <button style={styles.infoButton}>정보 보러가기</button>
+                                        </Link>
+                                        <button
+                                            style={styles.heartButton}
+                                            onClick={() => handleLikeClick(index)}
+                                        >
+                                            <img
+                                                src={likes[index] ? filledheart : emptyheart}
+                                                alt="heart"
+                                                style={styles.heartImage}
+                                            />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                                해당 정보가 존재하지 않습니다
                             </td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
                     <tfoot>
                         <tr>
