@@ -136,7 +136,9 @@ const BeneInfoRegister = () => {
     );
     const [foundationOptions, setFoundationOptions] = useState([]);
     const [scholarshipOptions, setScholarshipOptions] = useState([]);
-    const [selectedScholarship, setSelectedScholarship] = useState(info.scholarship?.name || "");
+    const [selectedScholarship, setSelectedScholarship] = useState(
+        info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : null
+    );
 
     const [incomeBracket, setIncomeBracket] = useState(info.incomeBracket?.replace(" 분위", "") || ""); // 수혜 당시 소득 분위
     const [totalGPA, setTotalGPA] = useState(info.totalGPA || ""); // 수혜 당시 전체 성적
@@ -149,7 +151,7 @@ const BeneInfoRegister = () => {
     const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, fetchScholarshipDetails, user, updateBenefitInfo } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -183,28 +185,6 @@ const BeneInfoRegister = () => {
         setIsFormValid(isValid);
     }, [selectedFoundation, selectedScholarship,  incomeBracket, totalGPA, univCategory, semesterCategory, majorCategory, year, advice, interviewTip]); 
 
-
-    const handleFoundationChange = async (selectedOption) => {
-        console.log("Selected Foundation:", selectedOption);
-        setSelectedFoundation(selectedOption);
-        setSelectedScholarship("");
-
-        if (selectedOption) {
-            const scholarships = await fetchScholarshipsByFoundation(selectedOption.value);
-            console.log("Scholarships:", scholarships);
-            setScholarshipOptions(
-                scholarships.map(scholarship => ({
-                    value: scholarship.name,
-                    label: scholarship.name,
-                    product_id: scholarship.id,
-                }))
-            );
-            console.log("Scholarship Options:", scholarshipOptions);
-        } else {
-            setScholarshipOptions([]);
-        }
-    };
-
     const handleTotalGPAChange = (e) => {
         let value = e.target.value;
     
@@ -223,6 +203,42 @@ const BeneInfoRegister = () => {
         }
     };
 
+    const handleFoundationChange = async (selectedOption) => {
+        console.log("Selected Foundation:", selectedOption);
+        setSelectedFoundation(selectedOption);
+        setSelectedScholarship(null);
+
+        if (selectedOption) {
+            const scholarships = await fetchScholarshipsByFoundation(selectedOption.value);
+            console.log("Scholarships:", scholarships);
+            setScholarshipOptions(
+                scholarships.map(scholarship => ({
+                    value: scholarship.name,
+                    label: scholarship.name,
+                }))
+            );
+            console.log("Scholarship Options:", scholarshipOptions);
+        } else {
+            setScholarshipOptions([]);
+        }
+    };
+
+    const handleScholarshipSelect = async (selectedOption) => {
+        if (selectedOption) {
+            const scholarshipDetails = await fetchScholarshipDetails(selectedOption.value);
+            if (scholarshipDetails) {
+                setSelectedScholarship({
+                    name: scholarshipDetails.name,
+                    product_id: scholarshipDetails.product_id, 
+                });
+            } else {
+                alert("장학 사업 정보를 불러오는 데 실패했습니다.");
+            }
+        } else {
+            setSelectedScholarship(null); // 선택 초기화
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -230,15 +246,9 @@ const BeneInfoRegister = () => {
             alert("모든 필드를 입력해주세요.");
             return;
         }
-
-        const selectedScholarshipData = scholarshipOptions.find(
-            (scholarship) => scholarship.value === selectedScholarship
-        );
-        console.log("Selected Scholarship Data:", selectedScholarshipData);
-
-        if (!selectedScholarshipData || !selectedScholarshipData.product_id) {
+    
+        if (!selectedScholarship || !selectedScholarship.product_id) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
-            console.error("장학 수혜 정보가 올바르지 않습니다.", selectedScholarshipData);
             return;
         }
 
@@ -248,9 +258,9 @@ const BeneInfoRegister = () => {
                 nickname: user.nickname
             },
             scholarship: {
-                id: selectedScholarshipData.product_id,
-                foundation_name: selectedFoundation.label,
-                name: selectedScholarshipData.value
+                id: selectedScholarship.product_id,
+                foundation_name: selectedFoundation.value, // 장학 재단명
+                name: selectedScholarship.name //장학 사업명
             },
             incomeBracket: `${incomeBracket} 분위`,
             totalGPA,
@@ -266,11 +276,11 @@ const BeneInfoRegister = () => {
         // 수혜 정보가 이미 존재하면 업데이트, 아니면 새로 추가
         try {
             if (info.id) {
-                await updateBenefitInfo(selectedScholarshipData.product_id, info.id, infoData); // 수정
+                await updateBenefitInfo(selectedScholarship.product_id, info.id, infoData); // 수정
             } else {
-                await addBenefitInfo(selectedScholarshipData.product_id, infoData); // 추가
+                await addBenefitInfo(selectedScholarship.product_id, infoData); // 추가
             }
-            navigate(`/reviews/${selectedScholarshipData.product_id}`); // 페이지 이동
+            navigate(`/reviews/${selectedScholarship.product_id}`); // 페이지 이동
         } catch (error) {
             console.error("정보 저장에 실패했습니다.", error);
             alert("정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
@@ -338,10 +348,10 @@ const BeneInfoRegister = () => {
                     id="scholarshipSelect"
                     value={
                         selectedScholarship
-                            ? { label: selectedScholarship, value: selectedScholarship }
+                            ? { label: selectedScholarship.name, value: selectedScholarship.name }
                             : null
                     }
-                    onChange={(option) => setSelectedScholarship(option?.value || "")}
+                    onChange={handleScholarshipSelect}
                     options={scholarshipOptions}
                     placeholder="장학 사업명을 선택하세요"
                     isDisabled={!selectedFoundation}

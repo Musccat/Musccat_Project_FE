@@ -109,6 +109,23 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const fetchScholarshipDetails = async (scholarshipName) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/reviews/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            return {
+                name: response.data.name,
+                product_id: response.data.product_id,
+            };
+        } catch (error) {
+            console.error("Failed to fetch scholarship details", error);
+            return null;
+        }
+    };
+
     const fetchScholarships = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/entirescholar/");
@@ -312,6 +329,7 @@ export const AuthProvider = ({ children }) => {
         fetchScholarships,
         fetchFoundations,
         fetchScholarshipsByFoundation,
+        fetchScholarshipDetails,
         checkUsernameAvailability,
         sendVerificationCode,
         verifyCode,
