@@ -210,6 +210,13 @@ function EntireScholar(props) {
         fetchScholarships();
     }, []);
 
+    useEffect(() => {
+        if (Array.isArray(scholarships)) {
+            setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
+        }
+    }, [scholarships]);
+
+
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
@@ -340,7 +347,7 @@ function EntireScholar(props) {
                         </tr>
                     </thead>
                     <tbody>
-                    {scholarshipsToDisplay.length > 0 ? (
+                    {Array.isArray(scholarshipsToDisplay) && scholarshipsToDisplay.length > 0 ? (
                         scholarshipsToDisplay.map((scholarship, index) => (
                             <tr key={scholarship.product_id}>
                                 <td style={styles.thTd}>{scholarship.foundation_name}</td>
