@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
     const fetchScholarships = async () => {
         try {
             const response = await axios.get("http://127.0.0.1:8000/entirescholar/");
-            setScholarships(response.data);
+            setScholarships(response.data.results);
             setLikes(Array(response.data.length).fill(false));  // 좋아요 상태 초기화
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
