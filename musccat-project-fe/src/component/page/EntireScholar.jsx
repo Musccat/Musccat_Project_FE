@@ -118,6 +118,26 @@ const styles = {
         width: "20px",
         height: "20px"
     },
+    triangleLeft: {
+        display: "inline-block",
+        width: "0",
+        height: "0",
+        borderTop: "8px solid transparent",
+        borderBottom: "8px solid transparent",
+        borderRight: "12px solid #348a8c", // 왼쪽을 향한 삼각형
+        cursor: "pointer",
+        marginRight: "8px"
+    },
+    triangleRight: {
+        display: "inline-block",
+        width: "0",
+        height: "0",
+        borderTop: "8px solid transparent",
+        borderBottom: "8px solid transparent",
+        borderLeft: "12px solid #348a8c", // 오른쪽을 향한 삼각형
+        cursor: "pointer",
+        marginLeft: "8px"
+    },
     pagination: {
         marginTop: "20px",
         textAlign: "center"
@@ -143,13 +163,14 @@ const styles = {
         marginBottom: "20px",
         marginTop: "10px",  
     }
+
 };
 const ScholarshipLink = styled(Link)`
     text-decoration: none;
     color: inherit;
 
     &:hover {
-        color: #007bff;  /* 파란색으로 변경 */
+        color: #007bff; 
     }
 `;
 
@@ -191,7 +212,16 @@ const Dropdown = styled.div`
 
 function EntireScholar(props) {
     // 상태 관리
-    const { fetchScholarships, likes, setLikes, scholarships } = useAuth();
+    const { fetchScholarships, 
+            likes, 
+            setLikes, 
+            scholarships,
+            goToNextPage, 
+            goToPreviousPage, 
+            currentPage, 
+            totalCount, 
+            nextPageUrl, 
+            previousPageUrl  } = useAuth();
 
     const [searchTerm, setSearchTerm] = useState(''); // 사용자가 입력한 검색어
     const [suggestions, setSuggestions] = useState([]); // 자동완성 제안 목록
@@ -207,15 +237,14 @@ function EntireScholar(props) {
     const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
 
     useEffect(() => {
-        fetchScholarships();
-    }, []);
+        fetchScholarships(currentPage);
+    }, [currentPage]);
 
     useEffect(() => {
         if (Array.isArray(scholarships)) {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
     }, [scholarships]);
-
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
@@ -271,6 +300,7 @@ function EntireScholar(props) {
     };
 
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
+    const totalPages = Math.ceil(totalCount / scholarships.length); // 총 페이지 수 계산
 
     return (
         <>
@@ -388,11 +418,33 @@ function EntireScholar(props) {
                         </tr>
                     </tfoot>
                 </table>
-                </div>
-                <div style={styles.pagination}>
-                    <span style={styles.paginationSpan}>1 2 3 4 5</span>
-                </div>
             </div>
+
+            {/* 페이지네이션 */}
+                <div style={styles.pagination}>
+                    {previousPageUrl && (
+                        <span onClick={goToPreviousPage}>
+                            <div style={styles.triangleLeft}></div>
+                        </span>
+                    )}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                        .slice(currentPage - 1, currentPage + 4)
+                        .map(page => (
+                            <span 
+                                key={page} 
+                                style={styles.paginationSpan} 
+                                onClick={() => fetchScholarships(page)}
+                            >
+                                {page}
+                            </span>
+                        ))}
+                    {nextPageUrl && (
+                        <span onClick={goToNextPage}>
+                            <div style={styles.triangleRight}></div>
+                        </span>
+                    )}
+                </div>
+                </div>
             </div>
         </div>
         </>

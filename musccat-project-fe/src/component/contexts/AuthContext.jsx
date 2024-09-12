@@ -20,11 +20,15 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
-    // benefit information
     const [benefitInfos, setBenefitInfos] = useState({});
 
+    // 장학금 목록 
     const [scholarships, setScholarships] = useState([]);
     const [likes, setLikes] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+    const [totalCount, setTotalCount] = useState(0);  // 전체 항목 수
+    const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
+    const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
 
     const navigate = useNavigate();
 
@@ -114,13 +118,30 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const fetchScholarships = async () => {
+    const fetchScholarships = async (page = 1) => {
         try {
-            const response = await axios.get("http://127.0.0.1:8000/entirescholar/");
+            const response = await axios.get(`http://127.0.0.1:8000/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
-            setLikes(Array(response.data.length).fill(false));  // 좋아요 상태 초기화
+            setLikes(Array(response.data.results.length).fill(false));  // 좋아요 상태 초기화
+            setTotalCount(response.data.count);  // 전체 항목 수 저장
+            setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
+            setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
+        }
+    };
+
+    const goToNextPage = async () => {
+        if (nextPageUrl) {
+            await fetchScholarships(currentPage + 1);
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    
+    const goToPreviousPage = async () => {
+        if (previousPageUrl && currentPage > 1) {
+            await fetchScholarships(currentPage - 1);
+            setCurrentPage(currentPage - 1);
         }
     };
     
@@ -311,10 +332,12 @@ export const AuthProvider = ({ children }) => {
         deleteBenefitInfo,
         fetchBenefitInfos,
         benefitInfos,
+        fetchScholarships,
+        goToNextPage,
+        goToPreviousPage,
         scholarships,
         likes,
         setLikes,
-        fetchScholarships,
         fetchFoundations,
         fetchScholarshipsByFoundation,
         checkUsernameAvailability,
