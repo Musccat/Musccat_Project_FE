@@ -151,7 +151,7 @@ const BeneInfoRegister = () => {
     const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, fetchScholarshipDetails, user, updateBenefitInfo } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -206,36 +206,30 @@ const BeneInfoRegister = () => {
     const handleFoundationChange = async (selectedOption) => {
         console.log("Selected Foundation:", selectedOption);
         setSelectedFoundation(selectedOption);
-        setSelectedScholarship(null);
-
+        setSelectedScholarship(null);  // 장학금 선택 초기화
+    
         if (selectedOption) {
             const scholarships = await fetchScholarshipsByFoundation(selectedOption.value);
             console.log("Scholarships:", scholarships);
             setScholarshipOptions(
                 scholarships.map(scholarship => ({
-                    value: scholarship.name,
-                    label: scholarship.name,
+                    value: scholarship.product_id, // product_id를 value로 설정
+                    label: scholarship.name, // 장학 사업명을 표시
                 }))
             );
-            console.log("Scholarship Options:", scholarshipOptions);
         } else {
             setScholarshipOptions([]);
         }
     };
 
-    const handleScholarshipSelect = async (selectedOption) => {
+    const handleScholarshipSelect = (selectedOption) => {
         if (selectedOption) {
-            const scholarshipDetails = await fetchScholarshipDetails(selectedOption.value);
-            if (scholarshipDetails) {
-                setSelectedScholarship({
-                    name: scholarshipDetails.name,
-                    product_id: scholarshipDetails.product_id, 
-                });
-            } else {
-                alert("장학 사업 정보를 불러오는 데 실패했습니다.");
-            }
+            setSelectedScholarship({
+                name: selectedOption.label,  // 선택한 장학 사업명
+                product_id: selectedOption.value,  // 선택한 product_id
+            });
         } else {
-            setSelectedScholarship(null); // 선택 초기화
+            setSelectedScholarship(null);  // 선택 초기화
         }
     };
 

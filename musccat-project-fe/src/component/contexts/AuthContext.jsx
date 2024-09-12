@@ -102,27 +102,14 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
-            return response.data;
+            // 장학 사업명과 product_id를 반환하도록 수정
+            return response.data.map((scholarship) => ({
+                name: scholarship.name,
+                product_id: scholarship.id,
+            }));
         } catch (error) {
             console.error("Failed to fetch scholarships by foundation", error);
             return [];
-        }
-    };
-
-    const fetchScholarshipDetails = async (scholarshipName) => {
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/reviews/`, {
-                headers: {
-                    Authorization: `Bearer ${authTokens.access}`,
-                },
-            });
-            return {
-                name: response.data.name,
-                product_id: response.data.product_id,
-            };
-        } catch (error) {
-            console.error("Failed to fetch scholarship details", error);
-            return null;
         }
     };
 
@@ -329,7 +316,6 @@ export const AuthProvider = ({ children }) => {
         fetchScholarships,
         fetchFoundations,
         fetchScholarshipsByFoundation,
-        fetchScholarshipDetails,
         checkUsernameAvailability,
         sendVerificationCode,
         verifyCode,
