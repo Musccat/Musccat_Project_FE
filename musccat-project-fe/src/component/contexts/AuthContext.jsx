@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
                 }
             });
             setUser({
+                id: response.data.id,
                 username: response.data.username,
                 fullName: response.data.fullname,
                 userNickname: response.data.nickname,
