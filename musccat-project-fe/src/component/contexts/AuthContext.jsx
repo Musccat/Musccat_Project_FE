@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }) => {
                 userNickname: response.data.nickname,
                 userBirthdate: response.data.birth,
                 email: response.data.email,
+                gender: response.data.gender,
                 region: response.data.region,
                 district: response.data.district,
                 incomeBracket: response.data.incomeBracket,
@@ -63,6 +64,7 @@ export const AuthProvider = ({ children }) => {
             });
         } catch (error) {
             console.error("Failed to fetch user data", error);
+            alert("사용자 정보를 가져오는 데 실패했습니다. 다시 시도해 주세요.");
         }
     };
 
@@ -74,16 +76,14 @@ export const AuthProvider = ({ children }) => {
                 }
             });
             if (response.status === 200) {
-                setUser({
-                    ...user,
-                    ...updatedData
-                });
-                await fetchUserData(); // 변경된 데이터로 사용자 정보 갱신
+                await fetchUserData(); // 서버에서 갱신된 정보를 다시 불러옴
+                alert("사용자 정보가 성공적으로 업데이트되었습니다.");
             } else {
                 alert("사용자 정보를 업데이트하는 데 실패했습니다.");
             }
         } catch (error) {
             console.error("사용자 정보 업데이트 중 오류 발생", error);
+            alert("사용자 정보 업데이트 중 오류가 발생했습니다. 다시 시도해 주세요.");
         }
     };
     const fetchFoundations = async () => {
@@ -159,11 +159,11 @@ export const AuthProvider = ({ children }) => {
                 setIsAuthenticated(true);
                 navigate("/main");
             } else {
-                alert("로그인에 실패했습니다. 서버 응답을 확인하세요.");
+                alert("로그인에 실패했습니다.");
             }
         } catch (error) {
             console.error("Error during login:", error);
-            alert("로그인 중 오류가 발생했습니다. 서버 상태를 확인하세요.");
+            alert("로그인 중 오류가 발생했습니다.");
         }
     };
 

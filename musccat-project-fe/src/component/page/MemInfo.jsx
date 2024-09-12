@@ -201,6 +201,7 @@ const MemInfo = () => {
         dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
         email: user?.email || '',
         nickname: user?.userNickname || '',
+        gender: '',
         region: '',
         district: '',
         incomeBracket: '',
@@ -223,6 +224,7 @@ const MemInfo = () => {
             const isFormValid = () => {
                 const requiredFields = [
                     'nickname',
+                    'gender',
                     'region',
                     'district',
                     'incomeBracket',
@@ -257,6 +259,7 @@ const MemInfo = () => {
                     dob: user.userBirthdate,
                     email: user.email,
                     nickname: user.userNickname || '',
+                    gender: user.userGender || '',
                     region: user.region || '',
                     district: user.district || '',
                     incomeBracket: user.incomeBracket || '',
@@ -309,7 +312,7 @@ const MemInfo = () => {
         e.preventDefault();
 
         // 필수 항목이 비어있지 않은지 확인
-        const requiredFields = ['nickname', 'region', 'district', 'incomeBracket', 'school', 'major', 'semester', 'totalGPA'];
+        const requiredFields = ['nickname', 'gender', 'region', 'district', 'incomeBracket', 'school', 'major', 'semester', 'totalGPA'];
         for (const field of requiredFields) {
             if (!formData[field] || formData[field].trim() === '') {
                 alert(`필수 항목 ${field}를(을) 입력하세요.`);
@@ -320,6 +323,7 @@ const MemInfo = () => {
         // 수정된 사용자 정보를 서버에 업데이트
         await updateUser({
             nickname: formData.nickname, // 수정된 닉네임 반영
+            gender: formData.gender,
             region: formData.region,
             district: formData.district,
             incomeBracket: formData.incomeBracket,
@@ -400,6 +404,42 @@ const MemInfo = () => {
                     <label>이메일</label>
                     <div className="valueDisplay">{user?.email}</div>
                 </FormGroup>
+
+                <RadioGroupWrapper>
+                    <RadioGroupLabel>성별<RequiredIndicator>*</RequiredIndicator></RadioGroupLabel>
+                    <RadioGroup>
+                        <RadioLabel>
+                            <input 
+                                type="radio" 
+                                name="gender" 
+                                value="남성" 
+                                checked={formData.gender === "남성"} 
+                                onChange={handleChange} 
+                            />
+                            남성
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="radio" 
+                                name="gender" 
+                                value="여성" 
+                                checked={formData.gender === "여성"} 
+                                onChange={handleChange} 
+                            />
+                            여성
+                        </RadioLabel>
+                        <RadioLabel>
+                            <input 
+                                type="radio" 
+                                name="gender" 
+                                value="선택안함" 
+                                checked={formData.gender === "선택안함"} 
+                                onChange={handleChange} 
+                            />
+                            선택안함
+                        </RadioLabel>
+                    </RadioGroup>
+                </RadioGroupWrapper>
 
                 <FormGroup>
                     <label>닉네임<RequiredIndicator>*</RequiredIndicator></label>
