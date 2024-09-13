@@ -151,8 +151,12 @@ const BeneInfoRegister = () => {
     const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo } = useAuth();
+    const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo, fetchUserData } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchUserData(); 
+    }, [fetchUserData]);
 
     useEffect(() => {
         // Fetch foundations on component mount
