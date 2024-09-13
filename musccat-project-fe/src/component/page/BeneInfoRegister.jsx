@@ -260,8 +260,7 @@ const BeneInfoRegister = () => {
 
         const infoData = {
             user: {
-                id: user.id,
-                nickname: user.nickname
+                id: user.id
             },
             scholarship: {
                 id: selectedScholarship.product_id,

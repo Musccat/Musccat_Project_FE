@@ -7,7 +7,7 @@ import Select from 'react-select';
 
 const Container = styled.div`
     max-width: 800px;
-    margin: 50px auto;
+    margin: 50px auto; 
     padding: 20px;
     border: 1px solid #348a8c;
     border-radius: 8px;
