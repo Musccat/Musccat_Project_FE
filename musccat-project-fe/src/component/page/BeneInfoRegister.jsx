@@ -158,11 +158,13 @@ const BeneInfoRegister = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchUserData();
+            if (!user) {  // user가 없을 때만 fetchUserData를 호출
+                await fetchUserData();
+            }
             setLoading(false);  // 데이터가 로드되면 로딩 상태 해제
         };
         fetchData();
-    }, [fetchUserData]);
+    }, [user, fetchUserData]);
 
     useEffect(() => {
         // Fetch foundations on component mount
