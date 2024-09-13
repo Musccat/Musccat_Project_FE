@@ -147,23 +147,14 @@ export const AuthProvider = ({ children }) => {
     
     const loginUser = async (username, password) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/users/login/", {
-                username,
-                password
-            });
-
-            if (response.status === 200 && response.data.access) {
-                setAuthTokens(response.data);
-                localStorage.setItem("authTokens", JSON.stringify(response.data));
-                await fetchUserData();  // Fetch and set the full user data after login
-                setIsAuthenticated(true);
-                navigate("/main");
-            } else {
-                alert("로그인에 실패했습니다.");
-            }
+            const response = await axios.post('http://127.0.0.1:8000/login/', { username, password });
+            const tokens = response.data; // 토큰 받기
+            setAuthTokens(tokens); // 토큰 저장
+            localStorage.setItem('authTokens', JSON.stringify(tokens)); // 로컬 스토리지에 저장
+            return true;  // 로그인 성공
         } catch (error) {
-            console.error("Error during login:", error);
-            alert("로그인 중 오류가 발생했습니다.");
+            console.error('로그인 실패:', error);
+            return false;  // 로그인 실패
         }
     };
 

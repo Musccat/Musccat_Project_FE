@@ -237,8 +237,12 @@ export default function Login() {
     const  handleSubmit = async (e) => {
         e.preventDefault();
         if (usernameValid && passwordValid) {
-            await loginUser(username, password); // loginUser 함수 호출
-            navigate('/main');
+            const loginSuccess = await loginUser(username, password); // loginUser 함수에서 토큰만 받아오기
+            if (loginSuccess) {
+                navigate('/main');  // 로그인 성공 시 메인 페이지로 이동
+            } else {
+                alert("로그인에 실패했습니다. 다시 시도해 주세요.");
+            }
         }
     }
 
