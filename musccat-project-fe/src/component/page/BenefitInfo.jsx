@@ -17,6 +17,8 @@ const Title = styled.h1`
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 `;
 const FoundationName  = styled.span`
     font-size: 18px;
@@ -61,6 +63,9 @@ const CardHeader = styled.div`
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const CardContent = styled.div`
@@ -218,8 +223,24 @@ const BenefitInfo = () => {
                                     <DarkGrayInfoLabel>{info.year}년 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
                                 <InfoSection>
-                                    <InfoLabel>기본 정보</InfoLabel>
-                                    <InfoDetail>{info.basicInfo}</InfoDetail>
+                                    <InfoLabel>소득 분위</InfoLabel>
+                                    <InfoDetail>{info.incomeBracket}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>대학 유형</InfoLabel>
+                                    <InfoDetail>{info.univCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>학과 계열</InfoLabel>
+                                    <InfoDetail>{info.majorCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>수료 학기</InfoLabel>
+                                    <InfoDetail>{info.semesterCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>전체 성적</InfoLabel>
+                                    <InfoDetail>{info.totalGPA}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>합격 팁</InfoLabel>
