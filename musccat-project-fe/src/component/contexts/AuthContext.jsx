@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
-            const response = await axios.put("http://127.0.0.1:8000/users/mypage/", updatedData, {
+            const response = await axios.put("http://127.0.0.1:8000/users/mypage/update/", updatedData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
