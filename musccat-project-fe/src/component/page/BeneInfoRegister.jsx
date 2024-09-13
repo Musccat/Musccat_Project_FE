@@ -154,8 +154,14 @@ const BeneInfoRegister = () => {
     const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo, fetchUserData } = useAuth();
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        fetchUserData(); 
+        const fetchData = async () => {
+            await fetchUserData();
+            setLoading(false);  // 데이터가 로드되면 로딩 상태 해제
+        };
+        fetchData();
     }, [fetchUserData]);
 
     useEffect(() => {
@@ -285,6 +291,9 @@ const BeneInfoRegister = () => {
         }
     };
 
+    if (loading) {
+        return <div>로딩 중...</div>;  // 로딩 중일 때 메시지 표시
+    }
 
     const incomeBracketOptions = Array.from({length: 10}, (_, i) => ({ 
         value: `${i + 1}`, 
