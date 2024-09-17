@@ -129,6 +129,7 @@ const InfoLabel = styled.div`
 
 const DarkGrayInfoLabel = styled(InfoLabel)`
     color: #555;  
+    font-weight: normal;
 `;
 
 const InfoDetail = styled.div`
@@ -207,7 +208,7 @@ const BenefitInfo = () => {
                     benefitInfoData.map((info, index) => (
                         <Card key={index}>
                             <CardHeader>
-                                {info.user.username}님의 정보
+                                수혜자 {index + 1}
                                 <ButtonGroup>
                                 <LikeButton>좋아요</LikeButton>
                                 {user?.id === info.user.id && (
@@ -220,7 +221,7 @@ const BenefitInfo = () => {
                             </CardHeader>
                             <CardContent>
                                 <InfoSection>
-                                    <DarkGrayInfoLabel>{info.year}년 수혜자</DarkGrayInfoLabel>
+                                    <DarkGrayInfoLabel>{info.year}년도 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>소득 분위</InfoLabel>

@@ -130,6 +130,7 @@ const InfoLabel = styled.div`
 
 const DarkGrayInfoLabel = styled(InfoLabel)`
     color: #555;  
+    font-weight: normal;
 `;
 
 const InfoDetail = styled.div`
@@ -145,8 +146,8 @@ const BenefitInfo_c = () => {
     useEffect(() => {
         // product_id에 해당하는 수혜 정보 필터링
         const filteredData = benefitinfo
-            .filter(info => info.scholarship.id.toString() === product_id)
-            .sort((a, b) => a.benefit_id - b.benefit_id); // benefit_id 오름차순 정렬
+            .filter(info => info.scholarship.id.toString() === product_id);
+            //.sort((a, b) => a.benefit_id - b.benefit_id); // benefit_id 오름차순 정렬
         setBenefitInfoData(filteredData);
     }, [product_id]);
     
@@ -184,7 +185,7 @@ const BenefitInfo_c = () => {
                             </CardHeader>
                             <CardContent>
                                 <InfoSection>
-                                <DarkGrayInfoLabel>{info.year}년 수혜자</DarkGrayInfoLabel>
+                                <DarkGrayInfoLabel>{info.year}년도 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>소득 분위</InfoLabel>
