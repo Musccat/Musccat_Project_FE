@@ -41,23 +41,27 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`
                 }
             });
+
+            const residence = response.data.residence ? response.data.residence.split(' ') : ['', ''];
+
             setUser({
                 id: response.data.id,
                 username: response.data.username,
                 fullName: response.data.fullname,
                 userNickname: response.data.nickname,
                 userBirthdate: response.data.birth,
+                age: response.data.age,
                 email: response.data.email,
                 gender: response.data.gender,
-                region: response.data.region,
-                district: response.data.district,
-                incomeBracket: response.data.incomeBracket,
-                applicantCategory: response.data.applicantCategory,
-                school: response.data.school,
+                region: residence[0],  
+                district: residence[1],
+                income: response.data.income,
+                univCategory: response.data.univCategory,
+                university: response.data.university,
+                majorCategory: response.data.majorCategory,
                 major: response.data.major,
                 year: response.data.year,
                 semester: response.data.semester,
-                currentGPA: response.data.currentGPA,
                 totalGPA: response.data.totalGPA,
                 familyStatus: response.data.familyStatus,
                 additionalInfo: response.data.additionalInfo,

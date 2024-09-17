@@ -194,19 +194,22 @@ const MemInfo = () => {
     const { state } = useLocation();
     const isInfoSubmitted = state?.isInfoSubmitted || false;
     const { user, fetchUserData, updateUser } = useAuth();
-
     const [formValid, setFormValid] = useState(false);
+
     const [formData, setFormData] = useState({
         fullname: user?.fullname || '',
+        username: user?.username || '',
         dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
+        age: user?.age || '',
         email: user?.email || '',
         nickname: user?.userNickname || '',
         gender: '',
         region: '',
         district: '',
-        incomeBracket: '',
-        applicantCategory: '',
-        school: '',
+        income: '',
+        univCategory: '',
+        university: '',
+        majorCategory: '',
         major: '',
         year: '',
         semester: '',
@@ -227,9 +230,10 @@ const MemInfo = () => {
                     'gender',
                     'region',
                     'district',
-                    'incomeBracket',
-                    'applicantCategory',
-                    'school',
+                    'income',
+                    'univCategory',
+                    'university',
+                    'majorCategory',
                     'major',
                     'year',
                     'semester',
@@ -253,18 +257,22 @@ const MemInfo = () => {
         const fetchData = async () => {
             await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
             if (user) {
+                const [region, district] = user.residence ? user.residence.split(' ') : ['', ''];
                 setFormData({
                     ...formData,
                     fullname: user.fullName,
+                    username: user.username,
                     dob: user.userBirthdate,
                     email: user.email,
+                    age: user.age,
                     nickname: user.userNickname || '',
                     gender: user.userGender || '',
-                    region: user.region || '',
-                    district: user.district || '',
-                    incomeBracket: user.incomeBracket || '',
-                    applicantCategory: user.applicantCategory || '',
-                    school: user.school || '',
+                    region: region || '',
+                    district: district || '',
+                    income: user.income || '',
+                    univCategory: user.univCategory || '',
+                    university: user.university || '',
+                    majorCategory: user.majorCategory || '',
                     major: user.major || '',
                     year: user.year || '',
                     semester: user.semester || '',
@@ -311,8 +319,11 @@ const MemInfo = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // residence로 region과 district 합치기
+        const residence = `${formData.region} ${formData.district}`;
+
         // 필수 항목이 비어있지 않은지 확인
-        const requiredFields = ['nickname', 'gender', 'region', 'district', 'incomeBracket', 'school', 'major', 'semester', 'totalGPA'];
+        const requiredFields = ['nickname', 'gender', 'region', 'district', 'income', 'univCategory','university', 'majorCategory', 'major', 'semester', 'totalGPA'];
         for (const field of requiredFields) {
             if (!formData[field] || formData[field].trim() === '') {
                 alert(`필수 항목 ${field}를(을) 입력하세요.`);
@@ -322,13 +333,13 @@ const MemInfo = () => {
 
         // 수정된 사용자 정보를 서버에 업데이트
         await updateUser({
-            nickname: formData.nickname, // 수정된 닉네임 반영
             gender: formData.gender,
-            region: formData.region,
-            district: formData.district,
-            incomeBracket: formData.incomeBracket,
-            applicantCategory: formData.applicantCategory,
-            school: formData.school,
+            nickname: formData.nickname, // 수정된 닉네임 반영
+            residence: residence,
+            income: formData.income,
+            univCategory: formData.univCategory,
+            university: formData.university,
+            majorCategory: formData.majorCategory,
             major: formData.major,
             year: formData.year,
             semester: formData.semester,
@@ -361,7 +372,7 @@ const MemInfo = () => {
         });
     };
 
-    const incomeBracketOptions = Array.from({length: 10}, (_, i) => ({ 
+    const incomeOptions = Array.from({length: 10}, (_, i) => ({ 
         value: `${i + 1}`, 
         label: `${i + 1}분위` 
     }));
@@ -370,6 +381,16 @@ const MemInfo = () => {
         { value: '대학신입생', label: '대학신입생' },
         ...Array.from({ length: 7 }, (_, i) => ({ value: `${i + 2}학기`, label: `${i + 2}학기` })),
         { value: '대학 8학기이상', label: '대학 8학기이상' }
+    ];
+
+    const univCategoryOptions = [
+        { value: '4년제(5~6년제)', label: '4년제(5~6년제)' },
+        { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
+        { value: '해외대학', label: '해외대학' },
+        { value: '학점은행제 대학', label: '학점은행제 대학'},
+        { value: '원격대학', label: '원격대학'},
+        { value: '기술대학', label: '기술대학'}
+        
     ];
 
     const majorCategoryOptions = [
@@ -390,9 +411,14 @@ const MemInfo = () => {
             <NoticeText>* 표시 항목은 필수 항목입니다.</NoticeText>
             <Space />
             <form onSubmit={handleSubmit}>
-            <FormGroup>
+                <FormGroup>
                     <label>이름</label>
                     <div className="valueDisplay">{user?.fullname}</div>
+                </FormGroup>
+
+                <FormGroup>
+                    <label>아이디</label>
+                    <div className="valueDisplay">{user?.username}</div>
                 </FormGroup>
 
                 <FormGroup>
@@ -401,9 +427,16 @@ const MemInfo = () => {
                 </FormGroup>
 
                 <FormGroup>
+                    <label>나이</label>
+                    <div className="valueDisplay">{user?.age}</div>
+                </FormGroup>
+
+                <FormGroup>
                     <label>이메일</label>
                     <div className="valueDisplay">{user?.email}</div>
                 </FormGroup>
+                <Space />
+                <Space />
 
                 <RadioGroupWrapper>
                     <RadioGroupLabel>성별<RequiredIndicator>*</RequiredIndicator></RadioGroupLabel>
@@ -477,10 +510,10 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>소득 분위<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
-                        id="incomeBracket"
-                        value={formData.incomeBracket ? { label: `${formData.incomeBracket} 분위`, value: formData.incomeBracket } : null}
-                        onChange={(option) => setFormData({ ...formData, incomeBracket: option?.value || '' })}
-                        options={incomeBracketOptions}
+                        id="income"
+                        value={formData.income ? { label: `${formData.income} 분위`, value: formData.income } : null}
+                        onChange={(option) => setFormData({ ...formData, income: option?.value || '' })}
+                        options={incomeOptions}
                         placeholder="소득 분위 선택"
                     />
                 </FormGroup>
@@ -490,15 +523,26 @@ const MemInfo = () => {
                         소득 분위 정보 확인
                     </StyledLink>
                 </LinkContainer>
+                
+                <FormGroup>
+                    <label>대학 유형<RequiredIndicator>*</RequiredIndicator></label>
+                    <input 
+                        name="univCategory" 
+                        value={univCategoryOptions.find(option => option.value === formData.univCategory) || ''}
+                        onChange={(option) => handleChange({ name: "univCategory", value: option.value })}
+                        options={univCategoryOptions}
+                        placeholder="대학 유형 선택"
+                    />
+                </FormGroup>
 
                 <FormGroup>
-                    <label>학교<RequiredIndicator>*</RequiredIndicator></label>
+                    <label>대학명<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
                         type="text" 
-                        name="school" 
-                        value={formData.school} 
+                        name="university" 
+                        value={formData.university} 
                         onChange={handleChange} 
-                        placeholder="학교명을 입력하세요"
+                        placeholder="대학명 검색"
                     />
                     <button type="button">검색</button>
                 </FormGroup>
@@ -512,6 +556,18 @@ const MemInfo = () => {
                         options={majorCategoryOptions}
                         placeholder="학과 계열 선택"
                     />
+                </FormGroup>
+
+                <FormGroup>
+                    <label>학과명<RequiredIndicator>*</RequiredIndicator></label>
+                    <input 
+                        type="text" 
+                        name="major" 
+                        value={formData.major} 
+                        onChange={handleChange} 
+                        placeholder="학과명 검색"
+                    />
+                    <button type="button">검색</button>
                 </FormGroup>
 
                 <FormGroup>

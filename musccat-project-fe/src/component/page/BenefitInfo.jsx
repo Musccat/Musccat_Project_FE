@@ -224,7 +224,7 @@ const BenefitInfo = () => {
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>소득 분위</InfoLabel>
-                                    <InfoDetail>{info.incomeBracket}</InfoDetail>
+                                    <InfoDetail>{info.income}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>대학 유형</InfoLabel>

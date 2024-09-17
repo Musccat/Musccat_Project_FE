@@ -145,18 +145,20 @@ const MyPage = () => {
     const { user, fetchUserData } = useAuth();
 
     const [fullName, setFullName] = useState('');
-    const [userNickname, setUserNickname] = useState('');
+    const [userName, setUserName] = useState('');
     const [userBirthdate, setUserBirthdate] = useState('');
+    const [age, setUserAge] = useState('');
     const [userEmail, setUserEmail] = useState('');
-    const [region, setRegion] = useState('');
-    const [district, setDistrict] = useState('');
-    const [incomeBracket, setIncomeBracket] = useState('');
-    const [applicantCategory, setApplicantCategory] = useState('');
-    const [school, setSchool] = useState('');
+    const [userNickname, setUserNickname] = useState('');
+    const [userGender, setUserGender] = useState('');
+    const [userResidence, setUserResidence] = useState('');
+    const [income, setIncome] = useState('');
+    const [univCategory, setUnivCategory] = useState('');
+    const [university, setUniversity] = useState('');
+    const [majorCategory, setMajorCategory] = useState('');
     const [major, setMajor] = useState('');
     const [year, setYear] = useState('');
     const [semester, setSemester] = useState('');
-    const [currentGPA, setCurrentGPA] = useState('');
     const [totalGPA, setTotalGPA] = useState('');
     const [familyStatus, setFamilyStatus] = useState('');
     const [additionalInfo, setAdditionalInfo] = useState('');
@@ -172,18 +174,22 @@ const MyPage = () => {
     useEffect(() => {
         if (user) {
             setFullName(user.fullName);
+            setUserName(user.username);
             setUserNickname(user.userNickname);
             setUserBirthdate(user.userBirthdate);
+            setUserAge(user.age);
             setUserEmail(user.email);
-            setRegion(user.region);
-            setDistrict(user.district);
-            setIncomeBracket(user.incomeBracket);
-            setApplicantCategory(user.applicantCategory);
-            setSchool(user.school);
+
+            const residence = user.residence ? user.residence : '';
+            setUserResidence(residence);
+
+            setIncome(user.income);
+            setUnivCategory(user.univCategory);
+            setUniversity(user.university);
+            setMajorCategory(user.majorCategory);
             setMajor(user.major);
             setYear(user.year);
             setSemester(user.semester);
-            setCurrentGPA(user.currentGPA);
             setTotalGPA(user.totalGPA);
             setFamilyStatus(user.familyStatus);
             setAdditionalInfo(user.additionalInfo);
@@ -228,18 +234,28 @@ const MyPage = () => {
                     <Title>장학 기본 정보</Title>
                     <InfoList>
                         <InfoItem>
-                            <span>닉네임</span>
-                            <span>{userNickname}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
                             <span>이름</span>
                             <span>{fullName}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
+                            <span>아이디</span>
+                            <span>{userName}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>닉네임</span>
+                            <span>{userNickname}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
                             <span>생년월일</span>
                             <span>{userBirthdate}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>나이</span>
+                            <span>{age}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
@@ -255,28 +271,33 @@ const MyPage = () => {
                     <Title>추가 정보</Title>
                     <InfoList>
                         <InfoItem>
-                            <span>거주 지역</span>
-                            <span>{region}</span>
+                            <span>성별</span>
+                            <span>{userGender}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>구/군</span>
-                            <span>{district}</span>
+                            <span>거주 지역</span>
+                            <span>{userResidence}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
                             <span>소득 분위</span>
-                            <span>{incomeBracket}</span>
+                            <span>{income}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>지원 계열</span>
-                            <span>{applicantCategory}</span>
+                            <span>대학 유형</span>
+                            <span>{univCategory}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>학교</span>
-                            <span>{school}</span>
+                            <span>대학명</span>
+                            <span>{university}</span>
+                            <Space />
+                        </InfoItem>
+                        <InfoItem>
+                            <span>학과 계열</span>
+                            <span>{majorCategory}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
@@ -285,18 +306,8 @@ const MyPage = () => {
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>학년</span>
-                            <span>{year}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
                             <span>수료 학기</span>
                             <span>{semester}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
-                            <span>직전 학기 성적</span>
-                            <span>{currentGPA}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
@@ -305,7 +316,7 @@ const MyPage = () => {
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>가족 상태</span>
+                            <span>가정 형태</span>
                             <span>{familyStatus}</span>
                             <Space />
                         </InfoItem>
