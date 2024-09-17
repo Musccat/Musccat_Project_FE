@@ -141,26 +141,15 @@ const InfoDetail = styled.div`
 const BenefitInfo_c = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
     const [benefitInfoData, setBenefitInfoData] = useState([]);
-    // const { benefitInfos, fetchBenefitInfos, scholarships } = useAuth();
     
     useEffect(() => {
         // product_id에 해당하는 수혜 정보 필터링
-        const filteredData = benefitinfo.filter(info => info.scholarship.id.toString() === product_id);
+        const filteredData = benefitinfo
+            .filter(info => info.scholarship.id.toString() === product_id)
+            .sort((a, b) => a.benefit_id - b.benefit_id); // benefit_id 오름차순 정렬
         setBenefitInfoData(filteredData);
     }, [product_id]);
-    /*
-    useEffect(() => {
-        // 해당 product_id로 관련된 수혜 정보를 불러옴
-        fetchBenefitInfos(product_id);
-    }, [product_id, fetchBenefitInfos]);
-
-    // benefitInfos에서 해당 product_id에 대한 정보 가져오기
-    const benefitInfoData = benefitInfos[product_id] || [];
-
-    // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
-    const scholarship = scholarships.find(scholar => scholar.product_id === product_id);
-
-    */
+    
 
     return (
         <>
@@ -186,7 +175,7 @@ const BenefitInfo_c = () => {
                     benefitInfoData.map((info, index) => (
                         <Card key={index}>
                             <CardHeader>
-                                {info.user.nickname}님의 정보
+                                수혜자 {index + 1}
                                 <ButtonGroup>
                                 <LikeButton>좋아요</LikeButton>
                                 <EditButton>수정</EditButton>
