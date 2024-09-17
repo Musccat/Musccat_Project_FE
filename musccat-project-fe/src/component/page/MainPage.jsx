@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 const Wrapper = styled.div`
     padding: 16px;
     width: calc(100% - 32px);
-    min-height: 250vh;
+    min-height: 350vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -68,6 +68,16 @@ const SecondButton = styled.button`
     margin-left: 10px;
 `;
 
+const ThirdButton = styled.button`
+    padding: 8px 16px;
+    border: 1px solid #000; /* Black border */
+    border-radius: 4px; /* Rounded corners for the button */
+    background-color: #2f4858;
+    color: white;
+    margin-top: auto;
+    margin-left: 10px;
+`;
+
 
 const BottomButton = styled.button`
     padding: 16px 24px; /* 세로 길이를 늘림 */
@@ -116,43 +126,65 @@ function MainPage(props) {
                 <Space />
                 {isAuthenticated ? (
                     <>
-                        <Rectangle style={{ marginTop: "16px" }}>
-                            <Text>다양한 기관과 단체의
-                                <br/>장학금을 확인해보세요</Text>
-                            <Space />
-                            <Space />
-                            <Space />
-                            <Space />
-                            <Space />
-                            <FirstButton
-                                onClick={() => navigate('/entirescholar')}
-                            >
-                                전체 장학금 목록 보기
-                            </FirstButton>
-                            <Space />
-                        </Rectangle>
+                    <Rectangle style={{ marginTop: "16px" }}>
+                        <Text>다양한 기관과 단체의
+                            <br/>장학금을 확인해보세요</Text>
                         <Space />
                         <Space />
                         <Space />
                         <Space />
                         <Space />
+                        <FirstButton
+                            onClick={() => navigate('/entirescholar')}
+                        >
+                            전체 장학금 목록 보기
+                        </FirstButton>
+                        <Space />
+                    </Rectangle>
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Rectangle>
+                        <Text>나에게 맞는
+                            <br /> 맞춤 장학금을
+                            <br /> 확인해보세요. </Text>
                         <Space />
                         <Space />
-                        <Rectangle>
-                            <Text>나에게 맞는
-                                <br /> 맞춤 장학금을
-                                <br /> 확인해보세요. </Text>
-                            <Space />
-                            <Space />
-                            <Space />
-                            <Space />
-                            <SecondButton
-                                onClick={() => navigate('/recomscholar')}
-                            >
-                                추천 장학금 목록 보기
-                            </SecondButton>
-                            <Space />
-                        </Rectangle>
+                        <Space />
+                        <Space />
+                        <SecondButton
+                            onClick={() => navigate('/recomscholar')}
+                        >
+                            추천 장학금 목록 보기
+                        </SecondButton>
+                        <Space />
+                    </Rectangle>
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Space />
+                    <Rectangle>
+                        <Text>장학재단
+                            <br />이신가요?</Text>
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Space />
+                        <ThirdButton
+                            onClick={() => navigate('/addscholar')}
+                        >
+                            장학금 등록하기
+                        </ThirdButton>
+                        <Space />
+                    </Rectangle>
+
                     </>
                 ) : (
                     <>
@@ -191,6 +223,26 @@ function MainPage(props) {
                             >
                                 추천 장학금 목록 보기
                             </SecondButton>
+                            <Space />
+                        </Rectangle>
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Space />
+                        <Rectangle>
+                            <Text>장학재단이신가요?</Text>
+                            <Space />
+                            <Space />
+                            <Space />
+                            <Space />
+                            <ThirdButton
+                                onClick={() => navigate('/users/login')}
+                            >
+                                장학금 등록하기
+                            </ThirdButton>
                             <Space />
                         </Rectangle>
                     </>

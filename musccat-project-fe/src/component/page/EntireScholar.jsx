@@ -300,7 +300,7 @@ function EntireScholar(props) {
     };
 
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
-    const totalPages = Math.ceil(totalCount / scholarships.length); // 총 페이지 수 계산
+
 
     return (
         <>
@@ -427,17 +427,6 @@ function EntireScholar(props) {
                             <div style={styles.triangleLeft}></div>
                         </span>
                     )}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1)
-                        .slice(currentPage - 1, currentPage + 4)
-                        .map(page => (
-                            <span 
-                                key={page} 
-                                style={styles.paginationSpan} 
-                                onClick={() => fetchScholarships(page)}
-                            >
-                                {page}
-                            </span>
-                        ))}
                     {nextPageUrl && (
                         <span onClick={goToNextPage}>
                             <div style={styles.triangleRight}></div>
