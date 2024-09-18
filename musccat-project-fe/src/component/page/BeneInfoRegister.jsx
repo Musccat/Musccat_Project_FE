@@ -150,6 +150,7 @@ const BeneInfoRegister = () => {
     const [advice, setAdvice] = useState(info.advice || ""); // 합격팁
     const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false);
+    const [missingFields, setMissingFields] = useState([]);
 
     const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo, fetchUserData } = useAuth();
     const navigate = useNavigate();
@@ -245,11 +246,35 @@ const BeneInfoRegister = () => {
         }
     };
 
+    const checkMissingFields = () => {
+        const fields = [];
+
+        if (!selectedFoundation) fields.push("장학 재단명");
+        if (!selectedScholarship) fields.push("장학 사업명");
+        if (!income.trim()) fields.push("수혜 당시 소득 분위");
+        if (!totalGPA.trim()) fields.push("수혜 당시 전체 성적");
+        if (!univCategory.trim()) fields.push("대학 유형");
+        if (!semesterCategory.trim()) fields.push("수료 학기");
+        if (!majorCategory.trim()) fields.push("학과 계열");
+        if (!year.trim()) fields.push("수혜 년도");
+        if (!advice.trim()) fields.push("합격 팁");
+        if (!interviewTip.trim()) fields.push("면접 팁");
+
+        setMissingFields(fields);  // 비어있는 항목 저장
+        return fields.length === 0;  // 모든 필드가 채워졌으면 true 반환
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!isFormValid) {
             alert("모든 필드를 입력해주세요.");
+            return;
+        }
+
+        if (!checkMissingFields()) {
+            alert(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
             return;
         }
     

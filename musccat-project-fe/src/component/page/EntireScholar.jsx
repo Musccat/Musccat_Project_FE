@@ -180,6 +180,7 @@ const SortButtonContainer = styled.div`
 `;
 
 const SortButton = styled.button`
+    width: 140px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: ${props => props.bgColor || "#348a8c"};
@@ -189,6 +190,7 @@ const SortButton = styled.button`
     cursor: pointer;
     position: relative; 
     z-index: 2;
+    text-align: center;
 `;
 
 const DropdownItem = styled.div`
@@ -200,14 +202,15 @@ const DropdownItem = styled.div`
 const Dropdown = styled.div`
     position: absolute;
     top: calc(100% + 4px); 
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: white;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     z-index: 3;
     border-radius: 4px;
     overflow-y: auto;
     max-height: 200px;
-    width: max-content;
+    width: 120px;
 `;
 
 function EntireScholar(props) {
@@ -262,8 +265,6 @@ function EntireScholar(props) {
     }, [scholarships, typeOption, filterScholarshipsByType]);
 
 
-    
-
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
@@ -297,10 +298,6 @@ function EntireScholar(props) {
         setDropdownVisible(!dropdownVisible);
     };
 
-    const toggleTypeDropdown = () => {
-        setTypeDropdownVisible(!typeDropdownVisible);
-    };
-
     const handleSortOptionClick = (option) => {
         setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
         setSortOption(option);
@@ -309,6 +306,7 @@ function EntireScholar(props) {
 
     const handleTypeOptionClick = (option) => {
         setTypeOption(option);
+        setTypeDropdownVisible(false);
     };
 
     const handleLikeClick = (index) => {
@@ -370,7 +368,7 @@ function EntireScholar(props) {
                         {sortOption} ▼
                     </SortButton>
                     {dropdownVisible && (
-                        <div style={styles.dropdown}>
+                        <Dropdown visible={dropdownVisible}>
                             {otherOptions.map((option, index) => (
                                 <DropdownItem
                                     key={index}
@@ -379,7 +377,7 @@ function EntireScholar(props) {
                                     {option}
                                 </DropdownItem>
                             ))}
-                        </div>
+                        </Dropdown>
                     )}
                 </SortButtonContainer>
             </div>
