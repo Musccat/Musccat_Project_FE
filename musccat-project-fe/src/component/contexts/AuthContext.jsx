@@ -151,14 +151,45 @@ export const AuthProvider = ({ children }) => {
     
     const loginUser = async (username, password) => {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/login/', { username, password });
-            const tokens = response.data; // 토큰 받기
-            setAuthTokens(tokens); // 토큰 저장
-            localStorage.setItem('authTokens', JSON.stringify(tokens)); // 로컬 스토리지에 저장
-            return true;  // 로그인 성공
+            // 로그인 요청을 보내고 토큰을 받아옵니다.
+            const response = await axios.post('http://127.0.0.1:8000/users/login/', { 
+                username, 
+                password 
+            });
+    
+            // 로그인 성공 시 (status 200) 및 access 토큰이 있는지 확인
+            if (response.status === 200 && response.data.access) {
+                setAuthTokens(response.data);
+                localStorage.setItem("authTokens", JSON.stringify(response.data));
+    
+                // 로그인 후 사용자 데이터를 불러와서 설정
+                await fetchUserData();  
+    
+                // 로그인 상태를 true로 변경
+                setIsAuthenticated(true);
+    
+                // 메인 페이지로 이동
+                navigate("/main");
+            } else {
+                alert("로그인에 실패했습니다. 다시 시도해주세요.");
+            }
         } catch (error) {
-            console.error('로그인 실패:', error);
-            return false;  // 로그인 실패
+            // 서버에서 발생한 오류 처리
+            if (error.response) {
+                if (error.response.status === 400) {
+                    alert("잘못된 사용자 이름 또는 비밀번호입니다.");
+                } else if (error.response.status === 401) {
+                    alert("인증 실패. 사용자 정보를 확인해 주세요.");
+                } else {
+                    alert("서버 오류가 발생했습니다. 나중에 다시 시도해 주세요.");
+                }
+            } else if (error.request) {
+                // 요청이 서버에 도달하지 못한 경우
+                alert("서버에 연결할 수 없습니다. 네트워크를 확인해 주세요.");
+            } else {
+                // 요청을 설정하는 동안 발생한 오류
+                console.error("로그인 중 오류 발생:", error.message);
+            }
         }
     };
 
