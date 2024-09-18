@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
+    const [totalPages, setTotalPages] = useState(1);
 
     const navigate = useNavigate();
 
@@ -127,6 +128,7 @@ export const AuthProvider = ({ children }) => {
             setLikes(Array(response.data.results.length).fill(false));  // 좋아요 상태 초기화
             setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
             setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
+            setTotalPages(Math.ceil(response.data.count / 10));
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
         }
@@ -358,6 +360,7 @@ export const AuthProvider = ({ children }) => {
         checkUsernameAvailability,
         sendVerificationCode,
         verifyCode,
+        totalPages,
     };
 
 /*

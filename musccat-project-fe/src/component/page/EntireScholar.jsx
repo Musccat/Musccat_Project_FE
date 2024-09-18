@@ -220,7 +220,9 @@ function EntireScholar(props) {
             goToPreviousPage, 
             currentPage, 
             nextPageUrl, 
-            previousPageUrl  } = useAuth();
+            previousPageUrl,
+            totalPages,
+        } = useAuth();
 
     const [searchTerm, setSearchTerm] = useState(''); // 사용자가 입력한 검색어
     const [suggestions, setSuggestions] = useState([]); // 자동완성 제안 목록
@@ -239,11 +241,20 @@ function EntireScholar(props) {
         fetchScholarships(currentPage);
     }, [currentPage]);
 
+    // 페이지 번호 클릭 핸들러
+    const handlePageClick = (pageNumber) => {
+        if (pageNumber !== currentPage) {
+            fetchScholarships(pageNumber);
+        }
+    };
+
     useEffect(() => {
         if (Array.isArray(scholarships)) {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
     }, [scholarships]);
+
+    
 
     const handleSearchChange = (e) => {
         const value = e.target.value;
@@ -262,6 +273,8 @@ function EntireScholar(props) {
         }
     };
     
+
+
     // 제안 목록에서 항목을 선택했을 때 필터링된 장학금 목록을 설정
     const handleSuggestionClick = (foundationName) => {
         setSearchTerm(foundationName); // 선택된 제안으로 검색창을 업데이트
@@ -426,6 +439,25 @@ function EntireScholar(props) {
                             <div style={styles.triangleLeft}></div>
                         </span>
                     )}
+
+                    {/* 페이지 번호 표시 */}
+                    {[...Array(totalPages)].map((_, index) => (
+                        <button
+                            key={index}
+                            style={{
+                                margin: '0 5px',
+                                padding: '5px 10px',
+                                backgroundColor: currentPage === index + 1 ? '#348a8c' : '#ccc',
+                                color: 'white',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => handlePageClick(index + 1)}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+
                     {nextPageUrl && (
                         <span onClick={goToNextPage}>
                             <div style={styles.triangleRight}></div>
