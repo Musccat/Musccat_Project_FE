@@ -125,10 +125,12 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.get(`http://127.0.0.1:8000/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
-            setLikes(Array(response.data.results.length).fill(false));  // 좋아요 상태 초기화
             setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
             setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
             setTotalPages(Math.ceil(response.data.count / 10));
+
+            // 장학금 데이터를 불러온 후 좋아요 상태도 불러옴
+            await fetchLikedScholarships();
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
         }
@@ -156,6 +158,70 @@ export const AuthProvider = ({ children }) => {
         if (previousPageUrl && currentPage > 1) {
             await fetchScholarships(currentPage - 1);
             setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleLikeClick = async (index, scholarshipId) => {
+        const newLikes = [...likes];
+        const isLiked = newLikes[index];
+
+        if (isLiked) {
+            // 이미 좋아요 상태면 찜 목록에서 제거하는 요청
+            try {
+                const response = await axios.delete(`http://127.0.0.1:8000/scholarships/like/${scholarshipId}/`, {
+                    headers: {
+                        Authorization: `Bearer ${authTokens.access}`, // 사용자 인증 토큰
+                    },
+                });
+
+                if (response.status === 204) {
+                    newLikes[index] = false;
+                    alert("찜 목록에서 삭제되었습니다.");
+                }
+            } catch (error) {
+                console.error("찜 목록에서 삭제 중 오류 발생:", error);
+            }
+        } else {
+            // 좋아요 상태가 아니면 찜 목록에 추가하는 요청
+            try {
+                const response = await axios.post(`http://127.0.0.1:8000/scholarships/like/`, {
+                    user: user.id,
+                    scholarship_id: scholarshipId,
+                    added_at: new Date().toISOString(),
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${authTokens.access}`, // 사용자 인증 토큰
+                    },
+                });
+
+                if (response.status === 201) {
+                    newLikes[index] = true;
+                    alert("찜 목록에 추가되었습니다.");
+                }
+            } catch (error) {
+                console.error("찜 목록 추가 중 오류 발생:", error);
+            }
+        }
+
+        setLikes(newLikes);
+    };
+
+    const fetchLikedScholarships = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/scholarships/liked/', {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            
+            // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
+            const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
+            const updatedLikes = scholarships.map(scholarship =>
+                likedScholarshipIds.includes(scholarship.product_id)
+            );
+            setLikes(updatedLikes);
+        } catch (error) {
+            console.error("Failed to fetch liked scholarships:", error);
         }
     };
     
@@ -365,6 +431,7 @@ export const AuthProvider = ({ children }) => {
         goToNextPage,
         goToPreviousPage,
         scholarships,
+        handleLikeClick,
         likes,
         setLikes,
         fetchFoundations,

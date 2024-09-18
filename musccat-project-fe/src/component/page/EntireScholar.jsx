@@ -216,8 +216,8 @@ const Dropdown = styled.div`
 function EntireScholar(props) {
     // 상태 관리
     const { fetchScholarships, 
+            handleLikeClick,
             likes, 
-            setLikes, 
             scholarships,
             filterScholarshipsByType,
             goToNextPage, 
@@ -307,12 +307,6 @@ function EntireScholar(props) {
     const handleTypeOptionClick = (option) => {
         setTypeOption(option);
         setTypeDropdownVisible(false);
-    };
-
-    const handleLikeClick = (index) => {
-        const newLikes = [...likes];
-        newLikes[index] = !newLikes[index];
-        setLikes(newLikes);
     };
 
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
@@ -408,7 +402,7 @@ function EntireScholar(props) {
                                         </Link>
                                         <button
                                             style={styles.heartButton}
-                                            onClick={() => handleLikeClick(index)}
+                                            onClick={() => handleLikeClick(index, scholarship.product_id)}
                                         >
                                             <img
                                                 src={likes[index] ? filledheart : emptyheart}
