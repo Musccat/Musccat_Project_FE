@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
     const [scholarships, setScholarships] = useState([]);
     const [likes, setLikes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-    const [totalCount, setTotalCount] = useState(0);  // 전체 항목 수
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
 
@@ -126,7 +125,6 @@ export const AuthProvider = ({ children }) => {
             const response = await axios.get(`http://127.0.0.1:8000/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
             setLikes(Array(response.data.results.length).fill(false));  // 좋아요 상태 초기화
-            setTotalCount(response.data.count);  // 전체 항목 수 저장
             setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
             setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
         } catch (error) {

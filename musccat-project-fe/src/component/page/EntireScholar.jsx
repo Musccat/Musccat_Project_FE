@@ -219,7 +219,6 @@ function EntireScholar(props) {
             goToNextPage, 
             goToPreviousPage, 
             currentPage, 
-            totalCount, 
             nextPageUrl, 
             previousPageUrl  } = useAuth();
 
