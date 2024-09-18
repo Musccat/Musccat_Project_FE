@@ -216,6 +216,7 @@ function EntireScholar(props) {
             likes, 
             setLikes, 
             scholarships,
+            filterScholarshipsByType,
             goToNextPage, 
             goToPreviousPage, 
             currentPage, 
@@ -234,8 +235,8 @@ function EntireScholar(props) {
     const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
 
     const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
+
     const [typeOption, setTypeOption] = useState('장학금 전체');
-    const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
 
     useEffect(() => {
         fetchScholarships(currentPage);
@@ -253,6 +254,13 @@ function EntireScholar(props) {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
     }, [scholarships]);
+
+    // 필터링 적용
+    useEffect(() => {
+        const filtered = filterScholarshipsByType(typeOption);
+        setFilteredScholarships(filtered);
+    }, [scholarships, typeOption, filterScholarshipsByType]);
+
 
     
 
@@ -300,9 +308,7 @@ function EntireScholar(props) {
     };
 
     const handleTypeOptionClick = (option) => {
-        setTypeOptions([typeOption, ...typeOptions.filter(opt => opt !== option)]);
         setTypeOption(option);
-        setTypeDropdownVisible(false);
     };
 
     const handleLikeClick = (index) => {
@@ -343,12 +349,12 @@ function EntireScholar(props) {
                 </div>
             <div style={styles.buttonContainer}>
                 <SortButtonContainer>
-                    <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
+                    <SortButton bgColor="#2F6877" onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
                             {typeOption} ▼
                         </SortButton>
                         {typeDropdownVisible && (
                             <Dropdown>
-                                {typeOptions.map((option, index) => (
+                                {['장학금 전체', '지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
                                     <DropdownItem
                                         key={index}
                                         onClick={() => handleTypeOptionClick(option)}

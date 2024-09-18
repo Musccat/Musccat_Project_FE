@@ -134,6 +134,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const filterScholarshipsByType = (typeOption) => {
+        if (typeOption === '장학금 전체') {
+            return scholarships; // 전체 장학금 반환
+        }
+        
+        // 선택된 유형에 맞는 장학금 필터링
+        return scholarships.filter(scholarship => 
+            scholarship.financial_aid_type === typeOption
+        );
+    };
+
     const goToNextPage = async () => {
         if (nextPageUrl) {
             await fetchScholarships(currentPage + 1);
@@ -350,6 +361,7 @@ export const AuthProvider = ({ children }) => {
         fetchBenefitInfos,
         benefitInfos,
         fetchScholarships,
+        filterScholarshipsByType,
         goToNextPage,
         goToPreviousPage,
         scholarships,
