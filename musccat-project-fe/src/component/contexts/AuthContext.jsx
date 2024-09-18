@@ -68,7 +68,6 @@ export const AuthProvider = ({ children }) => {
             });
         } catch (error) {
             console.error("Failed to fetch user data", error);
-            alert("사용자 정보를 가져오는 데 실패했습니다. 다시 시도해 주세요.");
         }
     };
 
@@ -170,25 +169,17 @@ export const AuthProvider = ({ children }) => {
     
                 // 메인 페이지로 이동
                 navigate("/main");
-            } else {
-                alert("로그인에 실패했습니다. 다시 시도해주세요.");
-            }
+            } 
         } catch (error) {
             // 서버에서 발생한 오류 처리
             if (error.response) {
                 if (error.response.status === 400) {
-                    alert("잘못된 사용자 이름 또는 비밀번호입니다.");
+                    alert("잘못된 사용자 아이디 또는 비밀번호입니다.");
                 } else if (error.response.status === 401) {
                     alert("인증 실패. 사용자 정보를 확인해 주세요.");
                 } else {
                     alert("서버 오류가 발생했습니다. 나중에 다시 시도해 주세요.");
                 }
-            } else if (error.request) {
-                // 요청이 서버에 도달하지 못한 경우
-                alert("서버에 연결할 수 없습니다. 네트워크를 확인해 주세요.");
-            } else {
-                // 요청을 설정하는 동안 발생한 오류
-                console.error("로그인 중 오류 발생:", error.message);
             }
         }
     };
