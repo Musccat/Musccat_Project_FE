@@ -10,58 +10,62 @@ import { useAuth } from "../contexts/AuthContext";
 const styles = {
     wrapper: {  
         display: "flex",
-        justifyContent: "center",  
+        justifyContent: "flex-start",  
         alignItems: "center",   
-        padding: "70px",  
+        padding: "0",  
         boxSizing: "border-box",  
+        height: "100vh", 
+        flexDirection: "column",
+        marginTop: "70px"
     },
-    mainContainer: { 
-        maxWidth: "1200px",
-        width: "100%",
-        margin: "0 auto", 
-        padding: "20px",
-    },
-    outerContainer: {  
-        border: "2px solid #348a8c", 
-        borderRadius: "8px", 
-        padding: "20px", 
-        maxWidth: "900px", 
-        width: "100%",
-        marginTop: "10px", 
-        backgroundColor: "white", 
-        boxSizing: "border-box"
-    },
-    container: {
-        margin: "10px",
-        fontFamily: "Arial, sans-serif"
-    },
+
     heading: {
+        maxWidth: "900px",
+        width: "100%",
+        margin: "0 auto",
         textAlign: "left",
         fontSize: "2em",
         fontWeight: "bold",
         color: "black",
-        marginBottom: "20px"
+        marginBottom: "20px",  
+        marginTop: "0px",
+        paddingLeft: "20px", 
+    },
+    mainContainer: { 
+        maxWidth: "900px",  
+        width: "100%",  
+        margin: "0 auto",  
+        padding: "20px",  // 상하단 여백만 추가
+        border: "2px solid #348a8c",  // 외곽선 추가
+        borderRadius: "8px", 
+        backgroundColor: "white", 
+        boxSizing: "border-box",
+    },
+    centerContainer: {  // 새로운 컨테이너 추가
+        display: "flex",
+        justifyContent: "center",  // 가로 중앙 정렬
+        alignItems: "center",  // 세로 중앙 정렬 (필요 시 제거 가능)
+        width: "100%",  
+        height: "100%",  // 테이블이 세로로 중앙에 오도록 높이 설정
     },
     tableContainer: {  
-        display: "flex", 
-        justifyContent: "center", 
-        alignItems: "center", 
-        margin: "10px auto", 
+        display: "block", 
+        margin: "0 auto", 
         padding: "0 20px", 
-        width: "100%"
+        width: "100%",
+        maxWidth: "900px" 
     },
     table: {
         width: "100%",
-        maxWidth: "1000px",  // 테이블 최대 가로 크기를 1200px로 제한
-        borderCollapse: "collapse"
+        maxWidth: "1000px",
+        borderCollapse: "collapse",
+        margin: "0 auto"
     },
     thTd: {
         borderTop: "1px solid #348a8c",
         borderBottom: "1px solid #ddd",
-        borderLeft: "0",
-        borderRight: "0",
-        textAlign: "left",
-        padding: "12px"
+        padding: "12px",  
+        textAlign: "left",  
     },
     th: {
         fontWeight: "bold",
@@ -117,60 +121,58 @@ const MyInterest = () => {
         <>
         <NavBar />
             <div style={styles.wrapper}>
-            <div style={styles.mainContainer}>
             <h1 style={styles.heading}>내 관심목록</h1>
-                <div style={styles.outerContainer}>
-                    <div style={styles.container}>
-                        <div style={styles.tableContainer}>
-                            <table style={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th style={{ ...styles.firstThTd, ...styles.th }}>장학 재단명</th>
-                                        <th style={{ ...styles.firstThTd, ...styles.th }}>장학 사업명</th>
-                                        <th style={{ ...styles.firstThTd, ...styles.th }}>기한</th>
-                                        <th style={{ ...styles.firstThTd, ...styles.th }}>이전 수혜자 정보</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {scholarships.map((scholarship, index) => (
-                                        <tr key={scholarship.product_id}>
-                                            <td style={styles.thTd}>{scholarship.foundation_name}</td>
-                                            <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                                <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none", color: "black" }}>
-                                                    {scholarship.name}
-                                                </Link>
-                                            </td>
-                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>
-                                                ~{scholarship.recruitment_end}
-                                            </td>
-                                            <td style={styles.thTd}>
-                                                <div style={styles.flexContainer}>
-                                                    <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
-                                                        <button style={styles.infoButton}>정보 보러가기</button>
-                                                    </Link>
-                                                    <button
-                                                        style={styles.heartButton}
-                                                        onClick={() => handleLikeClick(index)}
-                                                    >
-                                                        <img
-                                                            src={likes[index] ? filledheart : emptyheart}
-                                                            alt="heart"
-                                                            style={styles.heartImage}
-                                                        />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colSpan="4" style={{ borderBottom: "1px solid #348a8c" }}></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
+            <div style={styles.mainContainer}>
+                <div style={styles.centerContainer}>
+                <div style={styles.tableContainer}>
+                    <table style={styles.table}>
+                        <thead>
+                            <tr>
+                                <th style={{ ...styles.firstThTd, ...styles.th }}>장학 재단명</th>
+                                <th style={{ ...styles.firstThTd, ...styles.th }}>장학 사업명</th>
+                                <th style={{ ...styles.firstThTd, ...styles.th }}>기한</th>
+                                <th style={{ ...styles.firstThTd, ...styles.th }}>이전 수혜자 정보</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {scholarships.map((scholarship, index) => (
+                                <tr key={scholarship.product_id}>
+                                    <td style={styles.thTd}>{scholarship.foundation_name}</td>
+                                    <td style={{ ...styles.thTd, paddingRight: "20px" }}>
+                                        <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none", color: "black" }}>
+                                            {scholarship.name}
+                                        </Link>
+                                    </td>
+                                    <td style={{ ...styles.thTd, paddingRight: "90px" }}>
+                                        ~{scholarship.recruitment_end}
+                                    </td>
+                                    <td style={styles.thTd}>
+                                        <div style={styles.flexContainer}>
+                                            <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
+                                                <button style={styles.infoButton}>정보 보러가기</button>
+                                            </Link>
+                                            <button
+                                                style={styles.heartButton}
+                                                onClick={() => handleLikeClick(index)}
+                                            >
+                                                <img
+                                                    src={likes[index] ? filledheart : emptyheart}
+                                                    alt="heart"
+                                                    style={styles.heartImage}
+                                                />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan="4" style={{ borderBottom: "1px solid #348a8c" }}></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
                 </div>
             </div>
         </div>
