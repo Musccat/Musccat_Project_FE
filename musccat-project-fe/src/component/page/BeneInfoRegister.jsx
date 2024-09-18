@@ -184,7 +184,7 @@ const BeneInfoRegister = () => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
         const isValid =  
                     selectedFoundation !== null &&
-                    selectedScholarship !== "" &&
+                    selectedScholarship !== null &&
                     income.trim() !== "" &&
                     totalGPA.trim() !== "" &&
                     univCategory.trim() !== "" &&
