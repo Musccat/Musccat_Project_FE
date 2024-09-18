@@ -226,7 +226,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateBenefitInfo = async (product_id, benefit_id, updatedInfo) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/reviews/${benefit_id}/`, updatedInfo, {
+            const response = await axios.put(`http://127.0.0.1:8000/reviews/edit/${benefit_id}/`, updatedInfo, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -249,7 +249,7 @@ export const AuthProvider = ({ children }) => {
 
     const deleteBenefitInfo = async (product_id, benefit_id) => {
         try {
-            const response = await axios.delete(`http://127.0.0.1:8000/reviews/${benefit_id}/`, {
+            const response = await axios.delete(`http://127.0.0.1:8000/reviews/edit/${benefit_id}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
