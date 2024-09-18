@@ -526,7 +526,7 @@ const MemInfo = () => {
                 
                 <FormGroup>
                     <label>대학 유형<RequiredIndicator>*</RequiredIndicator></label>
-                    <input 
+                    <StyledSelect
                         name="univCategory" 
                         value={univCategoryOptions.find(option => option.value === formData.univCategory) || ''}
                         onChange={(option) => handleChange({ name: "univCategory", value: option.value })}
