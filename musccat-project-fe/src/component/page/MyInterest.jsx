@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import NavBar from '../ui/NavBar';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
@@ -115,13 +115,19 @@ const ScholarshipLink = styled(Link)`
 `;
 
 const MyInterest = () => {
-    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships } = useAuth();
+    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, authTokens, logoutUser } = useAuth();
+    const navigate = useNavigate();
     const [filteredScholarships, setFilteredScholarships] = useState([]);
 
     useEffect(() => {
-        // 좋아요된 장학금 목록 불러오기
-        fetchLikedScholarships();
-    }, [fetchLikedScholarships]);
+         // authTokens가 존재할 때만 fetchLikedScholarships 호출
+         if (authTokens && authTokens.access) {
+            fetchLikedScholarships();
+        } else {
+            console.error("No access token available.");
+        }
+    }, [authTokens, fetchLikedScholarships, logoutUser, navigate]);
+
 
     useEffect(() => {
         // likedScholarships와 likes가 정의된 경우에만 필터링

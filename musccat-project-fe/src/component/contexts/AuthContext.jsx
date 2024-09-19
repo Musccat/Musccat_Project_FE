@@ -208,6 +208,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     const fetchLikedScholarships = async () => {
+        if (!authTokens || !authTokens.access) {
+            console.error("No access token available.");
+            return;
+        }
+
         try {
             const response = await axios.get('http://127.0.0.1:8000/scholarships/liked/', {
                 headers: {
