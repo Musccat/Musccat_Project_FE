@@ -270,6 +270,13 @@ const BeneInfoRegister = () => {
         if (info.id) {
             setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : selectedFoundation);
             setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : selectedScholarship);
+
+            // 만약에 이미 선택된 장학 재단 및 장학 사업명에 대한 데이터를 유지
+            if (info.scholarship) {
+                setFoundationOptions([{ value: info.scholarship.foundation_name, label: info.scholarship.foundation_name }]); // 재단을 유지
+                setScholarshipOptions([{ value: info.scholarship.id, label: info.scholarship.name }]); // 사업명을 유지
+            }
+
             setIncome(info.income ? info.income.replace("분위", "") : "");
             setTotalGPA(info.totalGPA || "");
             setUnivCategory(info.univCategory || "");
