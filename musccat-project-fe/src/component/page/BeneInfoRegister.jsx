@@ -298,7 +298,7 @@ const BeneInfoRegister = () => {
             return;
         }
 
-        if (!selectedScholarship || !selectedScholarship.product_id) {
+        if (!info.id && (!selectedScholarship || !selectedScholarship.product_id)) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
             return;
         }
