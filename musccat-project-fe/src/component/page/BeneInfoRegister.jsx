@@ -394,7 +394,7 @@ const BeneInfoRegister = () => {
                     id="foundationSelect"
                     value={selectedFoundation}
                     onChange={handleFoundationChange}
-                    options={foundationOptions}
+                    options={foundationOptions.length ? foundationOptions : []}
                     placeholder="장학 재단명을 선택하세요"
                     isSearchable
                     isDisabled={!!info.id}
@@ -413,7 +413,7 @@ const BeneInfoRegister = () => {
                             : null
                     }
                     onChange={handleScholarshipSelect}
-                    options={scholarshipOptions}
+                    options={scholarshipOptions.length ? scholarshipOptions : []}
                     placeholder="장학 사업명을 선택하세요"
                     isDisabled={!selectedFoundation || !!info.id} 
                     isSearchable
