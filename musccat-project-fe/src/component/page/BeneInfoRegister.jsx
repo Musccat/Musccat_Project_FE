@@ -248,8 +248,12 @@ const BeneInfoRegister = () => {
     const checkMissingFields = () => {
         const fields = [];
 
-        if (!selectedFoundation) fields.push("장학 재단명");
-        if (!selectedScholarship) fields.push("장학 사업명");
+        // 장학 재단명과 장학 사업명은 수정하지 못하므로 제외
+        if (!info.id) { 
+            if (!selectedFoundation) fields.push("장학 재단명");
+            if (!selectedScholarship) fields.push("장학 사업명");
+        }
+
         if (!income.trim()) fields.push("수혜 당시 소득 분위");
         if (!totalGPA.trim()) fields.push("수혜 당시 전체 성적");
         if (!univCategory.trim()) fields.push("대학 유형");
