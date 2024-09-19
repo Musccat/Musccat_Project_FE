@@ -293,7 +293,6 @@ const MemInfo = () => {
             [name]: e.value,
         });
     } else {
-        // 일반적인 input, select, textarea 등에서 호출될 때의 처리
         const { name, value, type, checked } = e.target;
 
         if (type === "checkbox") {

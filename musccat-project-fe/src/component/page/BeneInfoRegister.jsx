@@ -183,9 +183,8 @@ const BeneInfoRegister = () => {
 
     useEffect(() => {
         // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
-        const isValid =  
-                    selectedFoundation !== null &&
-                    selectedScholarship !== null &&
+        const isValid =  (
+                (!info.id || (selectedFoundation !== null && selectedScholarship !== null)) &&
                     income.trim() !== "" &&
                     totalGPA.trim() !== "" &&
                     univCategory.trim() !== "" &&
@@ -193,8 +192,8 @@ const BeneInfoRegister = () => {
                     majorCategory.trim() !== "" &&
                     year.trim() !== "" &&
                     advice.trim() !== "" &&
-                    interviewTip.trim() !== "";
-
+                    interviewTip.trim() !== ""
+            );
         setIsFormValid(isValid);
     }, [selectedFoundation, selectedScholarship,  income, totalGPA, univCategory, semesterCategory, majorCategory, year, advice, interviewTip]); 
 
@@ -265,8 +264,8 @@ const BeneInfoRegister = () => {
 
     useEffect(() => {
         if (info) {
-            setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : null);
-            setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : null);
+            setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : selectedFoundation);
+            setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : selectedScholarship);
             setIncome(info.income ? info.income.replace("분위", "") : "");
             setTotalGPA(info.totalGPA || "");
             setUnivCategory(info.univCategory || "");
@@ -291,6 +290,7 @@ const BeneInfoRegister = () => {
 
         if (missingFields.length > 0) {  // 빈 필드가 있을 때만 알림 표시
             alert(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
+            console.log(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
             return;
         }
     
@@ -304,9 +304,9 @@ const BeneInfoRegister = () => {
                 id: user.id
             },
             scholarship: {
-                id: selectedScholarship.product_id,
-                foundation_name: selectedFoundation.value, // 장학 재단명
-                name: selectedScholarship.name //장학 사업명
+                id: info.scholarship ? info.scholarship.id : selectedScholarship.product_id,
+                foundation_name: info.scholarship ? info.scholarship.foundation_name : selectedFoundation.value,  // 장학 재단명
+                name:  info.scholarship ? info.scholarship.name : selectedScholarship.name //장학 사업명
             },
             income: `${income}분위`,
             totalGPA,
@@ -386,6 +386,7 @@ const BeneInfoRegister = () => {
                     options={foundationOptions}
                     placeholder="장학 재단명을 선택하세요"
                     isSearchable
+                    isDisabled={!!info.id}
                 />
             </FormRow>
 
@@ -403,8 +404,9 @@ const BeneInfoRegister = () => {
                     onChange={handleScholarshipSelect}
                     options={scholarshipOptions}
                     placeholder="장학 사업명을 선택하세요"
-                    isDisabled={!selectedFoundation}
+                    isDisabled={!selectedFoundation || !!info.id} 
                     isSearchable
+
                 />
             </FormRow>
 
