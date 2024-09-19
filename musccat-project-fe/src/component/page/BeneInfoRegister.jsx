@@ -140,7 +140,7 @@ const BeneInfoRegister = () => {
         info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : null
     );
 
-    const [income, setIncome] = useState(info.income?.replace(" 분위", "") || ""); // 수혜 당시 소득 분위
+    const [income, setIncome] = useState(info.income?info.income.replace("분위", "") : ""); // 수혜 당시 소득 분위
     const [totalGPA, setTotalGPA] = useState(info.totalGPA || ""); // 수혜 당시 전체 성적
     const [univCategory, setUnivCategory] = useState(info.univCategory || ""); // 대학 유형 구분
     const [semesterCategory, setSemesterCategory] = useState(info.semesterCategory || ""); // 수혜 당시 수료 학기 구분 
@@ -292,7 +292,7 @@ const BeneInfoRegister = () => {
                 foundation_name: selectedFoundation.value, // 장학 재단명
                 name: selectedScholarship.name //장학 사업명
             },
-            income: `${income} 분위`,
+            income: `${income}분위`,
             totalGPA,
             univCategory,
             semesterCategory,
@@ -410,7 +410,7 @@ const BeneInfoRegister = () => {
                 <Label htmlFor="income">수혜 당시 소득 분위</Label>
                     <StyledSelect
                         id="income"
-                        value={income ? { label: `${income} 분위`, value: income } : null}
+                        value={income ? { label: `${income}분위`, value: income } : null}
                         onChange={(option) => setIncome(option?.value || "")}
                         options={incomeOptions}
                         placeholder="소득 분위 선택"
