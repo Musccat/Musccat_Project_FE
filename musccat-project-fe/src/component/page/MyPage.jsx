@@ -165,11 +165,14 @@ const MyPage = () => {
     const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
-        };
-        fetchData();
-    }, []);
+        // user가 없을 때만 fetchUserData 호출
+        if (!user) {
+            const fetchData = async () => {
+                await fetchUserData();
+            };
+            fetchData();
+        }
+    }, [user, fetchUserData]); // user가 없을 때만 데이터를 가져옴
 
     useEffect(() => {
         if (user) {
