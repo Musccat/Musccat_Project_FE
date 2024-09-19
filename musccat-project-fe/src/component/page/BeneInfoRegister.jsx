@@ -262,8 +262,9 @@ const BeneInfoRegister = () => {
         return fields;
     };
 
+    /*
     useEffect(() => {
-        if (info) {
+        if (info&& !isFormValid) {
             setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : selectedFoundation);
             setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : selectedScholarship);
             setIncome(info.income ? info.income.replace("분위", "") : "");
@@ -275,8 +276,9 @@ const BeneInfoRegister = () => {
             setAdvice(info.advice || "");
             setInterviewTip(info.interviewTip || "");
         }
-    }, [info]);
-
+    }, [info, isFormValid]);
+    
+*/
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -293,13 +295,11 @@ const BeneInfoRegister = () => {
             console.log(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
             return;
         }
-        
-        /*
+
         if (!selectedScholarship || !selectedScholarship.product_id) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
             return;
         }
-        */
 
         const infoData = {
             user: {
