@@ -171,12 +171,10 @@ const BeneInfoRegister = () => {
         // Fetch foundations on component mount
         const loadFoundations = async () => {
             const foundations = await fetchFoundations();
-            setFoundationOptions(
-                foundations.map(foundation => ({
+            setFoundationOptions(foundations ? foundations.map(foundation => ({
                     value: foundation.name,
                     label: foundation.name,
-                }))
-            );
+                })) : []);
         };
         loadFoundations();
     }, [fetchFoundations]);
@@ -315,7 +313,7 @@ const BeneInfoRegister = () => {
                 id: user.id
             },
             scholarship: {
-                id: info.scholarship ? info.scholarship.id : selectedScholarship.product_id,
+                id: info.scholarship?.id || selectedScholarship?.product_id,
                 foundation_name: info.scholarship ? info.scholarship.foundation_name : selectedFoundation.value,  // 장학 재단명
                 name:  info.scholarship ? info.scholarship.name : selectedScholarship.name //장학 사업명
             },
