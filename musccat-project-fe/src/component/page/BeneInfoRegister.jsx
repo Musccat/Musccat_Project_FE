@@ -263,6 +263,21 @@ const BeneInfoRegister = () => {
         return fields;
     };
 
+    useEffect(() => {
+        if (info) {
+            setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : null);
+            setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : null);
+            setIncome(info.income ? info.income.replace("분위", "") : "");
+            setTotalGPA(info.totalGPA || "");
+            setUnivCategory(info.univCategory || "");
+            setSemesterCategory(info.semesterCategory || "");
+            setMajorCategory(info.majorCategory || "");
+            setYear(info.year?.toString() || "");
+            setAdvice(info.advice || "");
+            setInterviewTip(info.interviewTip || "");
+        }
+    }, [info]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
