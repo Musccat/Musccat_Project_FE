@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
     // 장학금 목록 
     const [scholarships, setScholarships] = useState([]);
     const [likes, setLikes] = useState([]);
+    const [likedScholarships, setLikedScholarships] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
@@ -216,6 +217,14 @@ export const AuthProvider = ({ children }) => {
             
             // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
             const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
+
+            const filteredScholarships = scholarships.filter(scholarship =>
+                likedScholarshipIds.includes(scholarship.product_id)
+            );
+            
+            // likedScholarships 상태 업데이트
+            setLikedScholarships(filteredScholarships);
+
             const updatedLikes = scholarships.map(scholarship =>
                 likedScholarshipIds.includes(scholarship.product_id)
             );
@@ -432,6 +441,8 @@ export const AuthProvider = ({ children }) => {
         goToPreviousPage,
         scholarships,
         handleLikeClick,
+        fetchLikedScholarships,
+        likedScholarships,
         likes,
         setLikes,
         fetchFoundations,

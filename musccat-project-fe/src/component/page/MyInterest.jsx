@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import NavBar from '../ui/NavBar';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
-import scholarships from '../data/interestdata';
 import { useAuth } from "../contexts/AuthContext";
 
 const styles = {
@@ -106,16 +105,36 @@ const styles = {
     }
 };
 
+const ScholarshipLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+        color: #007bff; 
+    }
+`;
+
 const MyInterest = () => {
-    const navigate = useNavigate();
+    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships } = useAuth();
+    const [filteredScholarships, setFilteredScholarships] = useState([]);
 
-    const {likes, setLikes } = useAuth();
+    useEffect(() => {
+        // 좋아요된 장학금 목록 불러오기
+        fetchLikedScholarships();
+    }, [fetchLikedScholarships]);
 
-    const handleLikeClick = (index) => {
-        const newLikes = [...likes];
-        newLikes[index] = !newLikes[index];
-        setLikes(newLikes);
-    };
+    useEffect(() => {
+        // likedScholarships와 likes가 정의된 경우에만 필터링
+        if (likedScholarships && likes) {
+            setFilteredScholarships(likedScholarships.filter((_, index) => likes[index]));
+        }
+    }, [likedScholarships, likes]);
+
+    const handleLikeAndRemove = (index, scholarshipId) => {
+        handleLikeClick(index, scholarshipId);
+        // 좋아요 해제 후 해당 항목 테이블에서 제거
+        setFilteredScholarships(prevFiltered => prevFiltered.filter((_, i) => i !== index));
+};
 
     return (
         <>
@@ -135,25 +154,22 @@ const MyInterest = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {scholarships.map((scholarship, index) => (
+                        {filteredScholarships.length > 0 ? (
+                            filteredScholarships.map((scholarship, index) => (
                                 <tr key={scholarship.product_id}>
                                     <td style={styles.thTd}>{scholarship.foundation_name}</td>
                                     <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                        <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none", color: "black" }}>
-                                            {scholarship.name}
-                                        </Link>
+                                        <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
                                     </td>
-                                    <td style={{ ...styles.thTd, paddingRight: "90px" }}>
-                                        ~{scholarship.recruitment_end}
-                                    </td>
+                                    <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
                                     <td style={styles.thTd}>
                                         <div style={styles.flexContainer}>
-                                            <Link to={`/notice/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
+                                            <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
                                                 <button style={styles.infoButton}>정보 보러가기</button>
                                             </Link>
                                             <button
                                                 style={styles.heartButton}
-                                                onClick={() => handleLikeClick(index)}
+                                                onClick={() => handleLikeAndRemove(index, scholarship.product_id)}
                                             >
                                                 <img
                                                     src={likes[index] ? filledheart : emptyheart}
@@ -164,13 +180,15 @@ const MyInterest = () => {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                        <tfoot>
+                            ))
+                        ) : (
                             <tr>
-                                <td colSpan="4" style={{ borderBottom: "1px solid #348a8c" }}></td>
+                                <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                                    찜한 장학금이 없습니다.
+                                </td>
                             </tr>
-                        </tfoot>
+                        )}
+                    </tbody>
                     </table>
                 </div>
                 </div>
