@@ -250,7 +250,7 @@ return (
                                     >
                                         {option}
                                     </DropdownItem>
-                                 ))}
+                                ))}
                             </Dropdown>
                             )}
                         </SortButtonContainer>
