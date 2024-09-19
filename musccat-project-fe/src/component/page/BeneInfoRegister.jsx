@@ -293,11 +293,13 @@ const BeneInfoRegister = () => {
             console.log(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
             return;
         }
-    
+        
+        /*
         if (!selectedScholarship || !selectedScholarship.product_id) {
             alert("장학 수혜 정보를 모두 입력해주세요.");
             return;
         }
+        */
 
         const infoData = {
             user: {
