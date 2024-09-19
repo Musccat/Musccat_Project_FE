@@ -260,8 +260,7 @@ const BeneInfoRegister = () => {
         if (!advice.trim()) fields.push("합격 팁");
         if (!interviewTip.trim()) fields.push("면접 팁");
 
-        setMissingFields(fields);  // 비어있는 항목 저장
-        return fields.length === 0;  // 모든 필드가 채워졌으면 true 반환
+        return fields;
     };
 
 
@@ -273,7 +272,9 @@ const BeneInfoRegister = () => {
             return;
         }
 
-        if (!checkMissingFields()) {
+        const missingFields = checkMissingFields();  // 빈 필드 배열 받기
+
+        if (missingFields.length > 0) {  // 빈 필드가 있을 때만 알림 표시
             alert(`모든 필드를 입력해주세요.\n비어있는 항목: ${missingFields.join(', ')}`);
             return;
         }
