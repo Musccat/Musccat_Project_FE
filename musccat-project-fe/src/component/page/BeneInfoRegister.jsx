@@ -140,7 +140,7 @@ const BeneInfoRegister = () => {
         info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : null
     );
 
-    const [income, setIncome] = useState(info.income || "");  // 수혜 당시 소득 분위
+    const [income, setIncome] = useState(info.income ? info.income.replace("분위", "") : ""); // 수혜 당시 소득 분위
     const [totalGPA, setTotalGPA] = useState(info.totalGPA || ""); // 수혜 당시 전체 성적
     const [univCategory, setUnivCategory] = useState(info.univCategory || ""); // 대학 유형 구분
     const [semesterCategory, setSemesterCategory] = useState(info.semesterCategory || ""); // 수혜 당시 수료 학기 구분 
@@ -266,7 +266,7 @@ const BeneInfoRegister = () => {
         if (info.id) {
             setSelectedFoundation(info.scholarship ? { value: info.scholarship.foundation_name, label: info.scholarship.foundation_name } : selectedFoundation);
             setSelectedScholarship(info.scholarship ? { name: info.scholarship.name, product_id: info.scholarship.id } : selectedScholarship);
-            setIncome(info.income || "");
+            setIncome(info.income ? info.income.replace("분위", "") : "");
             setTotalGPA(info.totalGPA || "");
             setUnivCategory(info.univCategory || "");
             setSemesterCategory(info.semesterCategory || "");
