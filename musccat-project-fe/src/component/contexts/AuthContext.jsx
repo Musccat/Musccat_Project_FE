@@ -361,7 +361,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchBenefitInfos = async (product_id) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/reviews/${product_id}/`, {
+            const response = await axios.get(`http://127.0.0.1:8000/reviews/view/${product_id}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
