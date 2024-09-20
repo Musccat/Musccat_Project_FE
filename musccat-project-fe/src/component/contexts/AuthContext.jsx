@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
             // 장학 사업명과 product_id를 반환하도록 수정
             return response.data.map((scholarship) => ({
                 name: scholarship.name,
-                product_id: scholarship.id,
+                product_id: String(scholarship.id),
             }));
         } catch (error) {
             console.error("Failed to fetch scholarships by foundation", error);

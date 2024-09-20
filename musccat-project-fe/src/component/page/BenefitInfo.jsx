@@ -170,7 +170,7 @@ const BenefitInfo = () => {
 
     // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
     const scholarship = Array.isArray(scholarships)
-        ? scholarships.find(scholar => scholar.id === parseInt(product_id))
+        ? scholarships.find(scholar => scholar.id === product_id)
         : null;
 
     // 장학 정보 삭제 핸들러 함수
