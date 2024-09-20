@@ -335,7 +335,7 @@ const BeneInfoRegister = () => {
             } else {
                 await addBenefitInfo(selectedScholarship.product_id, infoData); // 추가
             }
-            navigate(`/reviews/${selectedScholarship.product_id}`); // 페이지 이동
+            navigate(`/reviews/view/${selectedScholarship.product_id}`); // 페이지 이동
         } catch (error) {
             console.error("정보 저장에 실패했습니다.", error);
             alert("정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
