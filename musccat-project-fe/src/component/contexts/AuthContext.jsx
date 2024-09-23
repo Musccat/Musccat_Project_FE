@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
         if (isLiked) {
             // 이미 좋아요 상태면 찜 목록에서 제거하는 요청
             try {
-                const response = await axios.delete(`http://127.0.0.1:8000/scholarships/like/${scholarshipId}/`, {
+                const response = await axios.delete(`http://127.0.0.1:8000/userinfo/wishlist/delete/${scholarshipId}/`, {
                     headers: {
                         Authorization: `Bearer ${authTokens.access}`, // 사용자 인증 토큰
                     },
@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }) => {
         } else {
             // 좋아요 상태가 아니면 찜 목록에 추가하는 요청
             try {
-                const response = await axios.post(`http://127.0.0.1:8000/scholarships/like/`, {
+                const response = await axios.post(`http://127.0.0.1:8000/userinfo/wishlist/add/`, {
                     user: user.id,
                     scholarship_id: scholarshipId,
                     added_at: new Date().toISOString(),
@@ -214,7 +214,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            const response = await axios.get('http://127.0.0.1:8000/scholarships/liked/', {
+            const response = await axios.get('http://127.0.0.1:8000/userinfo/wishlist/', {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
