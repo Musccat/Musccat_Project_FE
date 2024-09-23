@@ -407,6 +407,25 @@ export const AuthProvider = ({ children }) => {
             return false;
         }
     };
+
+    const RegisterScholarship = async (scholarshipData) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/registerscholarships/', scholarshipData, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
+                },
+            });
+    
+            if (response.status === 201) {
+                alert("Scholarship successfully registered!");
+            } else {
+                alert("Failed to register scholarship.");
+            }
+        } catch (error) {
+            console.error("Error registering scholarship", error);
+            alert("An error occurred while registering the scholarship.");
+        }
+    };
     
 
     const logoutUser = () => {
@@ -456,6 +475,7 @@ export const AuthProvider = ({ children }) => {
         sendVerificationCode,
         verifyCode,
         totalPages,
+        RegisterScholarship
     };
 
 /*
