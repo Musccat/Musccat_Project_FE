@@ -23,7 +23,7 @@ const Title = styled.h1`
 
 const DateRow = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
     margin-bottom: 20px;
 `;
 
@@ -34,12 +34,6 @@ const Input = styled.input`
     border: 1px solid #ccc;
     font-size: 16px;
     text-align: center;
-`;
-
-const DateText = styled.span`
-    font-size: 24px;
-    line-height: 45px;
-    color: #333;
 `;
 
 const InfoBox = styled.div`
@@ -73,33 +67,27 @@ const Button = styled.button`
 `;
 const RecomSchoalrDate = () => {
     const { setScholarDate } = useAuth();
-    const [recruitmentStart, setRecruitmentStart] = useState("");
     const [recruitmentEnd, setRecruitmentEnd] = useState("");
     const [isFormValid, setIsFormValid] = useState(false);
+    const [today, setToday] = useState("");
 
     useEffect(() => {
-        setIsFormValid(recruitmentStart.trim() !== "" && recruitmentEnd.trim() !== "");
-    }, [recruitmentStart, recruitmentEnd]);
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split("T")[0]; // Format as yyyy-mm-dd
+        setToday(formattedDate);
+    }, []);
 
-    const handleStartChange = (e) => {
-        setRecruitmentStart(e.target.value);
-        // recruitmentEnd가 recruitmentStart보다 이전이면 초기화
-        if (recruitmentEnd && e.target.value > recruitmentEnd) {
-            setRecruitmentEnd("");
-        }
-    };
+    useEffect(() => {
+        setIsFormValid(recruitmentEnd.trim() !== "");
+    }, [recruitmentEnd]);
 
     const handleEndChange = (e) => {
         setRecruitmentEnd(e.target.value);
-        // recruitmentStart가 recruitmentEnd보다 이후면 초기화
-        if (recruitmentStart && e.target.value < recruitmentStart) {
-            setRecruitmentStart("");
-        }
+
     };
 
     const handleSubmit = async() => {
         const scholarshipPeriod = {
-            recruitment_start: recruitmentStart,
             recruitment_end: recruitmentEnd
         };  
 
@@ -125,18 +113,9 @@ const RecomSchoalrDate = () => {
             <DateRow>
                 <Input
                     type="date"
-                    value={recruitmentStart}
-                    onChange={handleStartChange}
-                    min="2024-01-01" 
-                    max={recruitmentEnd || "2099-12-31"} 
-                    placeholder="시작 날짜"
-                />
-                <DateText>~</DateText>
-                <Input
-                    type="date"
                     value={recruitmentEnd}
                     onChange={handleEndChange}
-                    min={recruitmentStart || "2024-01-01"}
+                    min={today} 
                     placeholder="종료 날짜"
                 />
             </DateRow>
