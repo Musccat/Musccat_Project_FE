@@ -426,7 +426,25 @@ export const AuthProvider = ({ children }) => {
             alert("An error occurred while registering the scholarship.");
         }
     };
-    
+
+    const setScholarDate = async (scholarshipPeriod) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/setscholarshipdate/', scholarshipPeriod, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
+                },
+            });
+
+            if (response.status === 201) {
+                alert("Scholarship date successfully set!");
+            } else {
+                alert("Failed to set scholarship date.");
+            }
+        } catch (error) {
+            console.error("Error setting scholarship date", error);
+            alert("An error occurred while setting the scholarship date.");
+        }
+    };
 
     const logoutUser = () => {
         setAuthTokens(null);
@@ -475,7 +493,8 @@ export const AuthProvider = ({ children }) => {
         sendVerificationCode,
         verifyCode,
         totalPages,
-        RegisterScholarship
+        RegisterScholarship,
+        setScholarDate
     };
 
 /*
