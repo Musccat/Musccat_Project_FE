@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Select from 'react-select';
 
@@ -59,9 +60,20 @@ const Input = styled.input`
 `;
 
 const Space = styled.div`
-    height: 20px; /* 여백 크기 설정 */
+    height: 10px; /* 여백 크기 설정 */
 `;
 
+const Line1 = styled.hr`
+    border: none;
+    border-top: 3px dashed #348a8c; 
+    margin: 10px 0;
+`;
+
+const Line2 = styled.hr`
+    border: none;
+    border-top: 3px dashed #2f4858; 
+    margin: 10px 0; 
+`;
 
 const ButtonContainer = styled.div`
     display: flex;
@@ -80,9 +92,12 @@ const SubmitButton = styled.button`
 `;
 
 const AddScholar = () => {
+    const navigate = useNavigate();
+
     const { RegisterScholarship } = useAuth();
+    const [isFormValid, setIsFormValid] = useState(false);
     const [formValues, setFormValues] = useState({
-        product_id: '',
+        product_type: '장학금', // 디폴트 값 설정
         managing_organization_type: '',
         foundation_name: '',
         name: '',
@@ -110,10 +125,93 @@ const AddScholar = () => {
         setFormValues({ ...formValues, [name]: value });
     };
 
+    useEffect(() => {
+        // 모든 필드가 채워졌는지 확인하고 isFormValid 업데이트
+        const isValid =  (
+        formValues.managing_organization_type.trim() !== "" &&
+        formValues.foundation_name.trim() !== "" &&
+        formValues.name.trim() !== "" &&
+        formValues.financial_aid_type.trim() !== "" &&
+        formValues.website_url.trim() !== "" &&
+        formValues.recruitment_start.trim() !== "" &&
+        formValues.recruitment_end.trim() !== "" &&
+        formValues.university_type.trim() !== "" &&
+        formValues.major_field_type.trim() !== "" &&
+        formValues.academic_year_type.trim() !== "" &&
+        formValues.selection_method_details.trim() !== "" &&
+        formValues.number_of_recipients_details.trim() !== "" &&
+        formValues.grade_criteria_details.trim() !== "" &&
+        formValues.income_criteria_details.trim() !== "" &&
+        formValues.residency_requirement_details.trim() !== "" &&
+        formValues.eligibility_restrictions.trim() !== "" &&
+        formValues.required_documents_details.trim() !== "" &&
+        formValues.support_details.trim() !== "" &&
+        formValues.recommendation_required.trim() !== "" &&
+        formValues.specific_qualification_details.trim() !== ""
+            );
+        setIsFormValid(isValid);
+    }, [
+        formValues.managing_organization_type,
+    formValues.foundation_name,
+    formValues.name,
+    formValues.financial_aid_type,
+    formValues.website_url,
+    formValues.recruitment_start,
+    formValues.recruitment_end,
+    formValues.university_type,
+    formValues.major_field_type,
+    formValues.academic_year_type,
+    formValues.selection_method_details,
+    formValues.number_of_recipients_details,
+    formValues.grade_criteria_details,
+    formValues.income_criteria_details,
+    formValues.residency_requirement_details,
+    formValues.eligibility_restrictions,
+    formValues.required_documents_details,
+    formValues.support_details,
+    formValues.recommendation_required,
+    formValues.specific_qualification_details 
+    ]); 
+
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent form from refreshing the page
-        await RegisterScholarship(formValues); // Pass form values to RegisterScholarship function
+        e.preventDefault(); 
+        const response = await RegisterScholarship(formValues);
+
+        if (response && response.status === 201) { 
+            window.alert("장학금 정보 입력이 완료 되었습니다");
+            navigate("/main"); 
+        } else {
+            window.alert("입력에 실패하였습니다. 다시 시도해주세요.");
+        }
     };
+
+    const univCategoryOptions = [
+        { value: '4년제(5~6년제)', label: '4년제(5~6년제)' },
+        { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
+        { value: '해외대학', label: '해외대학' },
+        { value: '학점은행제 대학', label: '학점은행제 대학'},
+        { value: '원격대학', label: '원격대학'},
+        { value: '기술대학', label: '기술대학'}
+        
+    ];
+
+    const majorCategoryOptions = [
+        { value: '공학계열', label: '공학계열' },
+        { value: '교육계열', label: '교육계열' },
+        { value: '사회계열', label: '사회계열' },
+        { value: '예체능계열', label: '예체능계열' },
+        { value: '의약계열', label: '의약계열' },
+        { value: '인문계열', label: '인문계열' },
+        { value: '자연계열', label: '자연계열' }
+    ];
+
+    const financialOptions = [
+        { value: '지역연고', label: '지역연고'},
+        { value: '성적우수', label: '성적우수'},
+        { value: '소득구분', label: '소득구분'},
+        { value: '특기자', label: '특기자'},
+        { value: '기타', label:'기타'}
+    ];
 
     return (
         <>
@@ -121,13 +219,12 @@ const AddScholar = () => {
         <PageWrapper>
             <Title>장학금 등록</Title>
             <FormContainer>
-            <FormRow>
-                        <Label>상품 유형</Label>
-                        <Input 
-                            name="product_id"
-                            value={formValues.product_id} 
-                            onChange={handleChange}
-                            placeholder="상품 유형" />
+                <FormRow>
+                    <Label>상품 유형</Label>
+                    <Input 
+                        name="product_type"
+                        value="장학금" 
+                        disabled />
                     </FormRow>
                     <FormRow>
                         <Label>장학 운영기관</Label>
@@ -155,21 +252,25 @@ const AddScholar = () => {
                     </FormRow>
                     <FormRow>
                         <Label>장학금 유형</Label>
-                        <Input 
+                        <StyledSelect 
                             name="financial_aid_type" 
-                            value={formValues.financial_aid_type} 
-                            onChange={handleChange}
-                            placeholder="장학금 유형" />
+                            options={financialOptions}
+                            value={financialOptions.find(option => option.value === formValues.financial_aid_type)} 
+                            onChange={(selectedOption) => handleChange({ target: { name: 'financial_aid_type', value: selectedOption.value } })}
+                            placeholder="장학금 유형"/>
                     </FormRow>
                     <FormRow>
                         <Label>장학재단 홈페이지 주소</Label>
                         <Input 
+                            type="url"
                             name="website_url" 
                             value={formValues.website_url} 
                             onChange={handleChange} 
-                            placeholder="장학재단 홈페이지 url"/>
+                            placeholder="https://example.com"/>
                     </FormRow>
 
+                    <Space />
+                    <Line1 />
                     <Space />
                     <Space />
 
@@ -202,18 +303,20 @@ const AddScholar = () => {
 
                     <FormRow>
                         <Label>대학 유형</Label>
-                        <Input 
+                        <StyledSelect
                             name="university_type" 
-                            value={formValues.university_type} 
-                            onChange={handleChange} 
+                            options={univCategoryOptions}
+                            value={univCategoryOptions.find(option => option.value === formValues.university_type)} 
+                            onChange={(selectedOption) => handleChange({ target: { name: 'university_type', value: selectedOption.value } })}
                             placeholder="대학 유형"/>
                     </FormRow>
                     <FormRow>
-                        <Label>학과 구분</Label>
-                        <Input 
+                        <Label>학과 구분</Label>  
+                        <StyledSelect 
                             name="major_field_type" 
-                            value={formValues.major_field_type} 
-                            onChange={handleChange} 
+                            options={majorCategoryOptions}
+                            value={majorCategoryOptions.find(option => option.value === formValues.major_field_type)} 
+                            onChange={(selectedOption) => handleChange({ target: { name: 'major_field_type', value: selectedOption.value } })}
                             placeholder="학과 구분"/>
                     </FormRow>
                     <FormRow>
@@ -224,7 +327,12 @@ const AddScholar = () => {
                             onChange={handleChange}
                             placeholder="학년 구분" />
                     </FormRow>
-                    {/* Detailed info */}
+
+                    <Space />
+                    <Line2 />
+                    <Space />
+                    <Space />
+
                     <FormRow>
                         <Label>선발방법 상세 내용</Label>
                         <Input 
@@ -307,7 +415,12 @@ const AddScholar = () => {
                     </FormRow>
 
                     <ButtonContainer>
-                        <SubmitButton onClick={handleSubmit}>입력 완료</SubmitButton>
+                        <SubmitButton 
+                            type="button" 
+                            onClick={handleSubmit}
+                            disabled={!isFormValid} >
+                                입력 완료
+                        </SubmitButton>
                     </ButtonContainer>
             </FormContainer>
         </PageWrapper>
