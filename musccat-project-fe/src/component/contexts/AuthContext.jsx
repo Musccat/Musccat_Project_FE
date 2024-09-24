@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/mypage/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/mypage/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/users/mypage/update/`, updatedData, {
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/mypage/update/`, updatedData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     };
     const fetchFoundations = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/reviews/foundations`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/foundations`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchScholarshipsByFoundation = async (foundationName) => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/reviews/scholarships/${foundationName}/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/scholarships/${foundationName}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchScholarships = async (page = 1) => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/entirescholar/?page=${page}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
             setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
             setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
         if (isLiked) {
             // 이미 좋아요 상태면 찜 목록에서 제거하는 요청
             try {
-                const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
+                const response = await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
                     headers: {
                         Authorization: `Bearer ${authTokens.access}`, // 사용자 인증 토큰
                     },
@@ -185,7 +185,7 @@ export const AuthProvider = ({ children }) => {
         } else {
             // 좋아요 상태가 아니면 찜 목록에 추가하는 요청
             try {
-                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/userinfo/wishlist/add/`, {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
                     scholarship_id: scholarshipId,
                     added_at: new Date().toISOString(),
@@ -214,7 +214,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/userinfo/wishlist/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -240,10 +240,10 @@ export const AuthProvider = ({ children }) => {
     };
     
     const loginUser = async (username, password) => {
-        console.log(process.env.NEXT_PUBLIC_API_URL); 
+        console.log(process.env.REACT_APP_API_URL); 
         try {
             // 로그인 요청을 보내고 토큰을 받아옵니다.
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login/`, { 
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login/`, { 
                 username, 
                 password 
             });
@@ -278,7 +278,7 @@ export const AuthProvider = ({ children }) => {
 
     const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate, email) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register/`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/register/`, {
                 username,
                 password,
                 password2,
@@ -301,7 +301,7 @@ export const AuthProvider = ({ children }) => {
 
     const addBenefitInfo = async (product_id, info) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/reviews/`, info, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/reviews/`, info, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -320,7 +320,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateBenefitInfo = async (product_id, benefit_id, updatedInfo) => {
         try {
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/reviews/edit/${benefit_id}/`, updatedInfo, {
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/reviews/edit/${benefit_id}/`, updatedInfo, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -343,7 +343,7 @@ export const AuthProvider = ({ children }) => {
 
     const deleteBenefitInfo = async (product_id, benefit_id) => {
         try {
-            const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/reviews/edit/${benefit_id}/`, {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/reviews/edit/${benefit_id}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
@@ -362,7 +362,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchBenefitInfos = async (product_id) => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/${product_id}/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/${product_id}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
@@ -382,7 +382,7 @@ export const AuthProvider = ({ children }) => {
     // 아이디 중복 확인 함수
     const checkUsernameAvailability = async (username) => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/${username}/`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/${username}/`);
             return response.data.available;  // true면 사용 가능, false면 이미 사용 중
         } catch (error) {
             console.error("Username availability check failed", error);
@@ -392,7 +392,7 @@ export const AuthProvider = ({ children }) => {
 
     const sendVerificationCode = async (email) => {
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/send-verification-code/`, { email });
+            await axios.post(`${process.env.REACT_APP_API_URL}/users/send-verification-code/`, { email });
         } catch (error) {
             console.error("Failed to send verification code", error);
             throw error;
@@ -401,7 +401,7 @@ export const AuthProvider = ({ children }) => {
     
     const verifyCode = async (email, code) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/verify-code/`, { email, "verify-code": code });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/verify-code/`, { email, "verify-code": code });
             return response.data.valid;  // true if valid, false if not
         } catch (error) {
             console.error("Failed to verify code", error);
@@ -411,7 +411,7 @@ export const AuthProvider = ({ children }) => {
 
     const RegisterScholarship = async (scholarshipData) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/registerscholarships/`, scholarshipData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/registerscholarships/`, scholarshipData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
@@ -430,7 +430,7 @@ export const AuthProvider = ({ children }) => {
 
     const setScholarDate = async (scholarshipPeriod) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/setscholarshipdate/`, scholarshipPeriod, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/setscholarshipdate/`, scholarshipPeriod, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
