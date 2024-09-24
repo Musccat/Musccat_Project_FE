@@ -56,6 +56,7 @@ const FirstButton = styled.button`
     color: white; 
     margin-top: auto;
     margin-left: 10px;
+    cursor: pointer;
 `;
 
 const SecondButton = styled.button`
@@ -66,6 +67,7 @@ const SecondButton = styled.button`
     color: white;
     margin-top: auto;
     margin-left: 10px;
+    cursor: pointer;
 `;
 
 const ThirdButton = styled.button`
@@ -76,6 +78,7 @@ const ThirdButton = styled.button`
     color: white;
     margin-top: auto;
     margin-left: 10px;
+    cursor: pointer;
 `;
 
 
@@ -90,6 +93,7 @@ const BottomButton = styled.button`
     white-space: pre-line; /* 줄 바꿈을 지원하도록 설정 */
     text-align: center; /* 텍스트를 가운데 정렬 */
     font-size: 16px; /* 텍스트 크기 조정 */
+    cursor: pointer;
 `;
 
 function MainPage(props) {
