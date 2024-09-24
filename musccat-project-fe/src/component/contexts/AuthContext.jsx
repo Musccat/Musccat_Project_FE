@@ -242,7 +242,7 @@ export const AuthProvider = ({ children }) => {
     const loginUser = async (username, password) => {
         try {
             // 로그인 요청을 보내고 토큰을 받아옵니다.
-            const response = await axios.post('http://127.0.0.1:8000/users/login/', { 
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login/`, { 
                 username, 
                 password 
             });
@@ -277,7 +277,7 @@ export const AuthProvider = ({ children }) => {
 
     const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate, email) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/users/register/", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register/`, {
                 username,
                 password,
                 password2,
