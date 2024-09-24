@@ -40,7 +40,7 @@ const InfoBox = styled.div`
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 10px;
-    text-align: center;
+    text-align: left;
     margin-bottom: 20px;
     background-color: rgba(52, 138, 140, 0.1);
     color: #2f4858;
@@ -120,7 +120,8 @@ const RecomSchoalrDate = () => {
                 />
             </DateRow>
             <InfoBox>
-                <p>* 원하는 기간을 선택해주세요</p>
+                <p>* 신청 기한을 설정해주세요</p>
+                <p>* 선택한 기간 내 신청 가능한 장학금들을 추천드립니다</p>
                 <p>* 기간 입력 후 '추천 받기' 버튼을 눌러주세요</p>
             </InfoBox>
             <Button 
