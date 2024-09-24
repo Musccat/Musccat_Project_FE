@@ -63,16 +63,10 @@ const Space = styled.div`
     height: 10px; /* 여백 크기 설정 */
 `;
 
-const Line1 = styled.hr`
+const Line = styled.hr`
     border: none;
     border-top: 3px dashed #348a8c; 
     margin: 10px 0;
-`;
-
-const Line2 = styled.hr`
-    border: none;
-    border-top: 3px dashed #2f4858; 
-    margin: 10px 0; 
 `;
 
 const ButtonContainer = styled.div`
@@ -270,7 +264,7 @@ const AddScholar = () => {
                     </FormRow>
 
                     <Space />
-                    <Line1 />
+                    <Line />
                     <Space />
                     <Space />
 
@@ -329,7 +323,7 @@ const AddScholar = () => {
                     </FormRow>
 
                     <Space />
-                    <Line2 />
+                    <Line />
                     <Space />
                     <Space />
 
