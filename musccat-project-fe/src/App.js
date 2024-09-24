@@ -19,6 +19,7 @@ import EntireScholar from './component/page/EntireScholar';
 import RecomSchoalrDate from './component/page/RecomScholarDate';
 import RecomScholar from './component/page/RecomScholar';
 import Notice from './component/page/Notice';
+import Notice_ from './component/page/Notice_';
 import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
 import MyInterest from './component/page/MyInterest';
@@ -46,6 +47,7 @@ function App() {
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/recomscholardate" element={<RecomSchoalrDate />} /> {/*추천 장학금 목록 기한 설정 페이지 */}
           <Route path="/notice" element={<Notice />} /> {/*장학금 공고 페이지 */}
+          <Route path="/notice_" element={<Notice_ />} /> {/*장학금 공고 디자인 페이지 */}
           <Route path="/reviews/view/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
           <Route path="/reviews" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
           <Route path="/reviewstest/:product_id" element={<BenefitInfo_c />} /> {/*이전 수혜자 정보 페이지 */}
