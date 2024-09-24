@@ -8,7 +8,7 @@ const PageWrapper = styled.div`
     max-width: 500px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
-    border: 1px solid #348a8c;
+    border: 2px solid #348a8c;
     border-radius: 10px;
     background-color: white;
 `;
@@ -48,7 +48,7 @@ const InfoBox = styled.div`
     padding: 10px;
     text-align: center;
     margin-bottom: 20px;
-    background-color: #f8f8f8;
+    background-color: rgba(52, 138, 140, 0.1);
     color: #2f4858;
 `;
 
