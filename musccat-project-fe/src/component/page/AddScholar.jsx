@@ -199,6 +199,12 @@ const AddScholar = () => {
         { value: '자연계열', label: '자연계열' }
     ];
 
+    const semesterCategoryOptions = [
+        { value: '대학신입생', label: '대학신입생' },
+        ...Array.from({ length: 7 }, (_, i) => ({ value: `${i + 2}학기`, label: `${i + 2}학기` })),
+        { value: '대학 8학기이상', label: '대학 8학기이상' }
+    ];
+
     const financialOptions = [
         { value: '지역연고', label: '지역연고'},
         { value: '성적우수', label: '성적우수'},
@@ -315,10 +321,11 @@ const AddScholar = () => {
                     </FormRow>
                     <FormRow>
                         <Label>학년 구분</Label>
-                        <Input 
-                            name="academic_year_type" 
-                            value={formValues.academic_year_type} 
-                            onChange={handleChange}
+                        <StyledSelect
+                            name="academic_year_type"
+                            options={semesterCategoryOptions} 
+                            value={semesterCategoryOptions.find(option => option.value === formValues.academic_year_type)} 
+                            onChange={(selectedOption) => handleChange({ target: { name: 'academic_year_type', value: selectedOption.value } })}
                             placeholder="학년 구분" />
                     </FormRow>
 
