@@ -240,9 +240,10 @@ export const AuthProvider = ({ children }) => {
     };
     
     const loginUser = async (username, password) => {
+        console.log(process.env.NEXT_PUBLIC_API_URL); 
         try {
             // 로그인 요청을 보내고 토큰을 받아옵니다.
-            const response = await axios.post(`https://scholli.site/users/login/`, { 
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login/`, { 
                 username, 
                 password 
             });
