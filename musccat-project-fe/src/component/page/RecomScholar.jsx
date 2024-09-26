@@ -188,7 +188,6 @@ const Title = styled.h2`
 
 function RecomScholar(props) {
 // 상태 관리
-const [likes, setLikes] = useState([]);
 
 const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -199,7 +198,7 @@ const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 const [typeOption, setTypeOption] = useState('장학금 전체');
 const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
 
-const { user, scholarships = [], fetchRecommendedScholarships } = useAuth(); 
+const { user, scholarships = [], fetchRecommendedScholarships, likes, handleLikeClick } = useAuth(); 
 const userFullName = user ? user.fullName : '사용자';
 
 useEffect(() => {
@@ -224,14 +223,6 @@ const handleTypeOptionClick = (option) => {
     setTypeOptions([typeOption, ...typeOptions.filter(opt => opt !== option)]);
     setTypeOption(option);
     setTypeDropdownVisible(false);
-};
-
-// 좋아요 버튼 클릭 핸들러
-const handleLikeClick = (index) => {
-    const newLikes = [...likes];
-    newLikes[index] = !newLikes[index];
-    setLikes(newLikes);
-
 };
 
 return (
@@ -304,7 +295,7 @@ return (
                                                 </Link>
                                                     <button
                                                         style={styles.heartButton}
-                                                        onClick={() => handleLikeClick(index)}
+                                                        onClick={() => handleLikeClick(index, scholarship.product_id)}
                                                     >
                                                         <img
                                                             src={likes[index] ? filledheart : emptyheart}
