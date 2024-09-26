@@ -238,6 +238,19 @@ export const AuthProvider = ({ children }) => {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+
+    const fetchRecommendedScholarships = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/recommended_scholarships/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            setScholarships(response.data); // 추천 장학금 목록을 상태에 저장
+        } catch (error) {
+            console.error("Failed to fetch recommended scholarships", error);
+        }
+    };
     
     const loginUser = async (username, password) => {
         console.log(process.env.REACT_APP_API_URL); 
@@ -430,7 +443,7 @@ export const AuthProvider = ({ children }) => {
 
     const setScholarDate = async (scholarshipPeriod) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/setscholarshipdate/`, scholarshipPeriod, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/set_scholarshipdate/`, scholarshipPeriod, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
@@ -497,7 +510,8 @@ export const AuthProvider = ({ children }) => {
         verifyCode,
         totalPages,
         RegisterScholarship,
-        setScholarDate
+        setScholarDate,
+        fetchRecommendedScholarships, 
     };
 
 /*

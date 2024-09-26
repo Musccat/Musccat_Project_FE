@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../ui/NavBar";
-import scholarships from "../data/scholarshipdata";
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
@@ -187,7 +186,7 @@ const Title = styled.h2`
 
 function RecomScholar(props) {
 // 상태 관리
-const [likes, setLikes] = useState(Array(scholarships.length).fill(false));
+const [likes, setLikes] = useState([]);
 
 const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -198,8 +197,12 @@ const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 const [typeOption, setTypeOption] = useState('장학금 전체');
 const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
 
-const { user } = useAuth(); // Retrieve user from the context
-const userNickname = user ? user.userNickname : '사용자';
+const { user, scholarships = [], fetchRecommendedScholarships } = useAuth(); 
+const userFullName = user ? user.fullName : '사용자';
+
+useEffect(() => {
+    fetchRecommendedScholarships();
+}, []);
 
 const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -235,7 +238,7 @@ return (
             <div style={styles.wrapper}>
                 <div style={styles.container}>
                 <div style={styles.outerContainer}>
-                    <h1 style={styles.header}><span style={styles.highlight}>{userNickname}</span> 님의 추천 장학금</h1>
+                    <h1 style={styles.header}><span style={styles.highlight}>{userFullName}</span> 님의 추천 장학금</h1>
                     <div style={styles.buttonContainer}>
                     <SortButtonContainer>
                         <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
@@ -284,42 +287,42 @@ return (
                                 </tr>
                             </thead>
                             <tbody>
-                                {scholarships.map((scholarship, index) => (
-                                    <tr key={index}>
-                                        <td style={styles.thTd}>{scholarship.foundation_name}</td>
-                                        <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                            <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
-                                        </td>
-                                        <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
-                                        <td style={styles.thTd}>
-                                            <div style={styles.flexContainer}>
-                                            <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
-                                                <button style={styles.infoButton}>정보 보러가기</button>
-                                            </Link>
-                                                <button
-                                                    style={styles.heartButton}
-                                                    onClick={() => handleLikeClick(index)}
-                                                >
-                                                    <img
-                                                        src={likes[index] ? filledheart : emptyheart}
-                                                        alt="heart"
-                                                        style={styles.heartImage}
-                                                    />
-                                                </button>
-                                            </div>
+                                {Array.isArray(scholarships) && scholarships.length > 0 ? (
+                                    scholarships.map((scholarship, index) => (
+                                        <tr key={index}>
+                                            <td style={styles.thTd}>{scholarship.foundation_name}</td>
+                                            <td style={{ ...styles.thTd, paddingRight: "20px" }}>
+                                                <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
+                                            </td>
+                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
+                                            <td style={styles.thTd}>
+                                                <div style={styles.flexContainer}>
+                                                <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
+                                                    <button style={styles.infoButton}>정보 보러가기</button>
+                                                </Link>
+                                                    <button
+                                                        style={styles.heartButton}
+                                                        onClick={() => handleLikeClick(index)}
+                                                    >
+                                                        <img
+                                                            src={likes[index] ? filledheart : emptyheart}
+                                                            alt="heart"
+                                                            style={styles.heartImage}
+                                                        />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                                            해당 정보가 존재하지 않습니다
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colSpan="4" style={{ borderBottom: "1px solid #348a8c" }}></td>
-                                </tr>
-                            </tfoot>
                         </table>
-                    </div>
-                    <div style={styles.pagination}>
-                        <span style={styles.paginationSpan}>1 2 3 4 5</span>
                     </div>
                 </div>
                 <WarningBox>
@@ -329,8 +332,7 @@ return (
             </div>
         </div>
     </>
-);
 
-
+    );
 }
 export default RecomScholar;
