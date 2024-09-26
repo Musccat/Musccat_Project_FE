@@ -196,14 +196,22 @@ const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 �
 
 const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 const [typeOption, setTypeOption] = useState('장학금 전체');
-const [typeOptions, setTypeOptions] = useState(['지역연고', '성적우수', '소득구분', '특기자', '기타']);
+const [filteredScholarships, setFilteredScholarships] = useState([]);
 
-const { user, scholarships = [], fetchRecommendedScholarships, likes, handleLikeClick } = useAuth(); 
+const { user, fetchRecommendedScholarships, likes, handleLikeClick, filterScholarshipsByType } = useAuth(); 
+const [scholarships, setScholarships] = useState([]);
 const userFullName = user ? user.fullName : '사용자';
 
 useEffect(() => {
-    fetchRecommendedScholarships();
+    fetchRecommendedScholarships().then(fetchedScholarships => {
+        setScholarships(fetchedScholarships); 
+    });
 }, []);
+
+useEffect(() => {
+    const filtered = filterScholarshipsByType(typeOption);
+    setFilteredScholarships(filtered);
+}, [scholarships, typeOption, filterScholarshipsByType]);
 
 const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -220,7 +228,6 @@ const handleSortOptionClick = (option) => {
 };
 
 const handleTypeOptionClick = (option) => {
-    setTypeOptions([typeOption, ...typeOptions.filter(opt => opt !== option)]);
     setTypeOption(option);
     setTypeDropdownVisible(false);
 };
@@ -239,7 +246,7 @@ return (
                         </SortButton>
                         {typeDropdownVisible && (
                             <Dropdown>
-                                {typeOptions.map((option, index) => (
+                                {['장학금 전체', '지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
                                     <DropdownItem
                                         key={index}
                                         onClick={() => handleTypeOptionClick(option)}
@@ -280,8 +287,8 @@ return (
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(scholarships) && scholarships.length > 0 ? (
-                                    scholarships.map((scholarship, index) => (
+                            {Array.isArray(filteredScholarships) && filteredScholarships.length > 0 ? (
+                                        filteredScholarships.map((scholarship, index) => (
                                         <tr key={index}>
                                             <td style={styles.thTd}>{scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
