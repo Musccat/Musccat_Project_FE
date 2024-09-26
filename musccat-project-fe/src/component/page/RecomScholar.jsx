@@ -132,6 +132,7 @@ const SortButtonContainer = styled.div`
 `;
 
 const SortButton = styled.button`
+    width: 140px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: ${props => props.bgColor || "#348a8c"};
@@ -139,8 +140,9 @@ const SortButton = styled.button`
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    position: relative; // For dropdown positioning
+    position: relative; 
     z-index: 2;
+    text-align: center;
 `;
 
 const DropdownItem = styled.div`
