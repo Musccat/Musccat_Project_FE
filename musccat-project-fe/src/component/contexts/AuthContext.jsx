@@ -441,6 +441,8 @@ export const AuthProvider = ({ children }) => {
             } else {
                 alert("Failed to set scholarship date.");
             }
+
+            return response;
         } catch (error) {
             console.error("Error setting scholarship date", error);
             alert("An error occurred while setting the scholarship date.");
