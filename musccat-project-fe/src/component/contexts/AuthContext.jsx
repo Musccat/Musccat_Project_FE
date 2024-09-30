@@ -238,6 +238,35 @@ export const AuthProvider = ({ children }) => {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+
+    const fetchScholarDetail = async (product_id) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/${product_id}/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`, // 인증 토큰 포함
+                },
+            });
+            return response.data; // 장학금 데이터를 반환
+        } catch (error) {
+            console.error("Failed to fetch scholarship details", error);
+            return null; // 에러 발생 시 null 반환
+        }
+    };
+
+
+    const fetchRecommendedScholarships = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/recommended_scholarships/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            setScholarships(response.data); // 추천 장학금 목록을 상태에 저장
+        } catch (error) {
+            console.error("Failed to fetch recommended scholarships", error);
+
+        }
+    };
     
     const loginUser = async (username, password) => {
         console.log(process.env.REACT_APP_API_URL); 
@@ -430,7 +459,7 @@ export const AuthProvider = ({ children }) => {
 
     const setScholarDate = async (scholarshipPeriod) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/setscholarshipdate/`, scholarshipPeriod, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/set_scholarshipdate/`, scholarshipPeriod, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
@@ -441,6 +470,8 @@ export const AuthProvider = ({ children }) => {
             } else {
                 alert("Failed to set scholarship date.");
             }
+
+            return response;
         } catch (error) {
             console.error("Error setting scholarship date", error);
             alert("An error occurred while setting the scholarship date.");
@@ -490,12 +521,14 @@ export const AuthProvider = ({ children }) => {
         setLikes,
         fetchFoundations,
         fetchScholarshipsByFoundation,
+        fetchScholarDetail,
         checkUsernameAvailability,
         sendVerificationCode,
         verifyCode,
         totalPages,
         RegisterScholarship,
-        setScholarDate
+        setScholarDate,
+        fetchRecommendedScholarships, 
     };
 
 /*

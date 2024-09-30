@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
 import Loudspeaker from '../ui/Loudspeaker.jpeg';
 import emptyheart from "../ui/emptyheart.jpeg";
@@ -133,7 +135,24 @@ const WarningBox = styled.div`
 
 
 const Notice = () => {
+    const [scholarship, setScholarship] = useState(null);
+    const { product_id } = useParams();
+    const { fetchScholarDetail } = useAuth(); 
     const [isHeartFilled, setIsHeartFilled] = useState(false);
+
+    useEffect(() => {
+        const loadScholarship = async () => {
+            const data = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
+            if (data) {
+                setScholarship(data); // 데이터를 상태로 설정
+            }
+        };
+        loadScholarship();
+    }, [product_id, fetchScholarDetail]);
+
+    if (!scholarship) {
+        return <p>Loading...</p>; // 데이터를 불러오는 동안 표시할 내용
+    }
 
     const toggleHeart = () => {
         setIsHeartFilled(!isHeartFilled);
@@ -145,8 +164,8 @@ const Notice = () => {
         <Container>
             <Header>
                 <ScholarshipTitleWrapper>
-                    <ScholarshipTitle>2024 상반기 광주시 빛고을 장학</ScholarshipTitle>
-                    <ScholarshipSubtitle>빛고을 장학 재단</ScholarshipSubtitle>
+                    <ScholarshipTitle>{scholarship.name}</ScholarshipTitle>
+                    <ScholarshipSubtitle>{scholarship.foundation_name}</ScholarshipSubtitle>
                     <HeartButton
                         src={isHeartFilled ? filledheart : emptyheart}
                         alt="Heart Icon"
@@ -155,59 +174,71 @@ const Notice = () => {
                 </ScholarshipTitleWrapper>
             </Header>
             <AnnouncementBar>공고</AnnouncementBar>
+
+            <Section>
+                <Title>장학금 유형</Title>
+                <ListItem>{scholarship.financial_aid_type}</ListItem>
+            </Section>
+
+            <Section>
+                <Title>장학재단 홈페이지 주소</Title>
+                <ListItem>{scholarship.website_url}</ListItem>
+            </Section>
+
             <Section>
                 <Title>신청 기간</Title>
-                <ListItem>2024.04.29 ~ 2024.05.28</ListItem>
+                <ListItem>{scholarship.recruitment_start} ~ {scholarship.recruitment_end}</ListItem>
             </Section>
 
             <Section>
-                <Title>선발인원</Title>
-                <List>
-                    <ListItem>· 총 330명</ListItem>
-                    <ListItem>· 중학색 93명</ListItem>
-                    <ListItem>· 중학생 196명</ListItem>
-                    <ListItem>· 대학생 41명</ListItem>
-                </List>
+                <Title>선발방법 상세 내용</Title>
+                <ListItem>{scholarship.selection_method_details}</ListItem>
             </Section>
 
             <Section>
-                <Title>장학혜택</Title>
-                <List>
-                    <ListItem>[장학급 지급] 최대 150만원</ListItem>
-                    <ListItem>· 중학생 35만원</ListItem>
-                    <ListItem>· 고등학생 50만원</ListItem>
-                    <ListItem>· 대학생 150만원</ListItem>
-                    <ListItem>※ 중복 수혜: 일부 가능</ListItem>
-                    <ListItem>※ 빛고을 장학금 기수혜자 선발 제외</ListItem>
-                </List>
+                <Title>선발인원 상세 내용</Title>
+                <ListItem>{scholarship.number_of_recipients_details}</ListItem>
             </Section>
 
             <Section>
-                <Title>접수 방법</Title>
-                <List>
-                    <ListItem>[방문 접수]</ListItem>
-                    <ListItem>· 접수처: 장학생 종류별 추천기관 (교육청, 자치구, 각 추천 기관 등)</ListItem>
-                    <ListItem>· 제출 서류: 공고문 확인</ListItem>
-                </List>
+                <Title>성적기준 상세 내용</Title>
+                <ListItem>{scholarship.grade_criteria_details}</ListItem>
             </Section>
 
             <Section>
-                <Title>지원 대상</Title>
-                <p>중학생, 고등학생, 대학생, 학교 밖 청소년</p>
+                <Title>소득기준 상세 내용</Title>
+                <ListItem>{scholarship.income_criteria_details}</ListItem>
             </Section>
 
             <Section>
-                <Title>신청 자격</Title>
-                <List>
-                    <ListItem>[지역 기준] 주민 등록지, 학교 소재지</ListItem>
-                    <ListItem>· 광주시 1년 이상 거주</ListItem>
-                    <ListItem>· 광주시 소재 학교 재학</ListItem>
-                    <ListItem>[추천 사항] 학교장, 기타</ListItem>
-                    <ListItem>※ 유형별 추천 사항 상이 (공고문 확인 필요)</ListItem>
-                    <ListItem>[유형별 신청 자격]</ListItem>
-                    <ListItem>· 학업 장려/ 생게 곤란 / 지정 장학 유형</ListItem>
-                    <ListItem> ※ 유형별 선발 조건 공고문 확인</ListItem>
-                </List>
+                <Title>거주지역여부 상세 내용</Title>
+                <ListItem>{scholarship.residency_requirement_details}</ListItem>
+            </Section>
+
+            <Section>
+                <Title>자격제한 상세 내용</Title>
+                <ListItem>{scholarship.eligibility_restrictions}</ListItem>
+            </Section>
+
+
+            <Section>
+                <Title>제출서류 상세 내용</Title>
+                <ListItem>{scholarship.required_documents_details}</ListItem>
+            </Section>
+
+            <Section>
+                <Title>지원내역 상세 내용</Title>
+                <ListItem>{scholarship.support_details}</ListItem>
+            </Section>
+
+            <Section>
+                <Title>추천필요여부 상세내용</Title>
+                <ListItem>{scholarship.recommendation_required}</ListItem>
+            </Section>
+
+            <Section>
+                <Title>특정자격 상세내용</Title>
+                <ListItem>{scholarship.specific_qualification_details}</ListItem>
             </Section>
 
             <HighlightBox>

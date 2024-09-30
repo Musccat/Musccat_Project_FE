@@ -145,7 +145,7 @@ const AddScholar = () => {
             );
         setIsFormValid(isValid);
     }, [
-        formValues.managing_organization_type,
+    formValues.managing_organization_type,
     formValues.foundation_name,
     formValues.name,
     formValues.financial_aid_type,

@@ -2,6 +2,7 @@ import React, { useEffect,useState } from 'react';
 import NavBar from '../ui/NavBar';
 import { useAuth } from "../contexts/AuthContext";
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const PageWrapper = styled.div`
     padding: 20px;
@@ -70,6 +71,7 @@ const RecomSchoalrDate = () => {
     const [recruitmentEnd, setRecruitmentEnd] = useState("");
     const [isFormValid, setIsFormValid] = useState(false);
     const [today, setToday] = useState("");
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const currentDate = new Date();
@@ -95,6 +97,7 @@ const RecomSchoalrDate = () => {
             const response = await setScholarDate(scholarshipPeriod);
             if (response && response.status === 201) {
                 alert("추천 기간 설정이 완료되었습니다.");
+                navigate('/recomscholar');
             } else {
                 alert("기간 설정에 실패하였습니다. 다시 시도해주세요.");
             }
