@@ -22,7 +22,7 @@ const FullWidthSection = styled.div`
 const ScholarshipTitleWrapper = styled.div`
     display: flex;
     align-items: baseline;
-    margin-left: 50px;
+    margin-left: 200px;
     margin-right: 50px;
     justify-content: space-between;
     width: 100%;
@@ -71,7 +71,7 @@ const Section = styled.div`
     margin-bottom: 50px;
 `;
 
-const Title = styled.h2`
+const Title = styled.h3`
     font-size: 1.7em;
     margin-bottom: 10px;
 `;
@@ -133,29 +133,42 @@ const WarningBox = styled.div`
     }
 `;
 
+const Space = styled.div`
+    height: 20px; /* 여백 크기 설정 */
+`;
 
 const Notice = () => {
     const [scholarship, setScholarship] = useState(null);
     const { product_id } = useParams();
-    const { fetchScholarDetail } = useAuth(); 
+    const { fetchScholarDetail, handleLikeClick, likedScholarships, likes } = useAuth(); 
     const [isHeartFilled, setIsHeartFilled] = useState(false);
+    const [hasError, setHasError] = useState(false); 
 
     useEffect(() => {
         const loadScholarship = async () => {
-            const data = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
-            if (data) {
-                setScholarship(data); // 데이터를 상태로 설정
+            try{
+                const data = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
+                if (data) {
+                    setScholarship(data); // 데이터를 상태로 설정
+                } else {
+                    setHasError(true); // 오류 상태 설정
+                }
+            } catch (error) {
+                setHasError(true); // 오류 상태 설정
             }
         };
         loadScholarship();
     }, [product_id, fetchScholarDetail]);
 
-    if (!scholarship) {
-        return <p>Loading...</p>; // 데이터를 불러오는 동안 표시할 내용
-    }
+    // 좋아요 상태를 likedScholarships로부터 설정
+    useEffect(() => {
+        const isLiked = likedScholarships.some((sch) => sch.product_id === product_id);
+        setIsHeartFilled(isLiked);
+    }, [likedScholarships, product_id]);
 
-    const toggleHeart = () => {
-        setIsHeartFilled(!isHeartFilled);
+    const handleHeartClick = () => {
+        handleLikeClick(isHeartFilled, product_id);
+        setIsHeartFilled(!isHeartFilled); // UI 즉시 반영
     };
 
     return (
@@ -164,81 +177,92 @@ const Notice = () => {
         <Container>
             <Header>
                 <ScholarshipTitleWrapper>
-                    <ScholarshipTitle>{scholarship.name}</ScholarshipTitle>
-                    <ScholarshipSubtitle>{scholarship.foundation_name}</ScholarshipSubtitle>
+                    <ScholarshipTitle>{scholarship?.name || '장학사업명'}</ScholarshipTitle>
+                    <ScholarshipSubtitle>{scholarship?.foundation_name || '장학재단명'}</ScholarshipSubtitle>
                     <HeartButton
                         src={isHeartFilled ? filledheart : emptyheart}
                         alt="Heart Icon"
-                        onClick={toggleHeart}
+                        onClick={handleHeartClick} 
                     />
                 </ScholarshipTitleWrapper>
             </Header>
             <AnnouncementBar>공고</AnnouncementBar>
 
+            <Space />
             <Section>
                 <Title>장학금 유형</Title>
-                <ListItem>{scholarship.financial_aid_type}</ListItem>
+                <ListItem>{scholarship?.financial_aid_type || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>장학재단 홈페이지 주소</Title>
-                <ListItem>{scholarship.website_url}</ListItem>
+                <ListItem>
+                {scholarship?.website_url ? (
+                    <a href={scholarship.website_url} target="_blank" rel="noopener noreferrer">
+                        {scholarship.website_url}
+                    </a>
+                ) : (
+                    '정보 없음'
+                )}
+                </ListItem>
             </Section>
 
             <Section>
                 <Title>신청 기간</Title>
-                <ListItem>{scholarship.recruitment_start} ~ {scholarship.recruitment_end}</ListItem>
+                <ListItem>
+                    {scholarship?.recruitment_start || '시작일 정보 없음'} ~ {scholarship?.recruitment_end || '종료일 정보 없음'}
+                </ListItem>
             </Section>
 
             <Section>
                 <Title>선발방법 상세 내용</Title>
-                <ListItem>{scholarship.selection_method_details}</ListItem>
+                <ListItem>{scholarship?.selection_method_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>선발인원 상세 내용</Title>
-                <ListItem>{scholarship.number_of_recipients_details}</ListItem>
+                <ListItem>{scholarship?.number_of_recipients_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>성적기준 상세 내용</Title>
-                <ListItem>{scholarship.grade_criteria_details}</ListItem>
+                <ListItem>{scholarship?.grade_criteria_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>소득기준 상세 내용</Title>
-                <ListItem>{scholarship.income_criteria_details}</ListItem>
+                <ListItem>{scholarship?.income_criteria_details|| '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>거주지역여부 상세 내용</Title>
-                <ListItem>{scholarship.residency_requirement_details}</ListItem>
+                <ListItem>{scholarship?.residency_requirement_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>자격제한 상세 내용</Title>
-                <ListItem>{scholarship.eligibility_restrictions}</ListItem>
+                <ListItem>{scholarship?.eligibility_restrictions || '정보 없음'}</ListItem>
             </Section>
 
 
             <Section>
                 <Title>제출서류 상세 내용</Title>
-                <ListItem>{scholarship.required_documents_details}</ListItem>
+                <ListItem>{scholarship?.required_documents_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>지원내역 상세 내용</Title>
-                <ListItem>{scholarship.support_details}</ListItem>
+                <ListItem>{scholarship?.support_details || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>추천필요여부 상세내용</Title>
-                <ListItem>{scholarship.recommendation_required}</ListItem>
+                <ListItem>{scholarship?.recommendation_required || '정보 없음'}</ListItem>
             </Section>
 
             <Section>
                 <Title>특정자격 상세내용</Title>
-                <ListItem>{scholarship.specific_qualification_details}</ListItem>
+                <ListItem>{scholarship?.specific_qualification_details || '정보 없음'}</ListItem>
             </Section>
 
             <HighlightBox>
@@ -246,8 +270,8 @@ const Notice = () => {
                     <Icon src={Loudspeaker} alt="Loudspeaker Icon" />
                     <Title2> 이런 사람이 장학금을 받았어요!</Title2>
                 </TitleWithIcon>
-                <p>{scholarship.gpt_success_tips}</p>
-                <p>{scholarship.gpt_interview_tips}</p>
+                <p>{scholarship?.gpt_success_tips || '정보 없음'}</p>
+                <p>{scholarship?.gpt_interview_tips || '정보 없음'}</p>
             </HighlightBox>
             <WarningBox>
                 <Title3> 신청할 때는 각 장학금의 세부적인 기준과 마감일을 다시 한번 확인하시기 바랍니다.</Title3>
