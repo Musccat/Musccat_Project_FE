@@ -219,38 +219,29 @@ const MemInfo = () => {
     });
 
     useEffect(() => {
-        if (isInfoSubmitted) {
-            // 기존 정보 수정 시 이미 모든 필드가 채워져 있으므로 폼을 유효하다고 설정
-            setFormValid(true);
-        } else {
-            // 신규 정보 입력 시 모든 필드가 채워져 있는지 확인
-            const isFormValid = () => {
-                const requiredFields = [
-                    'nickname',
-                    'gender',
-                    'region',
-                    'district',
-                    'income',
-                    'univCategory',
-                    'university',
-                    'majorCategory',
-                    'major',
-                    'year',
-                    'semester',
-                    'totalGPA'
-                ];
+        const isFormValid = () => {
+            const requiredFields = [
+                'gender', 'region', 'district', 'income', 'univCategory', 'university', 'majorCategory', 'major', 'semester', 'totalGPA'
+            ];
+    
             
             return requiredFields.every(field => {
+                // 값이 공백인지 확인
+                if (typeof formData[field] === 'string') {
+                    return formData[field]?.trim() !== '';
+                }
+                // familyStatus 배열 형식의 필드 처리
                 if (Array.isArray(formData[field])) {
                     return formData[field].length > 0;
                 }
-                return formData[field]?.trim() !== '';
+                return formData[field] !== undefined && formData[field] !== null;
             });
         };
     
-        setFormValid(isFormValid());
-        }
-    }, [formData, isInfoSubmitted]);
+        const valid = isFormValid();
+        console.log('formValid:', valid);  // 유효성 검사 결과를 로그로 출력
+        setFormValid(valid);
+    }, [formData]);
     
 
     useEffect(() => {
@@ -322,7 +313,8 @@ const MemInfo = () => {
         const residence = `${formData.region} ${formData.district}`;
 
         // 필수 항목이 비어있지 않은지 확인
-        const requiredFields = ['nickname', 'gender', 'region', 'district', 'income', 'univCategory','university', 'majorCategory', 'major', 'semester', 'totalGPA'];
+        const requiredFields = [
+            'nickname','gender', 'region', 'district', 'income', 'univCategory','university', 'majorCategory', 'major', 'semester', 'totalGPA'];
         for (const field of requiredFields) {
             if (!formData[field] || formData[field].trim() === '') {
                 alert(`필수 항목 ${field}를(을) 입력하세요.`);
@@ -347,7 +339,7 @@ const MemInfo = () => {
             additionalInfo: formData.additionalInfo
         });
         
-        navigate("/users/mypage", { state: { infoSubmitted: true } });
+        navigate("/users/mypage", { state: { isInfoSubmitted: true } });
     };
 
     const handleTotalGPAChange = (e) => {
@@ -473,6 +465,7 @@ const MemInfo = () => {
                     </RadioGroup>
                 </RadioGroupWrapper>
 
+                
                 <FormGroup>
                     <label>닉네임<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
@@ -509,7 +502,7 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>소득 분위<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
-                        id="income"
+                        name="income"
                         value={formData.income ? { label: `${formData.income} 분위`, value: formData.income } : null}
                         onChange={(option) => setFormData({ ...formData, income: option?.value || '' })}
                         options={incomeOptions}
@@ -572,7 +565,7 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>수료 학기<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
-                            id="semester"
+                            name="semester"
                             value={formData.semester ?{ label: formData.semester, value: formData.semester } : null}
                             onChange={(option) => setFormData({ ...formData, semester: option?.value || '' })}
                             options={semesterCategoryOptions}
