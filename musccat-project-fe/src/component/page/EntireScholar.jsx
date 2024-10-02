@@ -250,6 +250,7 @@ function EntireScholar(props) {
             likes, 
             scholarships,
             filterScholarshipsByType,
+            fetchScholarshipsByOrder,
             goToNextPage, 
             goToPreviousPage, 
             currentPage, 
@@ -336,6 +337,28 @@ function EntireScholar(props) {
         setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
         setSortOption(option);
         setDropdownVisible(false);
+
+        let orderOption = '';
+    switch (option) {
+        case '모집 종료 - 최신순':
+            orderOption = '-recruitment_end';
+            break;
+        case '모집 종료 - 오래된 순':
+            orderOption = 'recruitment_end';
+            break;
+        case '모집 시작 - 최신순':
+            orderOption = '-recruitment_start';
+            break;
+        case '모집 시작 - 오래된 순':
+            orderOption = 'recruitment_start';
+            break;
+        default:
+            orderOption = '';  // 기본값
+    }
+
+    // AuthContext에서 정렬 함수 호출
+    fetchScholarshipsByOrder(orderOption);
+
     };
 
     const handleTypeOptionClick = (option) => {

@@ -137,6 +137,20 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const goToNextPage = async () => {
+        if (nextPageUrl) {
+            await fetchScholarships(currentPage + 1);
+            setCurrentPage(currentPage + 1);
+        }
+    };
+    
+    const goToPreviousPage = async () => {
+        if (previousPageUrl && currentPage > 1) {
+            await fetchScholarships(currentPage - 1);
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     const filterScholarshipsByType = async (typeOption) => {
         try {
             let url = `${process.env.REACT_APP_API_URL}/entirescholar/`;
@@ -158,20 +172,6 @@ export const AuthProvider = ({ children }) => {
             setTotalPages(Math.ceil(response.data.count / 10)); // 총 페이지 수 업데이트
         } catch (error) {
             console.error(`Failed to fetch scholarships by type: ${typeOption}`, error);
-        }
-    };
-
-    const goToNextPage = async () => {
-        if (nextPageUrl) {
-            await fetchScholarships(currentPage + 1);
-            setCurrentPage(currentPage + 1);
-        }
-    };
-    
-    const goToPreviousPage = async () => {
-        if (previousPageUrl && currentPage > 1) {
-            await fetchScholarships(currentPage - 1);
-            setCurrentPage(currentPage - 1);
         }
     };
 
@@ -200,6 +200,26 @@ export const AuthProvider = ({ children }) => {
             return { scholarshipsByName: [], scholarshipsByFoundation: [] };
         }
     };
+
+    const fetchScholarshipsByOrder = async (orderOption) => {
+        try {
+            let url = `${process.env.REACT_APP_API_URL}/entirescholar/?ordering=${orderOption}`;
+            
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+    
+            setScholarships(response.data.results);  // 받아온 데이터를 상태에 저장
+            setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
+            setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
+            setTotalPages(Math.ceil(response.data.count / 10));  // 총 페이지 수 업데이트
+        } catch (error) {
+            console.error(`Failed to fetch scholarships with ordering: ${orderOption}`, error);
+        }
+    };
+    
     
 
     const handleLikeClick = async (index, scholarshipId) => {
@@ -554,6 +574,7 @@ export const AuthProvider = ({ children }) => {
         goToNextPage,
         goToPreviousPage,
         fetchScholarshipsByNameOrFoundation,
+        fetchScholarshipsByOrder,
         scholarships,
         handleLikeClick,
         fetchLikedScholarships,
