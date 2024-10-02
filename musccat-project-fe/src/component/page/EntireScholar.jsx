@@ -236,8 +236,8 @@ function EntireScholar(props) {
 
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
-    const [sortOption, setSortOption] = useState('기한 순');
-    const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
+    const [sortOption, setSortOption] = useState('모집 시작 - 최신순');
+    const [otherOptions, setOtherOptions] = useState(['모집 시작 - 오래된 순', '모집 종료 - 최신순', '모집 종료 - 오래된 순']);
 
     const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 

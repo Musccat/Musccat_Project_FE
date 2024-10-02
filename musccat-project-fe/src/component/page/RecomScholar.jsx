@@ -189,14 +189,14 @@ const Title = styled.h2`
 function RecomScholar(props) {
 // 상태 관리
 
-const [dropdownVisible, setDropdownVisible] = useState(false);
+//const [dropdownVisible, setDropdownVisible] = useState(false);
 
-const [sortOption, setSortOption] = useState('기한 순');
-const [otherOptions, setOtherOptions] = useState(['가나다 순', '좋아요 순']);
+//const [sortOption, setSortOption] = useState('모집 시작 - 최신순');
+//const [otherOptions, setOtherOptions] = useState(['모집 시작 - 오래된 순', '모집 종료 - 최신순', '모집 종료 - 오래된 순']);
 
-const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
-const [typeOption, setTypeOption] = useState('장학금 전체');
-const [filteredScholarships, setFilteredScholarships] = useState([]);
+//const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
+//const [typeOption, setTypeOption] = useState('장학금 전체');
+//const [filteredScholarships, setFilteredScholarships] = useState([]);
 
 const { user, fetchRecommendedScholarships, likes, handleLikeClick, filterScholarshipsByType } = useAuth(); 
 const [scholarships, setScholarships] = useState([]);
@@ -207,6 +207,8 @@ useEffect(() => {
         setScholarships(fetchedScholarships); 
     });
 }, []);
+
+/*
 
 useEffect(() => {
     const filtered = filterScholarshipsByType(typeOption);
@@ -220,17 +222,20 @@ const toggleDropdown = () => {
 const toggleTypeDropdown = () => {
     setTypeDropdownVisible(!typeDropdownVisible);
 };
+*/
 
-const handleSortOptionClick = (option) => {
+/*const handleSortOptionClick = (option) => {
     setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
     setSortOption(option);
     setDropdownVisible(false);
 };
+*/
 
-const handleTypeOptionClick = (option) => {
+/*const handleTypeOptionClick = (option) => {
     setTypeOption(option);
     setTypeDropdownVisible(false);
 };
+*/
 
 return (
     <>
@@ -239,6 +244,7 @@ return (
                 <div style={styles.container}>
                 <div style={styles.outerContainer}>
                     <h1 style={styles.header}><span style={styles.highlight}>{userFullName}</span> 님의 추천 장학금</h1>
+                    {/*
                     <div style={styles.buttonContainer}>
                     <SortButtonContainer>
                         <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
@@ -275,6 +281,7 @@ return (
                             )}
                         </SortButtonContainer>
                     </div>
+                    */}
 
                     <div style={styles.tableContainer}>
                         <table style={styles.table}>
@@ -287,8 +294,8 @@ return (
                                 </tr>
                             </thead>
                             <tbody>
-                            {Array.isArray(filteredScholarships) && filteredScholarships.length > 0 ? (
-                                        filteredScholarships.map((scholarship, index) => (
+                            {Array.isArray(scholarships) && scholarships.length > 0 ? (
+                                        scholarships.map((scholarship, index) => (
                                         <tr key={index}>
                                             <td style={styles.thTd}>{scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
