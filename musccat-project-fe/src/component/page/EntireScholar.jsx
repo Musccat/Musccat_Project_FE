@@ -217,6 +217,8 @@ function EntireScholar(props) {
     // 상태 관리
     const { fetchScholarships, 
             handleLikeClick,
+            fetchScholarshipsByNameOrFoundation,
+            fetchScholarshipsByFoundation,
             likes, 
             scholarships,
             filterScholarshipsByType,
@@ -265,33 +267,37 @@ function EntireScholar(props) {
     }, [scholarships, typeOption, filterScholarshipsByType]);
 
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = async (e) => {
         const value = e.target.value;
         setSearchTerm(value);
     
-        // 검색어가 있는 경우에만 자동완성 제안
         if (value.length > 0) {
-            const filteredSuggestions = scholarships
-                .map(s => s.foundation_name)
-                .filter(name => name.toLowerCase().includes(value.toLowerCase()))
-                .filter((name, index, self) => self.indexOf(name) === index); // 중복 제거
+            try {
+                // 장학 사업명과 재단명을 모두 검색
+                const { scholarshipsByName, scholarshipsByFoundation } = await fetchScholarshipsByNameOrFoundation(value);
     
-            setSuggestions(filteredSuggestions);
+                // 자동완성 제안 목록을 장학 사업명과 재단명을 합쳐서 설정
+                const scholarshipNames = scholarshipsByName.map(s => s.name);
+                const foundationScholarships = scholarshipsByFoundation.map(s => s.name);
+    
+                setSuggestions([...scholarshipNames, ...foundationScholarships]);
+            } catch (error) {
+                console.error("Error fetching suggestions:", error);
+            }
         } else {
-            setSuggestions([]);
+            setSuggestions([]); // 검색어가 없을 경우 자동완성 목록 숨기기
         }
     };
     
 
 
-    // 제안 목록에서 항목을 선택했을 때 필터링된 장학금 목록을 설정
-    const handleSuggestionClick = (foundationName) => {
-        setSearchTerm(foundationName); // 선택된 제안으로 검색창을 업데이트
+    const handleSuggestionClick = async (suggestion) => {
+        setSearchTerm(suggestion); // 선택된 제안으로 검색창을 업데이트
         setSuggestions([]); // 제안을 숨김
     
-        // 선택된 재단명에 해당하는 장학금만 필터링
-        const filtered = scholarships.filter(s => s.foundation_name === foundationName);
-        setFilteredScholarships(filtered);
+        // 선택된 장학 재단명에 해당하는 모든 장학금 필터링
+        const filteredScholarships = await fetchScholarshipsByFoundation(suggestion);
+        setFilteredScholarships(filteredScholarships);
     };
 
     const toggleDropdown = () => {
@@ -320,7 +326,7 @@ function EntireScholar(props) {
                 <div style={styles.searchBarContainer}>
                     <div style={styles.searchBar}>
                         <input type="text" 
-                        placeholder="장한 재단명 검색" 
+                        placeholder="장한 재단명, 장학 사업명 검색" 
                         style={styles.searchInput}
                         value={searchTerm} 
                         onChange={handleSearchChange} 

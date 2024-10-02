@@ -162,6 +162,33 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const fetchScholarshipsByNameOrFoundation = async (searchTerm) => {
+        try {
+            // 장학 사업명으로 검색
+            const nameResponse = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?name=${searchTerm}`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+    
+            // 장학 재단명으로 검색
+            const foundationResponse = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?foundation_name=${searchTerm}`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+    
+            return {
+                scholarshipsByName: nameResponse.data,
+                scholarshipsByFoundation: foundationResponse.data,
+            };
+        } catch (error) {
+            console.error("Error fetching scholarships by name or foundation:", error);
+            return { scholarshipsByName: [], scholarshipsByFoundation: [] };
+        }
+    };
+    
+
     const handleLikeClick = async (index, scholarshipId) => {
         const newLikes = [...likes];
         const isLiked = newLikes[index];
@@ -513,6 +540,7 @@ export const AuthProvider = ({ children }) => {
         filterScholarshipsByType,
         goToNextPage,
         goToPreviousPage,
+        fetchScholarshipsByNameOrFoundation,
         scholarships,
         handleLikeClick,
         fetchLikedScholarships,
