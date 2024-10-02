@@ -137,15 +137,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const filterScholarshipsByType = (typeOption) => {
-        if (typeOption === '장학금 전체') {
-            return scholarships; // 전체 장학금 반환
+    const filterScholarshipsByType = async (typeOption) => {
+        try {
+            let url = `${process.env.REACT_APP_API_URL}/entirescholar/`;
+            
+            // '장학금 전체'가 아닌 경우, 해당 유형으로 필터링
+            if (typeOption !== '장학금 전체') {
+                url += `?financial_aid_type=${encodeURIComponent(typeOption)}`;
+            }
+    
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+    
+            setScholarships(response.data.results); // 받아온 데이터를 상태에 저장
+            setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
+            setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
+            setTotalPages(Math.ceil(response.data.count / 10)); // 총 페이지 수 업데이트
+        } catch (error) {
+            console.error(`Failed to fetch scholarships by type: ${typeOption}`, error);
         }
-        
-        // 선택된 유형에 맞는 장학금 필터링
-        return scholarships.filter(scholarship => 
-            scholarship.financial_aid_type === typeOption
-        );
     };
 
     const goToNextPage = async () => {
