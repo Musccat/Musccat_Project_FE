@@ -179,8 +179,22 @@ const SortButtonContainer = styled.div`
     margin-right: 10px;
 `;
 
-const SortButton = styled.button`
-    width: 140px;
+const SortButton1 = styled.button`
+    width: 160px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2F6877;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative; 
+    z-index: 2;
+    text-align: center;
+`;
+
+const SortButton2 = styled.button`
+    width: 220px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: ${props => props.bgColor || "#348a8c"};
@@ -199,7 +213,7 @@ const DropdownItem = styled.div`
     white-space: nowrap;
 `;
 
-const Dropdown = styled.div`
+const Dropdown1 = styled.div`
     position: absolute;
     top: calc(100% + 4px); 
     left: 50%;
@@ -210,7 +224,21 @@ const Dropdown = styled.div`
     border-radius: 4px;
     overflow-y: auto;
     max-height: 200px;
-    width: 120px;
+    width: 150px;
+`;
+
+const Dropdown2 = styled.div`
+    position: absolute;
+    top: calc(100% + 4px); 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 3;
+    border-radius: 4px;
+    overflow-y: auto;
+    max-height: 200px;
+    width: 180px;
 `;
 
 function EntireScholar(props) {
@@ -347,11 +375,11 @@ function EntireScholar(props) {
                 </div>
             <div style={styles.buttonContainer}>
                 <SortButtonContainer>
-                    <SortButton bgColor="#2F6877" onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
+                    <SortButton1  onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
                             {typeOption} ▼
-                        </SortButton>
+                        </SortButton1>
                         {typeDropdownVisible && (
-                            <Dropdown>
+                            <Dropdown1>
                                 {['장학금 전체', '지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
                                     <DropdownItem
                                         key={index}
@@ -360,15 +388,15 @@ function EntireScholar(props) {
                                         {option}
                                     </DropdownItem>
                                 ))}
-                            </Dropdown>
+                            </Dropdown1>
                         )}
                 </SortButtonContainer>
                 <SortButtonContainer>
-                    <SortButton onClick={toggleDropdown}>
+                    <SortButton2 onClick={toggleDropdown}>
                         {sortOption} ▼
-                    </SortButton>
+                    </SortButton2>
                     {dropdownVisible && (
-                        <Dropdown visible={dropdownVisible}>
+                        <Dropdown2 visible={dropdownVisible}>
                             {otherOptions.map((option, index) => (
                                 <DropdownItem
                                     key={index}
@@ -377,7 +405,7 @@ function EntireScholar(props) {
                                     {option}
                                 </DropdownItem>
                             ))}
-                        </Dropdown>
+                        </Dropdown2>
                     )}
                 </SortButtonContainer>
             </div>
