@@ -66,7 +66,7 @@ const Highlight = styled.span`
 
 const GrayText = styled.p`
     margin-top: 8px;
-    font-size: 20px; /* Adjust font size as needed */
+    font-size: 18px; /* Adjust font size as needed */
     color: #666; /* Gray color */
     text-align: left; /* Align to the left or adjust as needed */
 `;
