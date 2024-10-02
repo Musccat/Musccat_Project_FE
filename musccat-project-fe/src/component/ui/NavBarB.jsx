@@ -25,6 +25,7 @@ const Logo = styled.div`
     display: flex;
     gap: 24px;
     align-items: center;
+    cursor: pointer;
 
     img {
         height: 40px; /* 네비게이션 항목과 같은 높이로 조정 */
