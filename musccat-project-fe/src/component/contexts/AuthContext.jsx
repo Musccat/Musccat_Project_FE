@@ -123,7 +123,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const fetchScholarships = async (page) => {
+    const fetchScholarships = async (page = 1) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?page=${page}`);
             setScholarships(response.data.results);

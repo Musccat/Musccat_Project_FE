@@ -536,8 +536,8 @@ function EntireScholar(props) {
 
             {/* 페이지네이션 */}
                 <div style={styles.pagination}>
-                    {previousPageUrl && pageRange.start > 1 ? (
-                        <span onClick={handlePreviousRange}>
+                    {previousPageUrl ? (
+                        <span onClick={goToPreviousPage}>
                             <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
                         </span>
                     ) : (
@@ -569,7 +569,7 @@ function EntireScholar(props) {
                         <>
                         {/* 페이지가 5개 초과일 때 */}
                         {pageRange.start > 1 && (
-                            <button
+                            <button 
                                 style={{
                                     margin: '0 5px',
                                     padding: '5px 10px',
@@ -603,11 +603,31 @@ function EntireScholar(props) {
                     ))}
 
                     {pageRange.end < totalPages && (
-                        <span onClick={handleNextRange}>
-                            <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
-                        </span>
+                        <button
+                        style={{
+                            margin: '0 5px',
+                            padding: '5px 10px',
+                            backgroundColor: '#ccc',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        onClick={handleNextRange}
+                    >
+                        다음
+                    </button>
                     )}
                 </>
+            )}
+            {/* 다음 페이지 버튼 */}
+            {nextPageUrl ? (
+                <span onClick={goToNextPage}>
+                    <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
+                </span>
+            ) : (
+                <span>
+                    <div style={styles.triangleRight}></div>
+                </span>
             )}
         </div>
         </div>
