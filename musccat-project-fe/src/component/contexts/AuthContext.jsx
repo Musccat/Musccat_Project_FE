@@ -131,6 +131,9 @@ export const AuthProvider = ({ children }) => {
             setPreviousPageUrl(response.data.previous);  // 이전 페이지 URL 저장
             setTotalPages(Math.ceil(response.data.count / 10));
 
+            console.log("Next Page URL:", response.data.next);
+            console.log("Previous Page URL:", response.data.previous);
+
             // 장학금 데이터를 불러온 후 좋아요 상태도 불러옴
             await fetchLikedScholarships();
         } catch (error) {
