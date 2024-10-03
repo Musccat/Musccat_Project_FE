@@ -124,10 +124,11 @@ const styles = {
         height: "0",
         borderTop: "8px solid transparent",
         borderBottom: "8px solid transparent",
-        borderRight: "12px solid", // 왼쪽을 향한 삼각형
-        cursor: "pointer",
+        borderRight: "12px solid", // 기본 삼각형 형태
+        borderRightColor: "#ccc", // 비활성화된 상태는 회색
+        cursor: "not-allowed", // 비활성화 시 커서 처리
         marginRight: "8px",
-        borderRightColor: "#348a8c"
+        background: "none", // 회색 상자 제거
     },
     triangleRight: {
         display: "inline-block",
@@ -135,16 +136,23 @@ const styles = {
         height: "0",
         borderTop: "8px solid transparent",
         borderBottom: "8px solid transparent",
-        borderLeft: "12px solid", // 오른쪽을 향한 삼각형
-        cursor: "pointer",
+        borderLeft: "12px solid", // 기본 삼각형 형태
+        borderLeftColor: "#ccc", // 비활성화된 상태는 회색
+        cursor: "not-allowed", // 비활성화 시 커서 처리
         marginLeft: "8px",
-        borderLeftColor: "#348a8c"
+        background: "none", // 회색 상자 제거
     },
 
-    triangleDisabled: {
-        cursor: "not-allowed", // 비활성화 시 마우스 커서 변경
-        borderColor: "#ccc"
+    triangleEnabledLeft: {
+        borderRightColor: "#348a8c", // 활성화된 상태는 지정된 색상
+        cursor: "pointer", // 활성화 시 커서 변경
     },
+
+    triangleEnabledRight: {
+        borderLeftColor: "#348a8c", // 활성화된 상태는 지정된 색상
+        cursor: "pointer", // 활성화 시 커서 변경
+    },
+
     pagination: {
         marginTop: "20px",
         textAlign: "center"
@@ -521,39 +529,60 @@ function EntireScholar(props) {
                 <div style={styles.pagination}>
                     {previousPageUrl && pageRange.start > 1 ? (
                         <span onClick={handlePreviousRange}>
-                            <div style={styles.triangleLeft}></div>
+                            <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
                         </span>
                     ) : (
                         <span>
-                            <div style={{ ...styles.triangleLeft, ...styles.triangleDisabled }}></div>
+                            <div style={styles.triangleLeft}></div>
                         </span>
                     )}
 
                     {/* 페이지 번호 표시 */}
-                    {Array.from({ length: pageRange.end - pageRange.start + 1 }, (_, index) => (
-                        <button
-                            key={index}
-                            style={{
-                                margin: '0 5px',
-                                padding: '5px 10px',
-                                backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
-                                color: 'white',
-                                border: 'none',
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => handlePageClick(pageRange.start + index)}
-                        >
-                            {pageRange.start + index}
-                        </button>
-                    ))}
+                    {totalPages <= 5 ? (
+                        // 페이지가 5개 이하일 때
+                        Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index}
+                                style={{
+                                    margin: '0 5px',
+                                    padding: '5px 10px',
+                                    backgroundColor: currentPage === index + 1 ? '#348a8c' : '#ccc',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handlePageClick(index + 1)}
+                            >
+                                {index + 1}
+                            </button>
+                        ))
+                    ) : (
+                        // 페이지가 5개 이상일 때
+                        Array.from({ length: 5 }, (_, index) => (
+                            <button
+                                key={index}
+                                style={{
+                                    margin: '0 5px',
+                                    padding: '5px 10px',
+                                    backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handlePageClick(pageRange.start + index)}
+                            >
+                                {pageRange.start + index}
+                            </button>
+                        ))
+                    )}
 
                     {nextPageUrl && pageRange.end < totalPages ? (
                         <span onClick={handleNextRange}>
-                            <div style={styles.triangleRight}></div>
+                            <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
                         </span>
                     ) : (
                         <span>
-                            <div style={{ ...styles.triangleRight, ...styles.triangleDisabled }}></div>
+                            <div style={styles.triangleRight}></div>
                         </span>
                     )}
                 </div>
