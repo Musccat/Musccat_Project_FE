@@ -443,7 +443,7 @@ function EntireScholar(props) {
                         </SortButton1>
                         {typeDropdownVisible && (
                             <Dropdown1>
-                                {['장학금 전체', '지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
+                                {['지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
                                     <DropdownItem
                                         key={index}
                                         onClick={() => handleTypeOptionClick(option)}

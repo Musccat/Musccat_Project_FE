@@ -157,7 +157,7 @@ export const AuthProvider = ({ children }) => {
             let url = `${process.env.REACT_APP_API_URL}/entirescholar/`;
             
             // '장학금 전체'가 아닌 경우, 해당 유형으로 필터링
-            if (typeOption !== '장학금 전체') {
+            if (typeOption) {
                 url += `?financial_aid_type=${encodeURIComponent(typeOption)}`;
             }
     
