@@ -16,7 +16,7 @@ const Container = styled.div`
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     padding: 40px;
-    width: 400px;
+    width: 500px;
 `;
 
 const Title = styled.h1`
@@ -171,22 +171,12 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
 
     // 아이디 형식 확인 (영문과 숫자만 포함)
     if (name === "username") {
-        const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
-        const isUsernameValid = usernamePattern.test(value);
-        setUsernameValid(isUsernameValid);
+        const usernamePattern = /^[a-zA-Z0-9]{4,}$/; // 영문, 숫자 포함 4자 이상
+        const isValid = usernamePattern.test(value); // 아이디 형식이 유효한지 확인
+        setUsernameValid(isValid);
 
-        if (isUsernameValid) {
-            // 아이디 형식이 유효할 때만 중복 체크 실행
-            try {
-                const available = await checkUsernameAvailability(value);
-                setUsernameAvailable(available);
-            } catch (error) {
-                console.error("아이디 중복 확인 중 오류 발생:", error);
-                setUsernameAvailable(false);  // 오류 발생 시, 중복된 것으로 처리
-            }
-        } else {
-            // 형식이 틀린 경우, 중복 확인 결과 초기화
-            setUsernameAvailable(true);  // 형식이 틀리면 중복 여부에 대해 알 수 없음
+        if (!isValid) {
+            setUsernameAvailable(true); // 형식이 틀리면 중복 여부와 상관 없음
         }
     }
 
@@ -320,6 +310,7 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
     };
 
     return (
+        <>
         <Page>
         <Container>
             <Title>회원가입</Title>
@@ -327,6 +318,7 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             <form onSubmit={handleSubmit}>
             <FormGroup>
                 <label>아이디</label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <input
                     type="text"
                     name="username"
@@ -334,7 +326,43 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
                     value={formData.username}
                     onChange={handleChange}
                     required
+                    style={{ flex: 1, marginRight: '10px' }} 
                 />
+                <button
+                    type="button"
+                    onClick={async () => {
+                        if (usernameValid && formData.username) { // 아이디 형식이 유효한 경우에만 실행
+                            try {
+                                const available = await checkUsernameAvailability(formData.username);
+                                setUsernameAvailable(available);
+                                if (available) {
+                                    alert("사용 가능한 아이디입니다.");
+                                } else {
+                                    alert("이미 사용 중인 아이디입니다.");
+                                }
+                            } catch (error) {
+                                console.error("아이디 중복 확인 중 오류 발생:", error);
+                            }
+                        } else {
+                            alert("아이디 형식이 올바르지 않습니다.");
+                        }
+                    }}
+                    disabled={!usernameValid || !formData.username.length === 0} // 아이디 형식이 올바르지 않으면 버튼 비활성화
+                    style={{
+                        backgroundColor: usernameValid && formData.username.length > 0 ? '#348a8c' : '#b0b0b0', // 유효할 때만 색상 변경
+                        color: '#ffffff',
+                        border: 'none',
+                        padding: '10px 12px',
+                        borderRadius: '4px',
+                        cursor: usernameValid && formData.username.length ? 'pointer' : 'not-allowed',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        width: '120px',
+                    }}
+                >
+                    아이디 중복 체크
+                </button>
+            </div>
             </FormGroup>
             {!usernameValid && formData.username && (
                 <ErrorMessage>올바른 아이디 형식이 아닙니다</ErrorMessage>
@@ -527,9 +555,8 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             </form>
         </Container>
         </Page>
+        </>
     );
+}
 
-};
-    
 export default Register;
-

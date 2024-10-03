@@ -500,7 +500,7 @@ export const AuthProvider = ({ children }) => {
 
     const RegisterScholarship = async (scholarshipData) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/registerscholarships/`, scholarshipData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/entirescholar/register/`, scholarshipData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
