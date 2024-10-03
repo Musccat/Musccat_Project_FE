@@ -91,10 +91,15 @@ const RecomSchoalrDate = () => {
     const handleSubmit = async() => {
         const scholarshipPeriod = {
             recruitment_end: recruitmentEnd
-        };  
+        };
+        
+        console.log("Sending scholarship period:", scholarshipPeriod); // 날짜 전송 로그
+
 
         try {
             const response = await setScholarDate(scholarshipPeriod);
+            console.log("Response from setScholarDate:", response); // 서버 응답 로그
+
             if (response && response.status === 201) {
                 alert("추천 기간 설정이 완료되었습니다.");
                 navigate('/recomscholar');

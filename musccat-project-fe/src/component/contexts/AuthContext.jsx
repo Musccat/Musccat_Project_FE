@@ -518,6 +518,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const setScholarDate = async (scholarshipPeriod) => {
+        console.log("Scholarship period being set:", scholarshipPeriod);
+
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, 
             {
@@ -527,6 +529,8 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,  // 인증 토큰 추가
                 },
             });
+
+            console.log("Response from server:", response); 
     
             if (response.status === 201) {
                 alert("Scholarship date successfully set!");
