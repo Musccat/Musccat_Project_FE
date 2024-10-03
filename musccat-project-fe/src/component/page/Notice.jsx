@@ -147,7 +147,8 @@ const Notice = () => {
     useEffect(() => {
         const loadScholarship = async () => {
             try{
-                const data = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
+                const response = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
+                const data = response.scholarship;
                 if (data) {
                     setScholarship(data); // 데이터를 상태로 설정
                 } else {
