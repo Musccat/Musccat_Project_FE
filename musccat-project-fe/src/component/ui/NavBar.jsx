@@ -104,7 +104,7 @@ function NavBar() {
             </Logo>
             <NavContainer>
             <NavLinks>
-            <Link to={"/entirescholar?page=1"}>전체 장학금 목록</Link>
+            <Link to={"/entirescholar"}>전체 장학금 목록</Link>
                 <Link to={"/recomscholardate"}>추천 장학금 목록</Link>
                 <Link to={"/users/myinterest"}>내 관심 목록</Link>
                 <Link to={"/users/mypage"}>마이페이지</Link>
