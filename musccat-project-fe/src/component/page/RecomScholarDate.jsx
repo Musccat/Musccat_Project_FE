@@ -100,7 +100,7 @@ const RecomSchoalrDate = () => {
             const response = await setScholarDate(scholarshipPeriod);
             console.log("Response from setScholarDate:", response); // 서버 응답 로그
 
-            if (response && response.status === 201) {
+            if (response && response.status === 200) {
                 alert("추천 기간 설정이 완료되었습니다.");
                 navigate('/recomscholar');
             } else {
