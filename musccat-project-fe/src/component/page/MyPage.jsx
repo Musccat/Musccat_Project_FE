@@ -167,10 +167,7 @@ const MyPage = () => {
     useEffect(() => {
         // user가 없을 때만 fetchUserData 호출
         if (!user) {
-            const fetchData = async () => {
-                await fetchUserData();
-            };
-            fetchData();
+            fetchUserData(); 
         }
     }, [user, fetchUserData]); // user가 없을 때만 데이터를 가져옴
 
