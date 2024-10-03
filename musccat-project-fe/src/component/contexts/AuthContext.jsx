@@ -536,7 +536,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, 
             {
-                recruitment_end: scholarshipPeriod.recruitment_end,  
+                date: scholarshipPeriod.recruitment_end,  
             }, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,  // 인증 토큰 추가
