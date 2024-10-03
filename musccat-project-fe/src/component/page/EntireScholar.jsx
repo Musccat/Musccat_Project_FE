@@ -124,9 +124,10 @@ const styles = {
         height: "0",
         borderTop: "8px solid transparent",
         borderBottom: "8px solid transparent",
-        borderRight: "12px solid #348a8c", // 왼쪽을 향한 삼각형
+        borderRight: "12px solid", // 왼쪽을 향한 삼각형
         cursor: "pointer",
-        marginRight: "8px"
+        marginRight: "8px",
+        borderRightColor: "#348a8c"
     },
     triangleRight: {
         display: "inline-block",
@@ -134,9 +135,15 @@ const styles = {
         height: "0",
         borderTop: "8px solid transparent",
         borderBottom: "8px solid transparent",
-        borderLeft: "12px solid #348a8c", // 오른쪽을 향한 삼각형
+        borderLeft: "12px solid", // 오른쪽을 향한 삼각형
         cursor: "pointer",
-        marginLeft: "8px"
+        marginLeft: "8px",
+        borderLeftColor: "#348a8c"
+    },
+
+    triangleDisabled: {
+        cursor: "not-allowed", // 비활성화 시 마우스 커서 변경
+        borderColor: "#ccc"
     },
     pagination: {
         marginTop: "20px",
@@ -272,9 +279,15 @@ function EntireScholar(props) {
 
     const [typeOption, setTypeOption] = useState('장학금 전체');
 
+    const [pageRange, setPageRange] = useState({ start: 1, end: 5 });
+
     useEffect(() => {
-        fetchScholarships(currentPage);
-    }, [currentPage]);
+        if (currentPage > pageRange.end) {
+            setPageRange({ start: pageRange.end + 1, end: Math.min(pageRange.end + 5, totalPages) });
+        } else if (currentPage < pageRange.start) {
+            setPageRange({ start: Math.max(pageRange.start - 5, 1), end: pageRange.start - 1 });
+        }
+    }, [currentPage, pageRange, totalPages]);
 
     // 페이지 번호 클릭 핸들러
     const handlePageClick = (pageNumber) => {
@@ -282,6 +295,23 @@ function EntireScholar(props) {
             fetchScholarships(pageNumber);
         }
     };
+
+    const handleNextRange = () => {
+        const newStart = pageRange.end + 1;
+        setPageRange({
+            start: newStart,
+            end: Math.min(newStart + 4, totalPages),
+        });
+    };
+
+    const handlePreviousRange = () => {
+        const newEnd = pageRange.start - 1;
+        setPageRange({
+            start: Math.max(1, newEnd - 4),
+            end: newEnd,
+        });
+    };
+
 
     useEffect(() => {
         if (Array.isArray(scholarships)) {
@@ -489,33 +519,41 @@ function EntireScholar(props) {
 
             {/* 페이지네이션 */}
                 <div style={styles.pagination}>
-                    {previousPageUrl && (
-                        <span onClick={goToPreviousPage}>
+                    {previousPageUrl && pageRange.start > 1 ? (
+                        <span onClick={handlePreviousRange}>
                             <div style={styles.triangleLeft}></div>
+                        </span>
+                    ) : (
+                        <span>
+                            <div style={{ ...styles.triangleLeft, ...styles.triangleDisabled }}></div>
                         </span>
                     )}
 
                     {/* 페이지 번호 표시 */}
-                    {[...Array(totalPages)].map((_, index) => (
+                    {Array.from({ length: pageRange.end - pageRange.start + 1 }, (_, index) => (
                         <button
                             key={index}
                             style={{
                                 margin: '0 5px',
                                 padding: '5px 10px',
-                                backgroundColor: currentPage === index + 1 ? '#348a8c' : '#ccc',
+                                backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
                                 color: 'white',
                                 border: 'none',
                                 cursor: 'pointer'
                             }}
-                            onClick={() => handlePageClick(index + 1)}
+                            onClick={() => handlePageClick(pageRange.start + index)}
                         >
-                            {index + 1}
+                            {pageRange.start + index}
                         </button>
                     ))}
 
-                    {nextPageUrl && (
-                        <span onClick={goToNextPage}>
+                    {nextPageUrl && pageRange.end < totalPages ? (
+                        <span onClick={handleNextRange}>
                             <div style={styles.triangleRight}></div>
+                        </span>
+                    ) : (
+                        <span>
+                            <div style={{ ...styles.triangleRight, ...styles.triangleDisabled }}></div>
                         </span>
                     )}
                 </div>
