@@ -566,40 +566,56 @@ function EntireScholar(props) {
                             </button>
                         ))
                     ) : (
-                        // 페이지가 5개 이상일 때
-                        Array.from({ length: 5 }, (_, index) => (
+                        <>
+                        {/* 페이지가 5개 초과일 때 */}
+                        {pageRange.start > 1 && (
                             <button
-                                key={index}
                                 style={{
                                     margin: '0 5px',
                                     padding: '5px 10px',
-                                    backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
+                                    backgroundColor: '#ccc',
                                     color: 'white',
                                     border: 'none',
                                     cursor: 'pointer'
                                 }}
-                                onClick={() => handlePageClick(pageRange.start + index)}
+                                onClick={handlePreviousRange}
                             >
-                                {pageRange.start + index}
+                                이전
                             </button>
-                        ))
                     )}
 
-                    {nextPageUrl && pageRange.end < totalPages ? (
+                    {/* 현재 페이지 범위 내 번호 표시 */}
+                    {Array.from({ length: Math.min(5, totalPages - pageRange.start + 1) }, (_, index) => (
+                        <button
+                            key={index}
+                            style={{
+                                margin: '0 5px',
+                                padding: '5px 10px',
+                                backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
+                                color: 'white',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => handlePageClick(pageRange.start + index)}
+                        >
+                            {pageRange.start + index}
+                        </button>
+                    ))}
+
+                    {pageRange.end < totalPages && (
                         <span onClick={handleNextRange}>
                             <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
                         </span>
-                    ) : (
-                        <span>
-                            <div style={styles.triangleRight}></div>
-                        </span>
                     )}
-                </div>
-                </div>
-            </div>
+                </>
+            )}
+        </div>
+        </div>
+        </div>
         </div>
         </>
-    );
-}
+        );
+ }
+
 
 export default EntireScholar;
