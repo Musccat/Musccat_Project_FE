@@ -270,7 +270,7 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
             
             console.log("인증번호가 이메일로 전송되었습니다.");
         } catch (error) {
-            console.error("인증번호 전송 중 오류 발생:", error);
+            console.error("인증번호 전송 중 오류 발생:", error.response ? error.response.data : error);
         }
     };
     
