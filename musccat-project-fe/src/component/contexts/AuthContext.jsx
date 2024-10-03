@@ -523,7 +523,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, 
             {
-                date: scholarshipPeriod.recruitment_end,  
+                recruitment_end: scholarshipPeriod.recruitment_end,  
             }, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,  // 인증 토큰 추가
@@ -532,18 +532,12 @@ export const AuthProvider = ({ children }) => {
 
             console.log("Response from server:", response); 
     
-            if (response.status === 201) {
-                alert("Scholarship date successfully set!");
-            } else {
-                alert("Failed to set scholarship date.");
-            }
-    
-            return response;
+            return response;  // 응답 반환, 여기서 경고창 처리하지 않음
         } catch (error) {
             console.error("Error setting scholarship date", error);
-            alert("An error occurred while setting the scholarship date.");
+            throw error;  // 에러를 상위로 전달
         }
-    };
+};
 
     const logoutUser = () => {
         setAuthTokens(null);
