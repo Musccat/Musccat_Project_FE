@@ -519,7 +519,7 @@ export const AuthProvider = ({ children }) => {
 
     const setScholarDate = async (scholarshipPeriod) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/set_scholarshipdate/`, scholarshipPeriod, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, scholarshipPeriod, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
                 },
@@ -552,7 +552,7 @@ export const AuthProvider = ({ children }) => {
             fetchScholarships();
         }
         setLoading(false);
-    }, [authTokens]);
+    }, [authTokens, fetchUserData, fetchScholarships]);
 
 
     const contextData = {

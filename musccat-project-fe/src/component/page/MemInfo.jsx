@@ -249,8 +249,8 @@ const MemInfo = () => {
             await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
             if (user) {
                 const [region, district] = user.residence ? user.residence.split(' ') : ['', ''];
-                setFormData({
-                    ...formData,
+                setFormData((prevData) => ({
+                    ...prevData,
                     fullname: user.fullName,
                     username: user.username,
                     dob: user.userBirthdate,
@@ -270,38 +270,42 @@ const MemInfo = () => {
                     totalGPA: user.totalGPA || '',
                     familyStatus: user.familyStatus || '',
                     additionalInfo: user.additionalInfo || '',
-                });
+                }));
             }
         };
         fetchData();
     }, [user, fetchUserData]);
 
     const handleChange = (e) => {
-        if (e && e.value) {
+        if (e && e.value !== undefined) {
         const { name } = e;
-        setFormData({
-            ...formData,
+        setFormData((prevData) =>({
+            ...prevData,
             [name]: e.value,
-        });
+        }));
     } else {
         const { name, value, type, checked } = e.target;
 
         if (type === "checkbox") {
-            let updatedFamilyStatus = [...formData.familyStatus];
-            if (checked) {
-                updatedFamilyStatus.push(value); // 체크된 항목 추가
-            } else {
-                updatedFamilyStatus = updatedFamilyStatus.filter(status => status !== value); // 체크 해제된 항목 제거
-            }
-            setFormData({
-                ...formData,
-                familyStatus: updatedFamilyStatus
+            setFormData((prevData) => {
+                let updatedFamilyStatus = [...prevData.familyStatus];
+                if (checked) {
+                    updatedFamilyStatus.push(value); // Add checked item
+                } else {
+                    updatedFamilyStatus = updatedFamilyStatus.filter(
+                        (status) => status !== value
+                    ); // Remove unchecked item
+                }
+                return {
+                    ...prevData,
+                    familyStatus: updatedFamilyStatus, // Update familyStatus array
+                };
             });
         } else {
-            setFormData({
-                ...formData,
-                [name]: value
-            });
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value, // Update other form fields
+            }));
         }
     }
     };
@@ -326,7 +330,7 @@ const MemInfo = () => {
         await updateUser({
             gender: formData.gender,
             nickname: formData.nickname, // 수정된 닉네임 반영
-            residence: residence,
+            residence,
             income: formData.income,
             univCategory: formData.univCategory,
             university: formData.university,

@@ -150,7 +150,6 @@ const BeneInfoRegister = () => {
     const [advice, setAdvice] = useState(info.advice || ""); // 합격팁
     const [interviewTip, setInterviewTip] = useState(info.interviewTip || "");// 면접팁
     const [isFormValid, setIsFormValid] = useState(false);
-    const [missingFields, setMissingFields] = useState([]);
 
     const { addBenefitInfo, fetchFoundations, fetchScholarshipsByFoundation, user, updateBenefitInfo, fetchUserData } = useAuth();
     const navigate = useNavigate();
