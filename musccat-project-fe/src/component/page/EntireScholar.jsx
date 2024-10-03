@@ -195,7 +195,7 @@ const SortButtonContainer = styled.div`
 `;
 
 const SortButton1 = styled.button`
-    width: 160px;
+    width: 180px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: #2F6877;
@@ -281,12 +281,12 @@ function EntireScholar(props) {
 
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
-    const [sortOption, setSortOption] = useState('모집 시작 - 최신순');
-    const [otherOptions, setOtherOptions] = useState(['모집 시작 - 오래된 순', '모집 종료 - 최신순', '모집 종료 - 오래된 순']);
+    const [sortOption, setSortOption] = useState('장학금 정렬');
+    const [otherOptions, setOtherOptions] = useState(['모집 시작 - 최신순', '모집 시작 - 오래된 순', '모집 종료 - 최신순', '모집 종료 - 오래된 순']);
 
     const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 
-    const [typeOption, setTypeOption] = useState('');
+    const [typeOption, setTypeOption] = useState('장학금 유형구분');
 
     const [pageRange, setPageRange] = useState({ start: 1, end: 5 });
 
