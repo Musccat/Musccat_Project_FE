@@ -305,7 +305,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchScholarDetail = async (product_id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/${product_id}/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/notice/${product_id}/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`, // 인증 토큰 포함
                 },
