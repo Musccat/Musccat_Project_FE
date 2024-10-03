@@ -325,7 +325,7 @@ function EntireScholar(props) {
 
     useEffect(() => {
         // 장학금 목록이 없을 때만 fetchScholarships 호출
-        if (!scholarships || scholarships.length === 0) {
+        if (!scholarships || scholarships.length === 0 || currentPage !== 1) {
             fetchScholarships(currentPage); 
         }
     }, [scholarships, currentPage, fetchScholarships]);
@@ -338,9 +338,18 @@ function EntireScholar(props) {
 
     // 필터링 적용
     useEffect(() => {
-        const filtered = filterScholarshipsByType(typeOption);
-        setFilteredScholarships(filtered);
-    }, [scholarships, typeOption, filterScholarshipsByType]);
+        if (typeOption !== '장학금 유형구분' && typeOption !== '') {
+            const filtered = filterScholarshipsByType(typeOption);
+            setFilteredScholarships(filtered);
+        }
+    }, [typeOption, filterScholarshipsByType]);
+
+    // 정렬
+    useEffect(() => {
+        if (sortOption !== '장학금 정렬' && sortOption !== '') {
+            fetchScholarshipsByOrder(sortOption);  // 선택된 정렬 옵션에 맞춰 데이터 로드
+        }
+    }, [sortOption, fetchScholarshipsByOrder]);
 
 
     const handleSearchChange = async (e) => {
@@ -376,18 +385,19 @@ function EntireScholar(props) {
         setFilteredScholarships(filteredScholarships);
     };
 
-    /*
-
-    const toggleDropdown = () => {
-        setDropdownVisible(!dropdownVisible);
+    // 장학금 유형 선택 시 호출될 함수 추가
+    const handleTypeOptionClick = (option) => {
+        setTypeOption(option);  // 선택된 유형을 저장
+        setTypeDropdownVisible(false);  // 드롭다운 닫기
     };
 
+
     const handleSortOptionClick = (option) => {
-        setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
         setSortOption(option);
         setDropdownVisible(false);
 
-        let orderOption = '';
+
+    let orderOption = '';
     switch (option) {
         case '모집 종료 - 최신순':
             orderOption = '-recruitment_end';
@@ -410,12 +420,25 @@ function EntireScholar(props) {
 
     };
 
-    const handleTypeOptionClick = (option) => {
-        setTypeOption(option);
-        setTypeDropdownVisible(false);
+    const handleDropdownToggle = (dropdownType) => {
+        if (dropdownType === 'sort') {
+            setDropdownVisible(!dropdownVisible);
+            setTypeDropdownVisible(false);  // 다른 드롭다운 닫기
+        } else if (dropdownType === 'type') {
+            setTypeDropdownVisible(!typeDropdownVisible);
+            setDropdownVisible(false);  // 다른 드롭다운 닫기
+        }
     };
 
-    */
+    // 제목처럼 보이는 텍스트를 관리하는 로직 추가
+    const renderTypeOptionTitle = () => {
+        return typeOption === '장학금 유형구분' ? '장학금 유형 구분' : typeOption;
+    };
+
+    const renderSortOptionTitle = () => {
+        return sortOption === '장학금 정렬' ? '장학금 정렬' : sortOption;
+    };
+
 
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
 
@@ -449,10 +472,10 @@ function EntireScholar(props) {
                 </div>
             <div style={styles.buttonContainer}>
                 <SortButtonContainer>
-                    <SortButton1 onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
-                            {typeOption} ▼
+                    <SortButton1 onClick={() => handleDropdownToggle('type')}>
+                        {renderTypeOptionTitle()} ▼
                         </SortButton1>
-                        {/*
+
                         {typeDropdownVisible && (
                             <Dropdown1>
                                 {['지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
@@ -464,14 +487,13 @@ function EntireScholar(props) {
                                     </DropdownItem>
                                 ))}
                             </Dropdown1>
-                        )} */}
+                        )} 
                 </SortButtonContainer>
                 <SortButtonContainer>
-                    <SortButton2> 
-                        {/* <SortButton2 onClick={toggleDropdown}> */}
-                        {sortOption} ▼
+                    <SortButton2 onClick={() => handleDropdownToggle('sort')}>
+                    {renderSortOptionTitle()} ▼
                     </SortButton2>
-                    {/*
+                    
                     {dropdownVisible && (
                         <Dropdown2 visible={dropdownVisible}>
                             {otherOptions.map((option, index) => (
@@ -483,7 +505,7 @@ function EntireScholar(props) {
                                 </DropdownItem>
                             ))}
                         </Dropdown2>
-                    )} */}
+                    )} 
                 </SortButtonContainer>
             </div>
             <div style={styles.container}>
