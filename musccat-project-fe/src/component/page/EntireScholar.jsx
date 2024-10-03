@@ -286,7 +286,7 @@ function EntireScholar(props) {
 
     const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
 
-    const [typeOption, setTypeOption] = useState('장학금 전체');
+    const [typeOption, setTypeOption] = useState('');
 
     const [pageRange, setPageRange] = useState({ start: 1, end: 5 });
 
