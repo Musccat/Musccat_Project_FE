@@ -369,6 +369,8 @@ function EntireScholar(props) {
         setFilteredScholarships(filteredScholarships);
     };
 
+    /*
+
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
     };
@@ -406,6 +408,8 @@ function EntireScholar(props) {
         setTypeDropdownVisible(false);
     };
 
+    */
+
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
 
 
@@ -438,9 +442,10 @@ function EntireScholar(props) {
                 </div>
             <div style={styles.buttonContainer}>
                 <SortButtonContainer>
-                    <SortButton1  onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
+                    <SortButton1 onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}>
                             {typeOption} ▼
                         </SortButton1>
+                        {/*
                         {typeDropdownVisible && (
                             <Dropdown1>
                                 {['지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
@@ -452,12 +457,14 @@ function EntireScholar(props) {
                                     </DropdownItem>
                                 ))}
                             </Dropdown1>
-                        )}
+                        )} */}
                 </SortButtonContainer>
                 <SortButtonContainer>
-                    <SortButton2 onClick={toggleDropdown}>
+                    <SortButton2> 
+                        {/* <SortButton2 onClick={toggleDropdown}> */}
                         {sortOption} ▼
                     </SortButton2>
+                    {/*
                     {dropdownVisible && (
                         <Dropdown2 visible={dropdownVisible}>
                             {otherOptions.map((option, index) => (
@@ -469,7 +476,7 @@ function EntireScholar(props) {
                                 </DropdownItem>
                             ))}
                         </Dropdown2>
-                    )}
+                    )} */}
                 </SortButtonContainer>
             </div>
             <div style={styles.container}>
