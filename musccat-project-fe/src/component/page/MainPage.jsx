@@ -44,6 +44,10 @@ const Rectangle = styled.div`
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
+
+    /* 부모 크기에 맞춰 자동으로 크기 조정 */
+    transform: scale(1.2); /* 기본 크기 */
+    transition: transform 0.3s ease;
 `;
 
 const TextContainer = styled.div`
@@ -184,13 +188,21 @@ const BottomButton = styled.button`
     text-align: center; /* 텍스트를 가운데 정렬 */
     font-size: 16px; /* 텍스트 크기 조정 */
     cursor: pointer;
+
+    /* 부모 크기에 맞춰 자동으로 크기 조정 */
+    transform: scale(1.2); /* 기본 크기 */
+    transition: transform 0.3s ease;
 `;
 
 const WhiteText = styled.p`
     color: white;
     font-size: 12px; /* Adjust font size if necessary */
-    margin-top: 8px;
+    margin-top: 15px;
     text-align: center; /* Adjust alignment if necessary */
+
+    /* 부모 크기에 맞춰 자동으로 크기 조정 */
+    transform: scale(1.2); /* 기본 크기 */
+    transition: transform 0.3s ease;
 `;
 
 const LoginText = styled.p`
