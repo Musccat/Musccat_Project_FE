@@ -324,6 +324,13 @@ function EntireScholar(props) {
 
 
     useEffect(() => {
+        // 장학금 목록이 없을 때만 fetchScholarships 호출
+        if (!scholarships || scholarships.length === 0) {
+            fetchScholarships(currentPage); 
+        }
+    }, [scholarships, currentPage, fetchScholarships]);
+    
+    useEffect(() => {
         if (Array.isArray(scholarships)) {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
