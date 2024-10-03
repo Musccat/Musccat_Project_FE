@@ -608,22 +608,6 @@ function EntireScholar(props) {
                             {pageRange.start + index}
                         </button>
                     ))}
-
-                    {pageRange.end < totalPages && (
-                        <button
-                        style={{
-                            margin: '0 5px',
-                            padding: '5px 10px',
-                            backgroundColor: '#ccc',
-                            color: 'white',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
-                        onClick={handleNextRange}
-                    >
-                        다음
-                    </button>
-                    )}
                 </>
             )}
             {/* 다음 페이지 버튼 */}
