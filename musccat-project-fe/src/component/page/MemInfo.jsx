@@ -507,8 +507,8 @@ const MemInfo = () => {
                     <label>소득 분위<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
                         name="income"
-                        value={formData.income ? { label: `${formData.income} 분위`, value: formData.income } : null}
-                        onChange={(option) => setFormData({ ...formData, income: option?.value || '' })}
+                        value={incomeOptions.find(option => option.value === formData.income) || null}
+                        onChange={(option) => handleChange({ name: "income", value: option.value })}
                         options={incomeOptions}
                         placeholder="소득 분위 선택"
                     />

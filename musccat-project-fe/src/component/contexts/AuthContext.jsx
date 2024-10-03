@@ -519,18 +519,21 @@ export const AuthProvider = ({ children }) => {
 
     const setScholarDate = async (scholarshipPeriod) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, scholarshipPeriod, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, 
+            {
+                date: scholarshipPeriod.date,  // 'date' 키로 전송
+            }, {
                 headers: {
-                    Authorization: `Bearer ${authTokens.access}`, // Send the auth token in the header
+                    Authorization: `Bearer ${authTokens.access}`,  // 인증 토큰 추가
                 },
             });
-
+    
             if (response.status === 201) {
                 alert("Scholarship date successfully set!");
             } else {
                 alert("Failed to set scholarship date.");
             }
-
+    
             return response;
         } catch (error) {
             console.error("Error setting scholarship date", error);
