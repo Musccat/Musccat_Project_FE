@@ -317,7 +317,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchRecommendedScholarships = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/scholarships/recommend/list/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
