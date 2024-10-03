@@ -471,7 +471,7 @@ export const AuthProvider = ({ children }) => {
     // 아이디 중복 확인 함수
     const checkUsernameAvailability = async (username) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/check-username/${username}/`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/check-username/${username}/`);
             return response.data.available;  // true면 사용 가능, false면 이미 사용 중
         } catch (error) {
             console.error("Username availability check failed", error);
