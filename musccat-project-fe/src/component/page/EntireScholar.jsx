@@ -268,7 +268,8 @@ function EntireScholar(props) {
             fetchScholarshipsByOrder,
             goToNextPage, 
             goToPreviousPage, 
-            currentPage, 
+            currentPage,
+            setCurrentPage, 
             nextPageUrl, 
             previousPageUrl,
             totalPages,
@@ -298,9 +299,10 @@ function EntireScholar(props) {
     }, [currentPage, pageRange, totalPages]);
 
     // 페이지 번호 클릭 핸들러
-    const handlePageClick = (pageNumber) => {
+    const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
-            fetchScholarships(pageNumber);
+            await fetchScholarships(pageNumber);  // 페이지 번호를 넘겨서 새로운 데이터를 가져옴
+            setCurrentPage(pageNumber);  // 현재 페이지 업데이트
         }
     };
 

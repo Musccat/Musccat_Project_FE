@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
     const [totalPages, setTotalPages] = useState(1);
 
+
     const navigate = useNavigate();
 
 
@@ -570,6 +571,8 @@ export const AuthProvider = ({ children }) => {
         deleteBenefitInfo,
         fetchBenefitInfos,
         benefitInfos,
+        currentPage,
+        setCurrentPage,
         fetchScholarships,
         filterScholarshipsByType,
         goToNextPage,
