@@ -170,18 +170,20 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
     setFormData({ ...formData, [name]: value });
 
     // 아이디 형식 확인 (영문과 숫자만 포함)
-    if (name === "username") {
-        const usernamePattern = /^[a-zA-Z0-9]{4,}$/;
-        const isUsernameValid = usernamePattern.test(value);
-        setUsernameValid(isUsernameValid);
-
-        if (isUsernameValid) {
+    if (isUsernameValid) {
+        // 아이디 형식이 유효할 때만 중복 체크 실행
+        try {
             const available = await checkUsernameAvailability(value);
             setUsernameAvailable(available);
-        } else {
-            setUsernameAvailable(true); // 형식이 틀리면 중복 체크 안함
+        } catch (error) {
+            console.error("아이디 중복 확인 중 오류 발생:", error);
+            setUsernameAvailable(false);  // 오류 발생 시, 중복된 것으로 처리
         }
+    } else {
+        // 형식이 틀린 경우, 중복 확인 결과 초기화
+        setUsernameAvailable(true);  // 형식이 틀리면 중복 여부에 대해 알 수 없음
     }
+};
 
     // 비밀번호 형식 확인(영문, 숫자, 특수문자 포함 8자 이상 입력)
     if (name === "password") {
@@ -521,7 +523,6 @@ const handleChange = async (e) => { // 사용자 입력값 업데이트
         </Container>
         </Page>
     );
-}
 
 export default Register;
 
