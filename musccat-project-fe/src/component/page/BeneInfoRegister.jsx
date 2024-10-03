@@ -352,7 +352,7 @@ const BeneInfoRegister = () => {
     }));
 
     const univCategoryOptions = [
-        { value: '4년제(5~6년제)', label: '4년제(5~6년제)' },
+        { value: '4년제(5~6년제포함)', label: '4년제(5~6년제포함)' },
         { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
         { value: '해외대학', label: '해외대학' },
         { value: '학점은행제 대학', label: '학점은행제 대학'},
@@ -363,8 +363,8 @@ const BeneInfoRegister = () => {
 
     const semesterCategoryOptions = [
         { value: '대학신입생', label: '대학신입생' },
-        ...Array.from({ length: 7 }, (_, i) => ({ value: `${i + 2}학기`, label: `${i + 2}학기` })),
-        { value: '대학 8학기이상', label: '대학 8학기이상' }
+        ...Array.from({ length: 7 }, (_, i) => ({ value: `대학${i + 2}학기`, label: `대학${i + 2}학기` })),
+        { value: '대학8학기이상', label: '대학8학기이상' }
     ];
 
     const majorCategoryOptions = [
