@@ -295,21 +295,21 @@ return (
                             </thead>
                             <tbody>
                             {Array.isArray(scholarships) && scholarships.length > 0 ? (
-                                        scholarships.map((scholarship, index) => (
+                                        scholarships.map((item, index) => (
                                         <tr key={index}>
-                                            <td style={styles.thTd}>{scholarship.foundation_name}</td>
+                                            <td style={styles.thTd}>{item.scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                                <ScholarshipLink to={`/notice/${scholarship.product_id}`}>{scholarship.name}</ScholarshipLink>
+                                                <ScholarshipLink to={`/notice/${item.scholarship.product_id}`}>{item.scholarship.name}</ScholarshipLink>
                                             </td>
-                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
+                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{item.scholarship.recruitment_end}</td>
                                             <td style={styles.thTd}>
                                                 <div style={styles.flexContainer}>
-                                                <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: 'none' }}>
+                                                <Link to={`/reviews/${item.scholarship.product_id}`} style={{ textDecoration: 'none' }}>
                                                     <button style={styles.infoButton}>정보 보러가기</button>
                                                 </Link>
                                                     <button
                                                         style={styles.heartButton}
-                                                        onClick={() => handleLikeClick(index, scholarship.product_id)}
+                                                        onClick={() => handleLikeClick(index, item.scholarship.product_id)}
                                                     >
                                                         <img
                                                             src={likes[index] ? filledheart : emptyheart}
