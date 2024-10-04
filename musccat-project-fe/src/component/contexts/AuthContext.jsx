@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     };
     const fetchFoundations = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/foundations`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/foundations/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
