@@ -203,13 +203,19 @@ const [scholarships, setScholarships] = useState([]);
 const userFullName = user ? user.fullName : '사용자';
 
 useEffect(() => {
-    fetchRecommendedScholarships().then(fetchedScholarships => {
-        setScholarships(fetchedScholarships); 
-        console.log("Scholarships after setting state:", fetchedScholarships);
-    });
-
-    console.log("scholarships:", scholarships);
+    fetchRecommendedScholarships()
+        .then(fetchedScholarships => {
+            console.log("Scholarships fetched:", fetchedScholarships); 
+            setScholarships(fetchedScholarships);
+        })
+        .catch(error => {
+            console.error("Error fetching scholarships:", error);
+        });
 }, []);
+
+useEffect(() => {
+    console.log("scholarships after state update:", scholarships);
+}, [scholarships]);
 
 /*
 
