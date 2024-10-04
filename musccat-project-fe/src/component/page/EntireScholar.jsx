@@ -308,22 +308,30 @@ function EntireScholar(props) {
         }
     };
 
-    const handleNextRange = () => {
+    const handleNextRange = async () => {
         const newStart = pageRange.end + 1;
-        setPageRange({
-            start: newStart,
-            end: Math.min(newStart + 4, totalPages),
+        if (newStart <= totalPages) {
+            // 백엔드에서 새로운 페이지 데이터를 가져옴
+            await fetchScholarships(newStart);  // 새로운 페이지로 장학금 데이터 불러오기
+            setPageRange({
+                start: newStart,
+                end: Math.min(newStart + 4, totalPages),
         });
         setCurrentPage(newStart);
+    }
     };
 
-    const handlePreviousRange = () => {
+    const handlePreviousRange = async () => {
         const newEnd = pageRange.start - 1;
-        setPageRange({
-            start: Math.max(1, newEnd - 4),
-            end: newEnd,
-        });
+        if (newEnd >= 1) {
+            // 백엔드에서 새로운 페이지 데이터를 가져옴
+            await fetchScholarships(newEnd);  // 이전 페이지로 장학금 데이터 불러오기
+            setPageRange({
+                start: Math.max(1, newEnd - 4),
+                end: newEnd,
+            });
         setCurrentPage(newEnd);
+        }
     };
 
 

@@ -130,10 +130,6 @@ export const AuthProvider = ({ children }) => {
 
     const fetchScholarships = async (page = 1) => {
         try {
-            // 장학금 데이터가 이미 있을 경우 API 요청을 하지 않음
-            if (scholarships && scholarships.length > 0) {
-                return;
-            }
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
             setNextPageUrl(response.data.next);  // 다음 페이지 URL 저장
