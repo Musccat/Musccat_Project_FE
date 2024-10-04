@@ -205,9 +205,10 @@ const userFullName = user ? user.fullName : '사용자';
 useEffect(() => {
     fetchRecommendedScholarships().then(fetchedScholarships => {
         setScholarships(fetchedScholarships); 
+        console.log("Scholarships after setting state:", fetchedScholarships);
     });
 
-    console.log(scholarships);
+    console.log("scholarships:", scholarships);
 }, []);
 
 /*
