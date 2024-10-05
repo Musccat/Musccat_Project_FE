@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
     const [totalPages, setTotalPages] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const navigate = useNavigate();
@@ -129,6 +130,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const fetchScholarships = async (page = 1) => {
+        setIsLoading(true);  // 로딩 시작
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?page=${page}`);
             setScholarships(response.data.results);
@@ -143,6 +145,8 @@ export const AuthProvider = ({ children }) => {
             await fetchLikedScholarships();
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
+        } finally {
+            setIsLoading(false);  // 로딩 끝
         }
     };
 
@@ -581,6 +585,7 @@ export const AuthProvider = ({ children }) => {
         benefitInfos,
         currentPage,
         setCurrentPage,
+        setScholarships,
         fetchScholarships,
         filterScholarshipsByType,
         goToNextPage,

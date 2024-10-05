@@ -266,6 +266,7 @@ function EntireScholar(props) {
             fetchScholarshipsByFoundation,
             likes, 
             scholarships,
+            setScholarships,
             filterScholarshipsByType,
             fetchScholarshipsByOrder,
             goToNextPage, 
@@ -292,6 +293,8 @@ function EntireScholar(props) {
 
     const [pageRange, setPageRange] = useState({ start: 1, end: 5 });
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         if (currentPage > pageRange.end) {
             setPageRange({ start: pageRange.end + 1, end: Math.min(pageRange.end + 5, totalPages) });
@@ -303,8 +306,9 @@ function EntireScholar(props) {
     // 페이지 번호 클릭 핸들러
     const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
-            await fetchScholarships(pageNumber);  // 페이지 번호를 넘겨서 새로운 데이터를 가져옴
-            setCurrentPage(pageNumber);  // 현재 페이지 업데이트
+            setCurrentPage(pageNumber); // 먼저 페이지 상태 업데이트
+            setScholarships([]); // 페이지 전환 시 기존 데이터를 초기화하여 중복 방지
+            await fetchScholarships(pageNumber); // 페이지에 해당하는 데이터를 가져옴
         }
     };
 
@@ -336,11 +340,11 @@ function EntireScholar(props) {
 
 
     useEffect(() => {
-        // 장학금 목록이 없을 때만 fetchScholarships 호출
-        if (scholarships.length === 0 || currentPage > 1) {
-            fetchScholarships(currentPage); 
-        }
-    }, [scholarships, currentPage]);
+        // currentPage 변경 시에만 fetchScholarships 호출
+        setIsLoading(true);  // 데이터를 가져오기 시작할 때 로딩 상태로 전환
+        fetchScholarships(currentPage)  // 데이터를 가져오는 비동기 함수 호출
+            .finally(() => setIsLoading(false));  // 데이터 가져오기가 끝나면 로딩 상태 해제ships(currentPage); 
+    }, [currentPage]);
     
     useEffect(() => {
         if (Array.isArray(scholarships)) {
@@ -460,6 +464,10 @@ function EntireScholar(props) {
             <NavBar />
             <div style={styles.wrapper}>
             <div style={styles.outerContainer}>
+            {isLoading ? (
+                    <div>로딩 중...</div>
+                ) : (
+                    <>
                 <div style={styles.searchBarContainer}>
                     <div style={styles.searchBar}>
                         <input type="text" 
@@ -642,7 +650,10 @@ function EntireScholar(props) {
                             </span>
                         )}
                     </div>  
+
                     </div>
+                    </>
+                )}
                 </div>
         </div>
         </>
