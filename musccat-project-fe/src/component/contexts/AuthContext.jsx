@@ -55,20 +55,19 @@ export const AuthProvider = ({ children }) => {
             setUser({
                 id: response.data.id,
                 username: response.data.username,
-                fullName: response.data.fullname,
-                userNickname: response.data.nickname,
-                userBirthdate: response.data.birth,
+                fullname: response.data.fullname,
+                nickname: response.data.nickname,
+                birth: response.data.birth,
                 age: response.data.age,
                 email: response.data.email,
                 gender: response.data.gender,
                 region: residence[0],  
                 district: residence[1],
                 income: response.data.income,
-                univCategory: response.data.univCategory,
+                univ_category: response.data.univ_category,
                 university: response.data.university,
-                majorCategory: response.data.majorCategory,
+                major_category: response.data.major_category,
                 major: response.data.major,
-                year: response.data.year,
                 semester: response.data.semester,
                 totalGPA: response.data.totalGPA,
                 familyStatus: response.data.familyStatus,
@@ -383,16 +382,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const registerUser = async (username, password, password2, fullName, userNickname, userBirthdate, email) => {
+    const registerUser = async (username, password, password2, fullname, nickname, birth, email) => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/register/`, {
                 username,
                 password,
                 password2,
-                nickname: userNickname,
-                birth: userBirthdate,
-                fullname: fullName,
-                email: email
+                nickname,
+                birth,
+                fullname,
+                email
             });
 
             if (response.status === 201) {
@@ -571,7 +570,7 @@ export const AuthProvider = ({ children }) => {
             fetchScholarships();
         }
         setLoading(false);
-    }, [authTokens, fetchUserData, fetchScholarships]);
+    }, [authTokens]);
 
 
     const contextData = {

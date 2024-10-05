@@ -199,7 +199,7 @@ const MemInfo = () => {
     const [formData, setFormData] = useState({
         fullname: user?.fullname || '',
         username: user?.username || '',
-        dob: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
+        birth: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
         age: user?.age || '',
         email: user?.email || '',
         nickname: user?.userNickname || '',
@@ -207,11 +207,10 @@ const MemInfo = () => {
         region: '',
         district: '',
         income: '',
-        univCategory: '',
+        univ_category: '',
         university: '',
-        majorCategory: '',
+        major_category: '',
         major: '',
-        year: '',
         semester: '',
         totalGPA: '',
         familyStatus: '',
@@ -221,7 +220,7 @@ const MemInfo = () => {
     useEffect(() => {
         const isFormValid = () => {
             const requiredFields = [
-                'gender', 'region', 'district', 'income', 'univCategory', 'university', 'majorCategory', 'major', 'semester', 'totalGPA'
+                'gender', 'region', 'district', 'income', 'univ_category', 'university', 'major_category', 'major', 'semester', 'totalGPA'
             ];
     
             
@@ -253,7 +252,7 @@ const MemInfo = () => {
                     ...prevData,
                     fullname: user.fullName,
                     username: user.username,
-                    dob: user.userBirthdate,
+                    birth: user.userBirthdate,
                     email: user.email,
                     age: user.age,
                     nickname: user.userNickname || '',
@@ -261,11 +260,10 @@ const MemInfo = () => {
                     region: region || '',
                     district: district || '',
                     income: user.income || '',
-                    univCategory: user.univCategory || '',
+                    univ_category: user.univ_category || '',
                     university: user.university || '',
-                    majorCategory: user.majorCategory || '',
+                    major_category: user.major_category || '',
                     major: user.major || '',
-                    year: user.year || '',
                     semester: user.semester || '',
                     totalGPA: user.totalGPA || '',
                     familyStatus: user.familyStatus || '',
@@ -318,7 +316,7 @@ const MemInfo = () => {
 
         // 필수 항목이 비어있지 않은지 확인
         const requiredFields = [
-            'nickname','gender', 'region', 'district', 'income', 'univCategory','university', 'majorCategory', 'major', 'semester', 'totalGPA'];
+            'nickname','gender', 'region', 'district', 'income', 'univ_category','university', 'major_category', 'major', 'semester', 'totalGPA'];
         for (const field of requiredFields) {
             if (!formData[field] || formData[field].trim() === '') {
                 alert(`필수 항목 ${field}를(을) 입력하세요.`);
@@ -332,11 +330,10 @@ const MemInfo = () => {
             nickname: formData.nickname, // 수정된 닉네임 반영
             residence,
             income: formData.income,
-            univCategory: formData.univCategory,
+            univ_category: formData.univ_category,
             university: formData.university,
-            majorCategory: formData.majorCategory,
+            major_category: formData.major_category,
             major: formData.major,
-            year: formData.year,
             semester: formData.semester,
             totalGPA: formData.totalGPA,
             familyStatus: formData.familyStatus,
@@ -418,7 +415,7 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>생년월일</label>
-                    <div className="valueDisplay">{user?.dob}</div>
+                    <div className="valueDisplay">{user?.birth}</div>
                 </FormGroup>
 
                 <FormGroup>
@@ -534,9 +531,9 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>대학 유형<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
-                        name="univCategory" 
-                        value={univCategoryOptions.find(option => option.value === formData.univCategory) || ''}
-                        onChange={(option) => handleChange({ name: "univCategory", value: option.value })}
+                        name="univ_category" 
+                        value={univCategoryOptions.find(option => option.value === formData.univ_category) || ''}
+                        onChange={(option) => handleChange({ name: "univ_category", value: option.value })}
                         options={univCategoryOptions}
                         placeholder="대학 유형 선택"
                     />
@@ -557,9 +554,9 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>학과 계열<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
-                        name="majorCategory" 
-                        value={majorCategoryOptions.find(option => option.value === formData.majorCategory) || ''}
-                        onChange={(option) => handleChange({ name: "majorCategory", value: option.value })}
+                        name="major_category" 
+                        value={majorCategoryOptions.find(option => option.value === formData.major_category) || ''}
+                        onChange={(option) => handleChange({ name: "major_category", value: option.value })}
                         options={majorCategoryOptions}
                         placeholder="학과 계열 선택"
                     />
