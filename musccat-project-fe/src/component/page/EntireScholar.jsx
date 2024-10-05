@@ -307,8 +307,6 @@ function EntireScholar(props) {
     const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
             setCurrentPage(pageNumber); // 먼저 페이지 상태 업데이트
-            setScholarships([]); // 페이지 전환 시 기존 데이터를 초기화하여 중복 방지
-            await fetchScholarships(pageNumber); // 페이지에 해당하는 데이터를 가져옴
         }
     };
 

@@ -487,8 +487,12 @@ const MemInfo = () => {
                         value={formData.region} 
                         onChange={handleChange}>
                         <option value="">지역을 선택하세요</option>
-                        <option value="서울">서울</option>
-                        <option value="부산">부산</option>
+                        <option value="서울">서울특별시</option>
+                        <option value="부산">부산광역시</option>
+                        <option value="부산">대구광역시</option>
+                        <option value="부산">인천광역시</option>
+                        <option value="부산">광주광역시</option>
+                        <option value="부산">대전광역시</option>
                         {/* Add more options as needed */}
                     </select>
 
@@ -497,8 +501,15 @@ const MemInfo = () => {
                         value={formData.district} 
                         onChange={handleChange}>
                         <option value="">구/군을 선택하세요</option>
-                        <option value="서대문구">서대문구</option>
-                        <option value="해운대구">해운대구</option>
+                        <option value="서대문구">강남구</option>
+                        <option value="해운대구">강동구</option>
+                        <option value="해운대구">강북구</option>
+                        <option value="해운대구">강서구</option>
+                        <option value="해운대구">관악구</option>
+                        <option value="해운대구">광진구</option>
+                        <option value="해운대구">구로구</option>
+                        <option value="해운대구">금천구</option>
+                        <option value="해운대구">노원구</option>
                         {/* Add more options as needed */}
                     </select>
                 </FormGroup>
