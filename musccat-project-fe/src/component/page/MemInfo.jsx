@@ -202,7 +202,7 @@ const MemInfo = () => {
         birth: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
         age: user?.age || '',
         email: user?.email || '',
-        nickname: user?.userNickname || '',
+        nickname: user?.nickname || '',
         gender: '',
         region: '',
         district: '',
@@ -220,7 +220,7 @@ const MemInfo = () => {
     useEffect(() => {
         const isFormValid = () => {
             const requiredFields = [
-                'gender', 'region', 'district', 'income', 'univ_category', 'university', 'major_category', 'major', 'semester', 'totalGPA'
+                'nickname','gender', 'region', 'district', 'income', 'univ_category', 'university', 'major_category', 'major', 'semester', 'totalGPA'
             ];
     
             
@@ -250,13 +250,13 @@ const MemInfo = () => {
                 const [region, district] = user.residence ? user.residence.split(' ') : ['', ''];
                 setFormData((prevData) => ({
                     ...prevData,
-                    fullname: user.fullName,
+                    fullname: user.fullname,
                     username: user.username,
-                    birth: user.userBirthdate,
+                    birth: user.birth,
                     email: user.email,
                     age: user.age,
-                    nickname: user.userNickname || '',
-                    gender: user.userGender || '',
+                    nickname: prevData.nickname !== '' ? prevData.nickname : user.nickname || '', 
+                    gender: user.gender || '',
                     region: region || '',
                     district: district || '',
                     income: user.income || '',
@@ -478,7 +478,7 @@ const MemInfo = () => {
                     <input 
                         type="text" 
                         name="nickname" 
-                        value={user?.nickname} 
+                        value={formData.nickname} 
                         onChange={handleChange} 
                     />
                 </FormGroup>
