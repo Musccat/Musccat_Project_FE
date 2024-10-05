@@ -155,7 +155,9 @@ const styles = {
 
     pagination: {
         marginTop: "20px",
-        textAlign: "center"
+        display: "flex",  // 플렉스 박스 설정
+        justifyContent: "center",  // 중앙 정렬
+        alignItems: "center",  // 수직 중앙 정렬 (선택 사항)
     },
     paginationSpan: {
         cursor: "pointer",
@@ -264,6 +266,7 @@ function EntireScholar(props) {
             fetchScholarshipsByFoundation,
             likes, 
             scholarships,
+            setScholarships,
             filterScholarshipsByType,
             fetchScholarshipsByOrder,
             goToNextPage, 
@@ -290,6 +293,8 @@ function EntireScholar(props) {
 
     const [pageRange, setPageRange] = useState({ start: 1, end: 5 });
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         if (currentPage > pageRange.end) {
             setPageRange({ start: pageRange.end + 1, end: Math.min(pageRange.end + 5, totalPages) });
@@ -301,34 +306,45 @@ function EntireScholar(props) {
     // 페이지 번호 클릭 핸들러
     const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
-            await fetchScholarships(pageNumber);  // 페이지 번호를 넘겨서 새로운 데이터를 가져옴
-            setCurrentPage(pageNumber);  // 현재 페이지 업데이트
+            setCurrentPage(pageNumber); // 먼저 페이지 상태 업데이트
+            setScholarships([]); // 페이지 전환 시 기존 데이터를 초기화하여 중복 방지
+            await fetchScholarships(pageNumber); // 페이지에 해당하는 데이터를 가져옴
         }
     };
 
-    const handleNextRange = () => {
+    const handleNextRange = async () => {
         const newStart = pageRange.end + 1;
-        setPageRange({
-            start: newStart,
-            end: Math.min(newStart + 4, totalPages),
+        if (newStart <= totalPages) {
+            // 백엔드에서 새로운 페이지 데이터를 가져옴
+            await fetchScholarships(newStart);  // 새로운 페이지로 장학금 데이터 불러오기
+            setPageRange({
+                start: newStart,
+                end: Math.min(newStart + 4, totalPages),
         });
+        setCurrentPage(newStart);
+    }
     };
 
-    const handlePreviousRange = () => {
+    const handlePreviousRange = async () => {
         const newEnd = pageRange.start - 1;
-        setPageRange({
-            start: Math.max(1, newEnd - 4),
-            end: newEnd,
-        });
+        if (newEnd >= 1) {
+            // 백엔드에서 새로운 페이지 데이터를 가져옴
+            await fetchScholarships(newEnd);  // 이전 페이지로 장학금 데이터 불러오기
+            setPageRange({
+                start: Math.max(1, newEnd - 4),
+                end: newEnd,
+            });
+        setCurrentPage(newEnd);
+        }
     };
 
 
     useEffect(() => {
-        // 장학금 목록이 없을 때만 fetchScholarships 호출
-        if (!scholarships || scholarships.length === 0 || currentPage !== 1) {
-            fetchScholarships(currentPage); 
-        }
-    }, [scholarships, currentPage, fetchScholarships]);
+        // currentPage 변경 시에만 fetchScholarships 호출
+        setIsLoading(true);  // 데이터를 가져오기 시작할 때 로딩 상태로 전환
+        fetchScholarships(currentPage)  // 데이터를 가져오는 비동기 함수 호출
+            .finally(() => setIsLoading(false));  // 데이터 가져오기가 끝나면 로딩 상태 해제ships(currentPage); 
+    }, [currentPage]);
     
     useEffect(() => {
         if (Array.isArray(scholarships)) {
@@ -432,7 +448,7 @@ function EntireScholar(props) {
 
     // 제목처럼 보이는 텍스트를 관리하는 로직 추가
     const renderTypeOptionTitle = () => {
-        return typeOption === '장학금 유형구분' ? '장학금 유형 구분' : typeOption;
+        return typeOption === '장학금 유형구분' ? '장학금 유형구분' : typeOption;
     };
 
     const renderSortOptionTitle = () => {
@@ -448,6 +464,10 @@ function EntireScholar(props) {
             <NavBar />
             <div style={styles.wrapper}>
             <div style={styles.outerContainer}>
+            {isLoading ? (
+                    <div>로딩 중...</div>
+                ) : (
+                    <>
                 <div style={styles.searchBarContainer}>
                     <div style={styles.searchBar}>
                         <input type="text" 
@@ -564,16 +584,20 @@ function EntireScholar(props) {
             </div>
 
             {/* 페이지네이션 */}
-                <div style={styles.pagination}>
-                    {previousPageUrl ? (
-                        <span onClick={goToPreviousPage}>
-                            <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
-                        </span>
-                    ) : (
-                        <span>
-                            <div style={styles.triangleLeft}></div>
-                        </span>
-                    )}
+            <div style={styles.pagination}>
+                 {/* 이전 페이지 화살표 */}
+                {pageRange.start > 1 ? (
+                    <span onClick={() => {
+                        handlePreviousRange();
+                    }}>
+                        <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
+                    </span>
+                ) : (
+                    <span>
+                        <div style={styles.triangleLeft}></div>
+                    </span>
+                )}
+
 
                     {/* 페이지 번호 표시 */}
                     {totalPages <= 5 ? (
@@ -595,56 +619,42 @@ function EntireScholar(props) {
                             </button>
                         ))
                     ) : (
-                        <>
-                        {/* 페이지가 5개 초과일 때 */}
-                        {pageRange.start > 1 && (
-                            <button 
+                        Array.from({ length: Math.min(5, totalPages - pageRange.start + 1) }, (_, index) => (
+                            <button
+                                key={index}
                                 style={{
                                     margin: '0 5px',
                                     padding: '5px 10px',
-                                    backgroundColor: '#ccc',
+                                    backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
                                     color: 'white',
                                     border: 'none',
                                     cursor: 'pointer'
                                 }}
-                                onClick={handlePreviousRange}
+                                onClick={() => handlePageClick(pageRange.start + index)}
                             >
-                                이전
+                                {pageRange.start + index}
                             </button>
+                        ))
                     )}
 
-                    {/* 현재 페이지 범위 내 번호 표시 */}
-                    {Array.from({ length: Math.min(5, totalPages - pageRange.start + 1) }, (_, index) => (
-                        <button
-                            key={index}
-                            style={{
-                                margin: '0 5px',
-                                padding: '5px 10px',
-                                backgroundColor: currentPage === pageRange.start + index ? '#348a8c' : '#ccc',
-                                color: 'white',
-                                border: 'none',
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => handlePageClick(pageRange.start + index)}
-                        >
-                            {pageRange.start + index}
-                        </button>
-                    ))}
-                </>
-            )}
-            {/* 다음 페이지 버튼 */}
-            {nextPageUrl ? (
-                <span onClick={goToNextPage}>
-                    <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
-                </span>
-            ) : (
-                <span>
-                    <div style={styles.triangleRight}></div>
-                </span>
-            )}
-        </div>
-        </div>
-        </div>
+                    {currentPage < totalPages ? (
+                            <span onClick={() => {
+                                // 범위 끝에 도달했을 때만 다음 범위로 이동
+                                handleNextRange(); 
+                            }}>
+                                <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
+                            </span>
+                        ) : (
+                            <span>
+                                <div style={styles.triangleRight}></div>
+                            </span>
+                        )}
+                    </div>  
+
+                    </div>
+                    </>
+                )}
+                </div>
         </div>
         </>
         );
