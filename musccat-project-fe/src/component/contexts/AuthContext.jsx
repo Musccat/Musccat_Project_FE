@@ -541,13 +541,13 @@ export const AuthProvider = ({ children }) => {
             });
     
             if (response.status === 201) {
-                alert("Scholarship successfully registered!");
+                alert("장학금 정보 입력이 완료 되었습니다");
             } else {
-                alert("Failed to register scholarship.");
+                alert("장학금 입력에 실패했습니다.");
             }
         } catch (error) {
             console.error("Error registering scholarship", error);
-            alert("An error occurred while registering the scholarship.");
+            alert("장학금 입력 중 오류가 발생했습니다.");
         }
     };
 

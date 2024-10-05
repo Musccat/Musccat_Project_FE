@@ -169,14 +169,8 @@ const AddScholar = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
-        const response = await RegisterScholarship(formValues);
-
-        if (response && response.status === 201) { 
-            window.alert("장학금 정보 입력이 완료 되었습니다");
-            navigate("/main"); 
-        } else {
-            window.alert("입력에 실패하였습니다. 다시 시도해주세요.");
-        }
+        await RegisterScholarship(formValues);  // RegisterScholarship 내부에서 alert 처리
+        navigate("/main");  // 입력 성공 시 메인 페이지로 이동
     };
 
     const univCategoryOptions = [
