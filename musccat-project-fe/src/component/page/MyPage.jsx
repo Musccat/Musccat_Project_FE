@@ -157,7 +157,6 @@ const MyPage = () => {
     const [university, setUniversity] = useState('');
     const [majorCategory, setMajorCategory] = useState('');
     const [major, setMajor] = useState('');
-    const [year, setYear] = useState('');
     const [semester, setSemester] = useState('');
     const [totalGPA, setTotalGPA] = useState('');
     const [familyStatus, setFamilyStatus] = useState('');
@@ -173,22 +172,22 @@ const MyPage = () => {
 
     useEffect(() => {
         if (user) {
-            setFullName(user.fullName);
+            setFullName(user.fullname);
             setUserName(user.username);
-            setUserNickname(user.userNickname);
-            setUserBirthdate(user.userBirthdate);
+            setUserNickname(user.nickname);
+            setUserBirthdate(user.birth);
             setUserAge(user.age);
+            setUserGender(user.gender);
             setUserEmail(user.email);
 
             const residence = user.residence ? user.residence : '';
             setUserResidence(residence);
 
             setIncome(user.income);
-            setUnivCategory(user.univCategory);
+            setUnivCategory(user.univ_category);
             setUniversity(user.university);
-            setMajorCategory(user.majorCategory);
+            setMajorCategory(user.major_category);
             setMajor(user.major);
-            setYear(user.year);
             setSemester(user.semester);
             setTotalGPA(user.totalGPA);
             setFamilyStatus(user.familyStatus);
