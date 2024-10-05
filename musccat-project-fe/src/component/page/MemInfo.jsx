@@ -324,6 +324,13 @@ const MemInfo = () => {
             }
         }
 
+        // familyStatus 배열을 쉼표로 구분된 문자열로 변환
+        const familyStatusStr = formData.familyStatus.join(', ');
+
+        // etc 변수에 familyStatus와 additionalInfo를 하나의 문자열로 합치기
+        const etc = `${familyStatusStr}(${formData.familyStatus.length > 0 ? 'familyStatus값' : ''}), ${formData.additionalInfo}(additionalInfo값)`;
+
+
         // 수정된 사용자 정보를 서버에 업데이트
         await updateUser({
             gender: formData.gender,
@@ -336,8 +343,7 @@ const MemInfo = () => {
             major: formData.major,
             semester: formData.semester,
             totalGPA: formData.totalGPA,
-            familyStatus: formData.familyStatus,
-            additionalInfo: formData.additionalInfo
+            etc
         });
         
         navigate("/users/mypage", { state: { isInfoSubmitted: true } });
