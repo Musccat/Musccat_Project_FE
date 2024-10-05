@@ -384,7 +384,12 @@ export const AuthProvider = ({ children }) => {
     
                 // 메인 페이지로 이동
                 navigate("/main");
-            } 
+
+                return true; // 로그인 성공 시 true 반환
+
+                } else {
+                    return false; // 로그인 실패 시 false 반환
+                }
         } catch (error) {
             // 서버에서 발생한 오류 처리
             if (error.response) {
