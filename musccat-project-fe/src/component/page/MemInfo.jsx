@@ -401,6 +401,42 @@ const MemInfo = () => {
         { value: '자연계열', label: '자연계열' }
     ];
 
+    // 데모용 대학명
+    const universityOptions = [
+        { value: '서울대학교', label: '서울대학교' },
+        { value: '연세대학교', label: '연세대학교' },
+        { value: '고려대학교', label: '고려대학교' },
+        { value: '이화여자대학교', label: '이화여자대학교' },
+        { value: '서강대학교', label: '서강대학교' },
+        { value: '성균관대학교', label: '성균관대학교' },
+        { value: '한양대학교', label: '한양대학교' },
+        { value: '중앙대학교', label: '중앙대학교' },
+        { value: '경희대학교', label: '경희대학교' },
+        { value: '한국외국어대학교', label: '한국외국어대학교' },
+        { value: '서울시립대학교', label: '서울시립대학교' },
+        
+    ];
+
+    //데모용 학과명
+    const majorOptions = [
+        { value: '경영학과', label: '경영학과' },
+        { value: '경제학과', label: '경제학과' },
+        { value: '국어교육학과', label: '국어교육학과' },
+        { value: '수학교육학과', label: '수학교육학과' },
+        { value: '사회학과', label: '사회학과' },
+        { value: '심리학과', label: '심리학과' },
+        { value: '수학과', label: '수학과' },
+        { value: '물리학과', label: '물리학과' },
+        { value: '화학과', label: '화학과' },
+        { value: '기계공학과', label: '기계공학과' },
+        { value: '컴퓨터공학과', label: '컴퓨터공학과' },
+        { value: '의학과', label: '의학과' },
+        { value: '수의학과', label: '수의학과' },
+        { value: '서양화과', label: '서양화과' },
+        { value: '동양화과', label: '동양화과' },
+
+    ];
+
     return (
         <>
         <NavBar />
@@ -547,14 +583,13 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>대학명<RequiredIndicator>*</RequiredIndicator></label>
-                    <input 
-                        type="text" 
+                    <StyledSelect
                         name="university" 
-                        value={formData.university} 
-                        onChange={handleChange} 
-                        placeholder="대학명 검색"
+                        value={universityOptions.find(option => option.value === formData.university) || ''}
+                        onChange={(option) => handleChange({ name: "university", value: option.value })}
+                        options={universityOptions}
+                        placeholder="대학명 선택"
                     />
-                    <button type="button">검색</button>
                 </FormGroup>
 
                 <FormGroup>
@@ -570,14 +605,13 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>학과명<RequiredIndicator>*</RequiredIndicator></label>
-                    <input 
-                        type="text" 
+                    <StyledSelect
                         name="major" 
-                        value={formData.major} 
-                        onChange={handleChange} 
-                        placeholder="학과명 검색"
+                        value={majorOptions.find(option => option.value === formData.major) || ''}
+                        onChange={(option) => handleChange({ name: "major", value: option.value })}
+                        options={majorOptions}  
+                        placeholder="학과명 선택"
                     />
-                    <button type="button">검색</button>
                 </FormGroup>
 
                 <FormGroup>
