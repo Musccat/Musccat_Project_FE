@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/users/mypage/update/`, updatedData, {
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/userinfo/mypage/update/`, updatedData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
