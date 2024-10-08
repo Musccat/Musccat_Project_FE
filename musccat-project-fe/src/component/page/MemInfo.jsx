@@ -212,7 +212,7 @@ const MemInfo = () => {
         major: '',
         semester: '',
         totalGPA: '',
-        familyStatus: '',
+        familyStatus: [],
         additionalInfo: ''
     });
 
@@ -312,12 +312,6 @@ const MemInfo = () => {
         // residence로 region과 district 합치기
         const residence = `${formData.region} ${formData.district}`;
 
-        // familyStatus 배열을 쉼표로 구분된 문자열로 변환
-        const familyStatusStr = formData.familyStatus.join(', ');
-
-        // etc 변수에 familyStatus와 additionalInfo를 하나의 문자열로 합치기
-        const etc = `${familyStatusStr}(${formData.familyStatus.length > 0 ? 'familyStatus값' : ''}), ${formData.additionalInfo}(additionalInfo값)`;
-
         // 필수 항목이 비어있지 않은지 확인
         const requiredFields = [
             'nickname','gender', 'region', 'district', 'income', 'univ_category','university', 'major_category', 'major', 'semester', 'totalGPA'];
@@ -327,6 +321,12 @@ const MemInfo = () => {
                 return;
             }
         }
+
+        // familyStatus 배열을 쉼표로 구분된 문자열로 변환
+        const familyStatusStr = formData.familyStatus.join(', ');
+
+        // etc 변수에 familyStatus와 additionalInfo를 하나의 문자열로 합치기
+        const etc = `${familyStatusStr}(${formData.familyStatus.length > 0 ? 'familyStatus값' : ''}), ${formData.additionalInfo}(additionalInfo값)`;
 
         console.log(formData);
 
