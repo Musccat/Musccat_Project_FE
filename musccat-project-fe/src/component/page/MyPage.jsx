@@ -158,8 +158,7 @@ const MyPage = () => {
     const [major, setMajor] = useState('');
     const [semester, setSemester] = useState('');
     const [totalGPA, setTotalGPA] = useState('');
-    const [familyStatus, setFamilyStatus] = useState('');
-    const [additionalInfo, setAdditionalInfo] = useState('');
+    const [etc, setEtc] = useState('');
     const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
 
     // 장학 기본 정보는 fetchUserData로 불러옴
@@ -200,8 +199,7 @@ const MyPage = () => {
             setMajor(user.major);
             setSemester(user.semester);
             setTotalGPA(user.totalGPA);
-            setFamilyStatus(user.familyStatus);
-            setAdditionalInfo(user.additionalInfo);
+            setEtc(user.etc);
         }
     }, [user]);
 
@@ -322,13 +320,8 @@ const MyPage = () => {
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>가정 형태</span>
-                            <span>{familyStatus}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
-                            <span>추가 정보</span>
-                            <span>{additionalInfo}</span>
+                            <span>기타</span>
+                            <span>{etc}</span>
                             <Space />
                         </InfoItem>
                     </InfoList>
