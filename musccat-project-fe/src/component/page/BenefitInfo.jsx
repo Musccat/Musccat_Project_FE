@@ -140,9 +140,10 @@ const InfoDetail = styled.div`
 
 const BenefitInfo = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
-    const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, scholarships, fetchScholarships, user } = useAuth();
+    const { benefitInfos, fetchBenefitInfos, deleteBenefitInfo, fetchScholarDetail, user } = useAuth();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [scholarship, setScholarship] = useState(null);
 
     useEffect(() => {
         // product_id가 존재할 때만 API 호출
@@ -155,11 +156,22 @@ const BenefitInfo = () => {
     }, [product_id, fetchBenefitInfos]);
 
     useEffect(() => {
-        // 장학금 정보를 불러오는 함수가 필요하다면 추가적으로 호출
-        if (!scholarships || scholarships.length === 0) {
-            fetchScholarships(); // fetchScholarships를 호출하여 scholarships 데이터를 가져옴
+        // product_id에 해당하는 장학금 상세 정보를 불러오는 함수 호출
+        if (product_id) {
+            fetchScholarDetail(product_id)
+                .then((response) => {
+                    const data = response.scholarship;
+                    if (data) {
+                        setScholarship(data); // 데이터를 상태로 설정
+                    } else {
+                        console.error("Scholarship data is missing");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching scholarship detail:", error);
+                });
         }
-    }, [fetchScholarships, scholarships]);
+    }, [product_id, fetchScholarDetail]);
 
     if (loading) {
         return <div>Loading...</div>;  // 로딩 중일 때 표시
@@ -168,10 +180,6 @@ const BenefitInfo = () => {
     // benefitInfos에서 해당 product_id에 대한 정보 가져오기
     const benefitInfoData = Array.isArray(benefitInfos[product_id]) ? benefitInfos[product_id] : [];
 
-    // scholarships에서 해당 product_id에 맞는 장학금 정보 가져오기
-    const scholarship = Array.isArray(scholarships)
-        ? scholarships.find(scholar => scholar.id === product_id)
-        : null;
 
     // 장학 정보 삭제 핸들러 함수
     // benefit_id(수혜 정보 고유 id)
