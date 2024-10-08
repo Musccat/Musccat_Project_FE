@@ -215,7 +215,19 @@ const Notice_ = () => {
                     <Icon src={Loudspeaker} alt="Loudspeaker Icon" />
                     <Title2> 이런 사람이 장학금을 받았어요!</Title2>
                 </TitleWithIcon>
-                <p>대체적으로 가정형편이 좋지 않거나 소득 분위가 낮은 학생들이 많이 수혜했어요. 지원서 제출은 물론 면접도 있기 때문에 지원서 내용을 잘 익히고 면접에서 떨지 않고 잘 말한 사람들이 많이 합격했어요. </p>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                <strong style={{ color: "#2f4f5f", marginRight: "10px", minWidth: "70px" }}>합격팁</strong>
+                <p style={{ margin: 0, textAlign: "justify" }}> 
+                    대체적으로 가정형편이 좋지 않거나 소득 분위가 낮은 학생들이 많이 수혜했어요.대체적으로 가정형편이 좋지 않거나 소득 분위가 낮은 학생들이 많이 수혜했어요.대체적으로 가정형편이 좋지 않거나 소득 분위가 낮은 학생들이 많이 수혜했어요. 
+                </p> 
+                </div>
+                <br/>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                <strong style={{ color: "#2f4f5f", marginRight: "10px", minWidth: "70px" }}>면접팁</strong>
+                <p style={{ margin: 0, textAlign: "justify" }}> 
+                    지원서 제출은 물론 면접도 있기 때문에 지원서 내용을 잘 익히고 면접에서 떨지 않고 잘 말한 사람들이 많이 합격했어요.대체적으로 가정형편이 좋지 않거나 소득 분위가 낮은 학생들이 많이 수혜했어요. 
+                </p>
+                </div>
             </HighlightBox>
             <WarningBox>
                 <Title3> 신청할 때는 각 장학금의 세부적인 기준과 마감일을 다시 한번 확인하시기 바랍니다.</Title3>
