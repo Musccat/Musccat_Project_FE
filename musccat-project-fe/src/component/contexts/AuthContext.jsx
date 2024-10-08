@@ -50,23 +50,6 @@ export const AuthProvider = ({ children }) => {
                 }
             });
 
-            const residence = response.data.residence ? response.data.residence.split(' ') : ['', ''];
-
-            // etc 필드에서 데이터를 받아 familyStatus와 additionalInfo로 분리
-            const etc = response.data.etc || '';
-            let familyStatus = '';
-            let additionalInfo = '';
-
-            if (etc) {
-                const parts = etc.split(', ');
-                if (parts.length > 0) {
-                    familyStatus = parts[0].replace(/\(familyStatus값\)/g, ''); // familyStatus값 추출
-                }
-                if (parts.length > 1) {
-                    additionalInfo = parts[1].replace(/\(additionalInfo값\)/g, ''); // additionalInfo값 추출
-                }
-            }
-
             setUser({
                 id: response.data.id,
                 username: response.data.username,
@@ -75,8 +58,67 @@ export const AuthProvider = ({ children }) => {
                 birth: response.data.birth,
                 age: response.data.age,
                 email: response.data.email,
+            });
+        } catch (error) {
+            console.error("Failed to fetch user data", error);
+        }
+    };
+
+    const updateUser = async (updatedData) => {
+        try {
+            // familyStatus와 additionalInfo를 JSON 형식으로 저장
+            const etc = JSON.stringify({
+                familyStatus: updatedData.familyStatus || '',
+                additionalInfo: updatedData.additionalInfo || ''
+            });
+    
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/userinfo/mypage/`, {
+                ...updatedData,
+                etc // etc 필드에 JSON 형식으로 저장
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+    
+            if (response.status === 200) {
+                await fetchUpdatedUserData();
+                alert("사용자 정보가 성공적으로 업데이트되었습니다.");
+            } else {
+                alert("사용자 정보를 업데이트하는 데 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("사용자 정보 업데이트 중 오류 발생", error);
+        }
+    };
+
+    // 새로운 사용자 데이터를 불러오는 함수
+    const fetchUpdatedUserData = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/mypage/update/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            });
+            const residence = response.data.residence ? response.data.residence.split(' ') : ['', ''];
+
+            // etc 필드를 JSON으로 파싱하여 familyStatus와 additionalInfo를 추출
+            let familyStatus = '';
+            let additionalInfo = '';
+            if (response.data.etc) {
+                try {
+                    const etcData = JSON.parse(response.data.etc);
+                    familyStatus = etcData.familyStatus || ''; // familyStatus 값 설정
+                    additionalInfo = etcData.additionalInfo || ''; // additionalInfo 값 설정
+                } catch (err) {
+                    console.error("Failed to parse etc field", err);
+                }
+            }
+
+            setUser((prevUser) => ({
+                ...prevUser,
                 gender: response.data.gender,
-                region: residence[0],  
+                region: residence[0],
                 district: residence[1],
                 residence: response.data.residence,
                 income: response.data.income,
@@ -86,33 +128,15 @@ export const AuthProvider = ({ children }) => {
                 major: response.data.major,
                 semester: response.data.semester,
                 totalGPA: response.data.totalGPA,
-                familyStatus: familyStatus.split(', '),  
-                additionalInfo: additionalInfo || '',  
-                etc: response.data.etc || ''
-            });
+                familyStatus: familyStatus.split(', '),
+                additionalInfo: additionalInfo || '',
+                etc: response.data.etc || '',
+            }));
         } catch (error) {
-            console.error("Failed to fetch user data", error);
+            console.error("Failed to fetch updated user data", error);
         }
     };
 
-    const updateUser = async (updatedData) => {
-        try {
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/userinfo/mypage/update/`, updatedData, {
-                headers: {
-                    Authorization: `Bearer ${authTokens.access}`
-                }
-            });
-            if (response.status === 200) {
-                await fetchUserData(); // 서버에서 갱신된 정보를 다시 불러옴
-                alert("사용자 정보가 성공적으로 업데이트되었습니다.");
-            } else {
-                alert("사용자 정보를 업데이트하는 데 실패했습니다.");
-            }
-        } catch (error) {
-            console.error("사용자 정보 업데이트 중 오류 발생", error);
-            
-        }
-    };
     const fetchFoundations = async () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/reviews/foundations/`, {
@@ -578,6 +602,7 @@ export const AuthProvider = ({ children }) => {
         registerUser,
         fetchUserData,
         updateUser,
+        fetchUpdatedUserData,
         logoutUser,
         isAuthenticated,
         addBenefitInfo,
