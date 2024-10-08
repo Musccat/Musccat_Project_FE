@@ -349,6 +349,26 @@ const MemInfo = () => {
         navigate("/users/mypage", { state: { isInfoSubmitted: true } });
     };
 
+    // const handleTotalGPAChange = (e) => {
+    //     let value = e.target.value;
+    
+    //     // 음수값 또는 4.5 이상일 경우 값을 빈 값으로 설정
+    //     if (value < 0 || value > 4.5) {
+    //         value = "";  // Clear the value
+    //     } else {
+    //         // 소수점 둘째 자리까지만 유지
+    //         if (value.includes('.')) {
+    //             const [integerPart, decimalPart] = value.split('.');
+    //             if (decimalPart.length > 2) {
+    //                 value = `${integerPart}.${decimalPart.substring(0, 2)}`;
+    //             }
+    //         }
+    //     }
+    //     setFormData({
+    //         ...formData,
+    //         totalGPA: value,
+    //     });
+    // };
     const handleTotalGPAChange = (e) => {
         let value = e.target.value;
     
@@ -364,9 +384,10 @@ const MemInfo = () => {
                 }
             }
         }
+    
         setFormData({
             ...formData,
-            totalGPA: value,
+            totalGPA: value === "" ? "" : parseFloat(value),  // 숫자로 변환하여 저장
         });
     };
 
@@ -625,7 +646,7 @@ const MemInfo = () => {
                     />
                 </FormGroup>
 
-                <FormGroup>
+                {/* <FormGroup>
                     <label>전체 성적<RequiredIndicator>*</RequiredIndicator></label>
                     <input 
                         type="number" 
@@ -633,6 +654,19 @@ const MemInfo = () => {
                         value={formData.totalGPA} 
                         onChange={handleTotalGPAChange} 
                         placeholder="전체 성적"
+                    />
+                </FormGroup> */}
+                <FormGroup>
+                    <label>전체 성적<RequiredIndicator>*</RequiredIndicator></label>
+                    <input 
+                        type="number"  // 숫자 입력 필드로 설정
+                        name="totalGPA" 
+                        value={formData.totalGPA} 
+                        onChange={handleTotalGPAChange} 
+                        placeholder="전체 성적"
+                        step="0.01"  // 소수점 두 자리까지 허용
+                        min="0" 
+                        max="4.5" 
                     />
                 </FormGroup>
 
