@@ -200,7 +200,6 @@ const MemInfo = () => {
         fullname: user?.fullname || '',
         username: user?.username || '',
         birth: `${user?.birthYear}-${user?.birthMonth}-${user?.birthDay}` || '',
-        age: user?.age || '',
         email: user?.email || '',
         nickname: user?.nickname || '',
         gender: '',
@@ -254,7 +253,6 @@ const MemInfo = () => {
                     username: user.username,
                     birth: user.birth,
                     email: user.email,
-                    age: user.age,
                     nickname: prevData.nickname !== '' ? prevData.nickname : user.nickname || '', 
                     gender: user.gender || '',
                     region: region || '',
@@ -459,11 +457,6 @@ const MemInfo = () => {
                 <FormGroup>
                     <label>생년월일</label>
                     <div className="valueDisplay">{user?.birth}</div>
-                </FormGroup>
-
-                <FormGroup>
-                    <label>나이</label>
-                    <div className="valueDisplay">{user?.age}</div>
                 </FormGroup>
 
                 <FormGroup>

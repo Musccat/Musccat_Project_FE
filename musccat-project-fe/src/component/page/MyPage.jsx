@@ -147,7 +147,6 @@ const MyPage = () => {
     const [fullName, setFullName] = useState('');
     const [userName, setUserName] = useState('');
     const [userBirthdate, setUserBirthdate] = useState('');
-    const [age, setUserAge] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userNickname, setUserNickname] = useState('');
     const [userGender, setUserGender] = useState('');
@@ -173,7 +172,6 @@ const MyPage = () => {
                 setUserName(user.username);
                 setUserNickname(user.nickname);
                 setUserBirthdate(user.birth);
-                setUserAge(user.age);
                 setUserGender(user.gender);
                 setUserEmail(user.email);
             }
@@ -269,11 +267,6 @@ const MyPage = () => {
                         <InfoItem>
                             <span>생년월일</span>
                             <span>{userBirthdate}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
-                            <span>나이</span>
-                            <span>{age}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
