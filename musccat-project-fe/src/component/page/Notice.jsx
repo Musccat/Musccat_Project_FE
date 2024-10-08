@@ -271,8 +271,19 @@ const Notice = () => {
                     <Icon src={Loudspeaker} alt="Loudspeaker Icon" />
                     <Title2> 이런 사람이 장학금을 받았어요!</Title2>
                 </TitleWithIcon>
-                <p>{scholarship?.gpt_success_tips || '정보 없음'}</p>
-                <p>{scholarship?.gpt_interview_tips || '정보 없음'}</p>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                <strong style={{ color: "#2f4f5f", marginRight: "10px", minWidth: "70px" }}>합격팁</strong>
+                <p style={{ margin: 0, textAlign: "justify" }}>
+                    {scholarship?.gpt_success_tips || '정보 없음'}
+                </p> 
+                </div>
+                <br/>
+                <div style={{ display: "flex", alignItems: "flex-start" }}>
+                <strong style={{ color: "#2f4f5f", marginRight: "10px", minWidth: "70px" }}>면접팁 </strong>
+                <p style={{ margin: 0, textAlign: "justify" }}>
+                    {scholarship?.gpt_interview_tips || '정보 없음'}
+                </p>
+                </div>
             </HighlightBox>
             <WarningBox>
                 <Title3> 신청할 때는 각 장학금의 세부적인 기준과 마감일을 다시 한번 확인하시기 바랍니다.</Title3>

@@ -42,14 +42,25 @@ const styles = {
         display: "flex",
         width: "100%", 
         maxWidth: "600px", 
-        position: "relative"
+        position: "relative",
+        overflow: "hidden", // 직사각형 오른쪽을 잘 보이게 처리
     },
     searchInput: {
         flex: 1,
         padding: "10px 40px 10px 20px", 
         fontSize: "16px",
         border: "3px solid #2f4f5f", 
-        borderRadius: "25px" 
+        borderRadius: "25px 0 0 25px", // 오른쪽을 직사각형으로
+        marginLeft: "0", // 버튼이 입력창과 바로 붙도록
+    },
+    searchButton: {
+        padding: "10px 20px",
+        backgroundColor: "#2f4f5f",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginLeft: "10px"
     },
     dropdown: {  
         position: "absolute",
@@ -263,8 +274,6 @@ function EntireScholar() {
     // 상태 관리
     const { fetchScholarships, 
             handleLikeClick,
-            fetchScholarshipsByNameOrFoundation,
-            fetchScholarshipsByFoundation,
             likes, 
             scholarships,
             currentPage,
@@ -274,8 +283,7 @@ function EntireScholar() {
             totalPages,
         } = useAuth();
 
-    const [searchTerm, setSearchTerm] = useState(''); // 사용자가 입력한 검색어
-    const [suggestions, setSuggestions] = useState([]); // 자동완성 제안 목록
+    const [searchTerm, setSearchTerm] = useState(''); // 단일 검색어 상태
     const [filteredScholarships, setFilteredScholarships] = useState(scholarships); // 필터링된 장학금 목록
 
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -357,9 +365,8 @@ function EntireScholar() {
 
 
     useEffect(() => {
-        setIsLoading(true);  // 데이터를 가져오기 시작할 때 로딩 상태로 전환
-        fetchScholarships(currentPage)  // 데이터를 가져오는 비동기 함수 호출
-            .finally(() => setIsLoading(false));  // 데이터 가져오기가 끝나면 로딩 상태 해제ships(currentPage); 
+        setIsLoading(true);  
+        fetchScholarships(currentPage, searchTerm).finally(() => setIsLoading(false));  
     }, [currentPage]);
     
     useEffect(() => {
@@ -368,38 +375,14 @@ function EntireScholar() {
         }
     }, [scholarships]);
 
-
-    const handleSearchChange = async (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-    
-        if (value.length > 0) {
-            try {
-                // 장학 사업명과 재단명을 모두 검색
-                const { scholarshipsByName, scholarshipsByFoundation } = await fetchScholarshipsByNameOrFoundation(value);
-    
-                // 자동완성 제안 목록을 장학 사업명과 재단명을 합쳐서 설정
-                const scholarshipNames = scholarshipsByName.map(s => s.name);
-                const foundationScholarships = scholarshipsByFoundation.map(s => s.name);
-    
-                setSuggestions([...scholarshipNames, ...foundationScholarships]);
-            } catch (error) {
-                console.error("Error fetching suggestions:", error);
-            }
-        } else {
-            setSuggestions([]); // 검색어가 없을 경우 자동완성 목록 숨기기
-        }
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);  // 검색어 설정
     };
-    
 
-
-    const handleSuggestionClick = async (suggestion) => {
-        setSearchTerm(suggestion); // 선택된 제안으로 검색창을 업데이트
-        setSuggestions([]); // 제안을 숨김
-    
-        // 선택된 장학 재단명에 해당하는 모든 장학금 필터링
-        const filteredScholarships = await fetchScholarshipsByFoundation(suggestion);
-        setFilteredScholarships(filteredScholarships);
+    // 검색 버튼 클릭 시 검색 수행
+    const handleSearchButtonClick = async () => {
+        setCurrentPage(1);  // 검색 시 첫 페이지로 이동
+        await fetchScholarships(1, '', '', searchTerm).finally(() => setIsLoading(false));  // 검색어에 맞는 장학금 목록 가져오기
     };
 
     // 장학금 유형 선택 시 호출될 함수 추가
@@ -462,7 +445,6 @@ function EntireScholar() {
 
     const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
 
-
     return (
         <>
             <NavBar />
@@ -474,24 +456,17 @@ function EntireScholar() {
                     <>
                 <div style={styles.searchBarContainer}>
                     <div style={styles.searchBar}>
-                        <input type="text" 
-                        placeholder="장한 재단명, 장학 사업명 검색" 
-                        style={styles.searchInput}
-                        value={searchTerm} 
-                        onChange={handleSearchChange} 
+                        <input 
+                            type="text" 
+                            placeholder="장학 사업명 검색" 
+                            //placeholder="장학 사업명 또는 장학 재단명 검색"
+                            style={styles.searchInput}
+                            value={searchTerm}
+                            onChange={handleSearchChange} 
                         />
-                    {suggestions.length > 0 && (
-                        <div style={styles.dropdown}>
-                            {suggestions.map((suggestion, index) => (
-                                <div 
-                                    key={index} 
-                                    onClick={() => handleSuggestionClick(suggestion)} 
-                                    style={{ padding: "10px", cursor: "pointer" }}>
-                                    {suggestion}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                        <button style={styles.searchButton} onClick={handleSearchButtonClick}>
+                            검색
+                        </button>
                     </div>
                 </div>
             <div style={styles.buttonContainer}>

@@ -322,11 +322,11 @@ const MemInfo = () => {
             }
         }
 
-        // familyStatus 배열을 쉼표로 구분된 문자열로 변환
+        // familyStatus 배열을 콤마로 구분된 문자열로 변환하고, 추가 정보와 함께 etc 문자열로 결합
         const familyStatusStr = formData.familyStatus.join(', ');
-
-        // etc 변수에 familyStatus와 additionalInfo를 하나의 문자열로 합치기
-        const etc = `${familyStatusStr}(${formData.familyStatus.length > 0 ? 'familyStatus값' : ''}), ${formData.additionalInfo}(additionalInfo값)`;
+        const etc = familyStatusStr 
+            ? `${familyStatusStr}, ${formData.additionalInfo}` 
+            : formData.additionalInfo;
 
         console.log(formData);
 

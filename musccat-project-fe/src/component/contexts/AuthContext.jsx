@@ -146,7 +146,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const fetchScholarships = async (page = 1, typeOption = '', sortOption = '', searchTerm = '') => {
+    const fetchScholarships = async (page = 1, typeOption = '', sortOption = '', searchTerm = '', foundationName = '') => {
         setIsLoading(true);  // 로딩 시작
         try {
             let url = `${process.env.REACT_APP_API_URL}/entirescholar/?page=${page}`;
@@ -161,9 +161,14 @@ export const AuthProvider = ({ children }) => {
                 url += `&ordering=${encodeURIComponent(sortOption)}`;
             }
 
-            // 검색어 추가
+            // 사업명 검색 추가
             if (searchTerm) {
                 url += `&name=${encodeURIComponent(searchTerm)}`;
+            }
+
+            // 재단명 검색 추가
+            if (foundationName) {
+                url += `&foundationname=${encodeURIComponent(foundationName)}`;
             }
 
             const response = await axios.get(url, {
@@ -210,37 +215,7 @@ export const AuthProvider = ({ children }) => {
             }
         }
     };
-
-
-    const fetchScholarshipsByNameOrFoundation = async (searchTerm) => {
-        try {
-            // 장학 사업명으로 검색
-            const nameResponse = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?name=${searchTerm}`, {
-                headers: {
-                    Authorization: `Bearer ${authTokens.access}`,
-                },
-            });
     
-            // 장학 재단명으로 검색
-            const foundationResponse = await axios.get(`${process.env.REACT_APP_API_URL}/entirescholar/?foundation_name=${searchTerm}`, {
-                headers: {
-                    Authorization: `Bearer ${authTokens.access}`,
-                },
-            });
-    
-            return {
-                scholarshipsByName: nameResponse.data,
-                scholarshipsByFoundation: foundationResponse.data,
-            };
-        } catch (error) {
-            console.error("Error fetching scholarships by name or foundation:", error);
-            return { scholarshipsByName: [], scholarshipsByFoundation: [] };
-        }
-    };
-
-    
-    
-
     const handleLikeClick = async (index, scholarshipId) => {
         const newLikes = [...likes];
         const isLiked = newLikes[index];
@@ -592,7 +567,6 @@ export const AuthProvider = ({ children }) => {
         fetchScholarships,
         goToNextPage,
         goToPreviousPage,
-        fetchScholarshipsByNameOrFoundation,
         scholarships,
         handleLikeClick,
         fetchLikedScholarships,
