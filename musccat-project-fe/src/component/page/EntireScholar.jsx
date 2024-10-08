@@ -6,6 +6,7 @@ import styled from "styled-components";
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 
+
 const styles = {
     wrapper: {  
         display: "flex",
@@ -258,7 +259,7 @@ const Dropdown2 = styled.div`
     width: 180px;
 `;
 
-function EntireScholar(props) {
+function EntireScholar() {
     // 상태 관리
     const { fetchScholarships, 
             handleLikeClick,
@@ -266,15 +267,10 @@ function EntireScholar(props) {
             fetchScholarshipsByFoundation,
             likes, 
             scholarships,
-            setScholarships,
-            filterScholarshipsByType,
-            fetchScholarshipsByOrder,
-            goToNextPage, 
-            goToPreviousPage, 
             currentPage,
             setCurrentPage, 
-            nextPageUrl, 
-            previousPageUrl,
+            goToNextPage, 
+            goToPreviousPage,
             totalPages,
         } = useAuth();
 
@@ -310,35 +306,57 @@ function EntireScholar(props) {
         }
     };
 
+    const handleNextPage = async () => {
+        if (currentPage < pageRange.end) {
+            goToNextPage(); // 다음 페이지로 이동
+        } else {
+            await handleNextRange(); // 페이지 범위가 끝났을 때는 범위 변경
+        }
+    };
+
+    const handlePreviousPage = async () => {
+        if (currentPage > pageRange.start) {
+            goToPreviousPage(); // 이전 페이지로 이동
+        } else {
+            await handlePreviousRange(); // 페이지 범위가 시작점일 때는 범위 변경
+        }
+    };
+
     const handleNextRange = async () => {
         const newStart = pageRange.end + 1;
+        const newEnd = Math.min(newStart + 4, totalPages);
+
         if (newStart <= totalPages) {
-            // 백엔드에서 새로운 페이지 데이터를 가져옴
-            await fetchScholarships(newStart);  // 새로운 페이지로 장학금 데이터 불러오기
             setPageRange({
                 start: newStart,
-                end: Math.min(newStart + 4, totalPages),
-        });
-        setCurrentPage(newStart);
-    }
+                end: newEnd
+            });
+
+            setCurrentPage(newStart);
+
+            await fetchScholarships(newStart);
+        }
     };
 
     const handlePreviousRange = async () => {
         const newEnd = pageRange.start - 1;
+        const newStart = Math.max(1, newEnd - 4);
+
         if (newEnd >= 1) {
-            // 백엔드에서 새로운 페이지 데이터를 가져옴
-            await fetchScholarships(newEnd);  // 이전 페이지로 장학금 데이터 불러오기
             setPageRange({
-                start: Math.max(1, newEnd - 4),
-                end: newEnd,
+                start: newStart,
+                end: newEnd
             });
-        setCurrentPage(newEnd);
+
+            setCurrentPage(newEnd);
+
+            await fetchScholarships(newEnd);
         }
     };
 
 
+
     useEffect(() => {
-        // currentPage 변경 시에만 fetchScholarships 호출
         setIsLoading(true);  // 데이터를 가져오기 시작할 때 로딩 상태로 전환
         fetchScholarships(currentPage)  // 데이터를 가져오는 비동기 함수 호출
             .finally(() => setIsLoading(false));  // 데이터 가져오기가 끝나면 로딩 상태 해제ships(currentPage); 
@@ -349,21 +367,6 @@ function EntireScholar(props) {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
     }, [scholarships]);
-
-    // 필터링 적용
-    useEffect(() => {
-        if (typeOption !== '장학금 유형구분' && typeOption !== '') {
-            const filtered = filterScholarshipsByType(typeOption);
-            setFilteredScholarships(filtered);
-        }
-    }, [typeOption, filterScholarshipsByType]);
-
-    // 정렬
-    useEffect(() => {
-        if (sortOption !== '장학금 정렬' && sortOption !== '') {
-            fetchScholarshipsByOrder(sortOption);  // 선택된 정렬 옵션에 맞춰 데이터 로드
-        }
-    }, [sortOption, fetchScholarshipsByOrder]);
 
 
     const handleSearchChange = async (e) => {
@@ -403,6 +406,9 @@ function EntireScholar(props) {
     const handleTypeOptionClick = (option) => {
         setTypeOption(option);  // 선택된 유형을 저장
         setTypeDropdownVisible(false);  // 드롭다운 닫기
+    
+        // 선택된 유형을 기준으로 장학금을 다시 가져오는 로직
+        fetchScholarships(currentPage, option, sortOption, searchTerm);
     };
 
 
@@ -430,7 +436,7 @@ function EntireScholar(props) {
     }
 
     // AuthContext에서 정렬 함수 호출
-    fetchScholarshipsByOrder(orderOption);
+    fetchScholarships(currentPage, '', orderOption, searchTerm);
 
     };
 
@@ -586,7 +592,7 @@ function EntireScholar(props) {
                  {/* 이전 페이지 화살표 */}
                 {pageRange.start > 1 ? (
                     <span onClick={() => {
-                        handlePreviousRange();
+                        handlePreviousPage();
                     }}>
                         <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
                     </span>
@@ -638,7 +644,7 @@ function EntireScholar(props) {
                     {currentPage < totalPages ? (
                             <span onClick={() => {
                                 // 범위 끝에 도달했을 때만 다음 범위로 이동
-                                handleNextRange(); 
+                                handleNextPage(); 
                             }}>
                                 <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
                             </span>
