@@ -142,12 +142,11 @@ const Space = styled.div`
 const MyPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const {  user, fetchUserData, fetchUpdatedUserData } = useAuth();
+    const {  user, fetchUserData } = useAuth();
 
     const [fullName, setFullName] = useState('');
     const [userName, setUserName] = useState('');
     const [userBirthdate, setUserBirthdate] = useState('');
-    const [age, setUserAge] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userNickname, setUserNickname] = useState('');
     const [userGender, setUserGender] = useState('');
@@ -173,7 +172,6 @@ const MyPage = () => {
                 setUserName(user.username);
                 setUserNickname(user.nickname);
                 setUserBirthdate(user.birth);
-                setUserAge(user.age);
                 setUserGender(user.gender);
                 setUserEmail(user.email);
             }
@@ -185,29 +183,16 @@ const MyPage = () => {
 
      // 추가 정보는 isInfoSubmitted가 true일 때만 updateUser로 불러옴
     useEffect(() => {
-        const savedInfoSubmitted = localStorage.getItem("isInfoSubmitted");
-        if (savedInfoSubmitted) {
-            setIsInfoSubmitted(JSON.parse(savedInfoSubmitted));
-        }
+        if (user) {
+            setFullName(user.fullname);
+            setUserName(user.username);
+            setUserNickname(user.nickname);
+            setUserBirthdate(user.birth);
+            setUserGender(user.gender);
+            setUserEmail(user.email);
 
-        if (location.state && location.state.isInfoSubmitted) {
-            setIsInfoSubmitted(true);
-            localStorage.setItem("isInfoSubmitted", JSON.stringify(true)); // 상태 저장
-        }
-
-        const fetchAdditionalInfo = async () => {
-            if (isInfoSubmitted) {
-                await fetchUpdatedUserData();  // 추가 정보를 업데이트
-            }
-        };
-
-        fetchAdditionalInfo();
-    }, [location.state, isInfoSubmitted, fetchUpdatedUserData]);
-
-    useEffect(() => {
-        if (user && isInfoSubmitted) {
-            // updateUser로 받은 데이터로 설정
-            setUserResidence(user.residence);
+            const residence = user.residence ? user.residence : '';
+            setUserResidence(residence);
             setIncome(user.income);
             setUnivCategory(user.univ_category);
             setUniversity(user.university);
@@ -215,12 +200,20 @@ const MyPage = () => {
             setMajor(user.major);
             setSemester(user.semester);
             setTotalGPA(user.totalGPA);
-            setFamilyStatus(user.familyStatus || []);
-            setAdditionalInfo(user.additionalInfo || '');
+            setFamilyStatus(user.familyStatus);
+            setAdditionalInfo(user.additionalInfo);
         }
-    }, [user, isInfoSubmitted]);
+    }, [user]);
+
+    useEffect(() => {
+        const infoSubmitted = localStorage.getItem('isInfoSubmitted') === 'true';
+        if (infoSubmitted) {
+            setIsInfoSubmitted(true);
+        }
+    }, []);
 
     const handleNewInfoClick = () => {
+        localStorage.setItem('isInfoSubmitted', true);
         navigate("/users/meminfo", { state: { isInfoSubmitted } });
     };
 
@@ -269,11 +262,6 @@ const MyPage = () => {
                         <InfoItem>
                             <span>생년월일</span>
                             <span>{userBirthdate}</span>
-                            <Space />
-                        </InfoItem>
-                        <InfoItem>
-                            <span>나이</span>
-                            <span>{age}</span>
                             <Space />
                         </InfoItem>
                         <InfoItem>
