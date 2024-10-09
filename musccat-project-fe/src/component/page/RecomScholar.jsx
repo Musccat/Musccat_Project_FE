@@ -187,64 +187,53 @@ const Title = styled.h2`
 
 
 function RecomScholar(props) {
-// 상태 관리
 
-//const [dropdownVisible, setDropdownVisible] = useState(false);
+const { user, scholarships, setScholarships, loadScholarships, fetchUserData, likes, handleLikeClick, authTokens  } = useAuth(); 
+const [isLoading, setIsLoading] = useState(true);
+const [hasFetchedData, setHasFetchedData] = useState(false); // 데이터가 이미 로드되었는지 확인
 
-//const [sortOption, setSortOption] = useState('모집 시작 - 최신순');
-//const [otherOptions, setOtherOptions] = useState(['모집 시작 - 오래된 순', '모집 종료 - 최신순', '모집 종료 - 오래된 순']);
+    // 사용자 데이터와 장학금 데이터 불러오기
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                // 사용자 데이터가 없으면 불러오기
+                if (authTokens && !user) {
+                    await fetchUserData();
+                }
 
-//const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
-//const [typeOption, setTypeOption] = useState('장학금 전체');
-//const [filteredScholarships, setFilteredScholarships] = useState([]);
+                // 장학금 데이터 불러오기
+                const scholarshipsData = await loadScholarships();
+                console.log("Scholarships data:", scholarshipsData);
+                if (Array.isArray(scholarshipsData)) {
+                    setScholarships(scholarshipsData);
+                    console.log("Scholarships loaded:", scholarshipsData);
+                } else {
+                    console.error("Scholarships data is not an array");
+                }
+                setHasFetchedData(true);
+            } catch (error) {
+                console.error("Failed to load data", error);
+            } finally {
+                setIsLoading(false); // 로딩 종료
+            }
+        };
 
-const { user, fetchRecommendedScholarships, likes, handleLikeClick, filterScholarshipsByType } = useAuth(); 
-const [scholarships, setScholarships] = useState([]);
-const userFullName = user ? user.fullName : '사용자';
+        // authTokens가 존재하고, 데이터가 로드되지 않았으면 fetchData 실행
+        if (authTokens && !hasFetchedData) {
+            fetchData();
+        }
+    }, [authTokens, user, fetchUserData, loadScholarships, hasFetchedData]);
 
-useEffect(() => {
-    fetchRecommendedScholarships()
-        .then(fetchedScholarships => {
-            console.log("Scholarships fetched:", fetchedScholarships); 
-            setScholarships(fetchedScholarships);
-        })
-        .catch(error => {
-            console.error("Error fetching scholarships:", error);
-        });
-}, []);
+    useEffect(() => {
+        loadScholarships();  // 컴포넌트가 마운트될 때 장학금 데이터를 불러옴
+    }, [loadScholarships]);
 
-useEffect(() => {
-    console.log("scholarships after state update:", scholarships);
-}, [scholarships]);
+    // 로딩 중일 때 보여줄 UI
+    if (isLoading) {
+        return <div>로딩 중...</div>;
+    }
 
-/*
-
-useEffect(() => {
-    const filtered = filterScholarshipsByType(typeOption);
-    setFilteredScholarships(filtered);
-}, [scholarships, typeOption, filterScholarshipsByType]);
-
-const toggleDropdown = () => {
-    setDropdownVisible(!dropdownVisible);
-};
-
-const toggleTypeDropdown = () => {
-    setTypeDropdownVisible(!typeDropdownVisible);
-};
-*/
-
-/*const handleSortOptionClick = (option) => {
-    setOtherOptions([sortOption, ...otherOptions.filter(opt => opt !== option)]);
-    setSortOption(option);
-    setDropdownVisible(false);
-};
-*/
-
-/*const handleTypeOptionClick = (option) => {
-    setTypeOption(option);
-    setTypeDropdownVisible(false);
-};
-*/
 
 return (
     <>
@@ -252,45 +241,7 @@ return (
             <div style={styles.wrapper}>
                 <div style={styles.container}>
                 <div style={styles.outerContainer}>
-                    <h1 style={styles.header}><span style={styles.highlight}>{userFullName}</span> 님의 추천 장학금</h1>
-                    {/*
-                    <div style={styles.buttonContainer}>
-                    <SortButtonContainer>
-                        <SortButton bgColor="#2F6877" onClick={toggleTypeDropdown}>
-                            {typeOption} ▼
-                        </SortButton>
-                        {typeDropdownVisible && (
-                            <Dropdown>
-                                {['장학금 전체', '지역연고', '성적우수', '소득구분', '특기자', '기타'].map((option, index) => (
-                                    <DropdownItem
-                                        key={index}
-                                        onClick={() => handleTypeOptionClick(option)}
-                                    >
-                                        {option}
-                                    </DropdownItem>
-                                ))}
-                            </Dropdown>
-                            )}
-                        </SortButtonContainer>
-                        <SortButtonContainer>
-                            <SortButton onClick={toggleDropdown}>
-                                {sortOption} ▼
-                            </SortButton>
-                            {dropdownVisible && (
-                                <Dropdown>
-                                    {otherOptions.map((option, index) => (
-                                        <DropdownItem
-                                            key={index}
-                                            onClick={() => handleSortOptionClick(option)}
-                                        >
-                                            {option}
-                                        </DropdownItem>
-                                    ))}
-                                </Dropdown>
-                            )}
-                        </SortButtonContainer>
-                    </div>
-                    */}
+                    <h1 style={styles.header}><span style={styles.highlight}>{user.fullname}</span> 님의 추천 장학금</h1>
 
                     <div style={styles.tableContainer}>
                         <table style={styles.table}>
@@ -303,22 +254,32 @@ return (
                                 </tr>
                             </thead>
                             <tbody>
-                            {Array.isArray(scholarships) && scholarships.length > 0 ? (
-                                        scholarships.map((item, index) => (
+                                {isLoading ? (
+                                    <tr>
+                                        <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                                            로딩 중...
+                                        </td>
+                                    </tr>
+                                ) : scholarships && scholarships.length > 0 ? (
+                                    scholarships.map((item, index) => (
                                         <tr key={index}>
                                             <td style={styles.thTd}>{item.scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
-                                                <ScholarshipLink to={`/notice/${item.product_id}`}>{item.scholarship.name}</ScholarshipLink>
+                                                <ScholarshipLink to={`/notice/${item.scholarship.product_id}`}>
+                                                    {item.scholarship.name}
+                                                </ScholarshipLink>
                                             </td>
-                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{item.scholarship.recruitment_end}</td>
+                                            <td style={{ ...styles.thTd, paddingRight: "90px" }}>
+                                                ~{item.scholarship.recruitment_end}
+                                            </td>
                                             <td style={styles.thTd}>
                                                 <div style={styles.flexContainer}>
-                                                <Link to={`/reviews/${item.product_id}`} style={{ textDecoration: 'none' }}>
+                                                <Link to={`/reviews/view/${item.scholarship.product_id}`} style={{ textDecoration: 'none' }}>
                                                     <button style={styles.infoButton}>정보 보러가기</button>
                                                 </Link>
                                                     <button
                                                         style={styles.heartButton}
-                                                        onClick={() => handleLikeClick(index, item.product_id)}
+                                                        onClick={() => handleLikeClick(index, item.scholarship.product_id || item.product_id)}
                                                     >
                                                         <img
                                                             src={likes[index] ? filledheart : emptyheart}

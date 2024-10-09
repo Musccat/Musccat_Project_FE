@@ -307,10 +307,37 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
-            setScholarships(response.data); // 추천 장학금 목록을 상태에 저장
+            console.log("Response data:", response.data); 
+            if (response && response.data) {
+                return response.data; // 서버에서 받은 데이터 반환
+                console.log("Response data:", response.data); 
+            } else {
+                console.error("Unexpected data format:", response);
+                return [];  // 데이터가 없을 경우 빈 배열 반환
+            }
         } catch (error) {
             console.error("Failed to fetch recommended scholarships", error);
+            return []; // 에러가 발생한 경우 빈 배열 반환
+        }
+    };
 
+    const loadScholarships = async () => {
+        try {
+            const data = await fetchRecommendedScholarships(); 
+            console.log("Scholarships data:", data); // 데이터가 어떻게 오는지 확인
+    
+            if (Array.isArray(data) && data.length > 0) {
+                setScholarships(data);  // 데이터를 상태에 저장
+                console.log("Scholarships set:", data);  // 저장된 데이터 확인
+            } else {
+                console.error("Unexpected data format or empty data:", data);  // 데이터가 배열이 아니거나 빈 배열일 경우
+                setScholarships([]);  // 빈 배열로 설정
+            }
+        } catch (error) {
+            console.error("Failed to load scholarships", error);
+            setScholarships([]);  // 오류가 발생한 경우 빈 배열 설정
+        } finally {
+            setIsLoading(false);  // 로딩 완료
         }
     };
     
@@ -583,6 +610,7 @@ export const AuthProvider = ({ children }) => {
         RegisterScholarship,
         setScholarDate,
         fetchRecommendedScholarships, 
+        loadScholarships
     };
 
 /*
