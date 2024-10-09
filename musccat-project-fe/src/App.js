@@ -16,7 +16,7 @@ import Login from './component/page/Login';
 import Register from './component/page/Register';
 import MainPage from './component/page/MainPage';
 import EntireScholar from './component/page/EntireScholar';
-import RecomSchoalrDate from './component/page/RecomScholarDate';
+import RecomScholarDate from './component/page/RecomScholarDate';
 import RecomScholar from './component/page/RecomScholar';
 import RecomScholar_ from './component/page/RecomScholar_';
 import Notice from './component/page/Notice';
@@ -47,7 +47,7 @@ function App() {
           <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/recomscholar_" element={<RecomScholar_ />} /> {/*추천 장학금 목록 디자인 페이지 */}
-          <Route path="/recomscholardate" element={<RecomSchoalrDate />} /> {/*추천 장학금 목록 기한 설정 페이지 */}
+          <Route path="/recomscholardate" element={<RecomScholarDate />} /> {/*추천 장학금 목록 기한 설정 페이지 */}
           <Route path="/notice/:product_id" element={<Notice />} /> {/*장학금 공고 페이지 */}
           <Route path="/notice_" element={<Notice_ />} /> {/*장학금 공고 디자인 페이지 */}
           <Route path="/reviews/view/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
