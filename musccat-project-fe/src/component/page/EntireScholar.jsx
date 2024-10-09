@@ -369,7 +369,14 @@ function EntireScholar() {
 
     useEffect(() => {
         setIsLoading(true);  
-        fetchScholarships(currentPage, search).finally(() => setIsLoading(false));  
+        fetchScholarships(1, search).finally(() => setIsLoading(false));  
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (currentPage !== 1) {
+            setIsLoading(true);  
+            fetchScholarships(currentPage, search).finally(() => setIsLoading(false));  // 페이지 변경 시 해당 페이지의 장학금 목록 가져오기
+        }
     }, [currentPage]);
     
     useEffect(() => {
@@ -392,7 +399,9 @@ function EntireScholar() {
     const handleTypeOptionClick = (option) => {
         setTypeOption(option);  // 선택된 유형을 저장
         setTypeDropdownVisible(false);  // 드롭다운 닫기
-    
+
+        setCurrentPage(1);  // 첫 페이지로 이동
+
         // 선택된 유형을 기준으로 장학금을 다시 가져오는 로직
         fetchScholarships(currentPage, option, sortOption, search);
     };
@@ -402,29 +411,31 @@ function EntireScholar() {
         setSortOption(option);
         setDropdownVisible(false);
 
+        setCurrentPage(1);  // 첫 페이지로 이동
 
-    let orderOption = '';
-    switch (option) {
-        case '모집 종료 - 최신순':
-            orderOption = '-recruitment_end';
-            break;
-        case '모집 종료 - 오래된 순':
-            orderOption = 'recruitment_end';
-            break;
-        case '모집 시작 - 최신순':
-            orderOption = '-recruitment_start';
-            break;
-        case '모집 시작 - 오래된 순':
-            orderOption = 'recruitment_start';
-            break;
-        default:
-            orderOption = '';  // 기본값
-    }
 
-    // AuthContext에서 정렬 함수 호출
-    fetchScholarships(currentPage, '', orderOption, search);
+        let orderOption = '';
+        switch (option) {
+            case '모집 종료 - 최신순':
+                orderOption = '-recruitment_end';
+                break;
+            case '모집 종료 - 오래된 순':
+                orderOption = 'recruitment_end';
+                break;
+            case '모집 시작 - 최신순':
+                orderOption = '-recruitment_start';
+                break;
+            case '모집 시작 - 오래된 순':
+                orderOption = 'recruitment_start';
+                break;
+            default:
+                orderOption = '';  // 기본값
+        }
 
-    };
+        // AuthContext에서 정렬 함수 호출
+        fetchScholarships(1, typeOption, orderOption, search);
+
+        };
 
     const handleDropdownToggle = (dropdownType) => {
         if (dropdownType === 'sort') {
