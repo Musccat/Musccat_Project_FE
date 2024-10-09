@@ -359,9 +359,9 @@ function EntireScholar() {
                 end: newEnd
             });
 
-            setCurrentPage(newEnd);
+            setCurrentPage(newStart); 
 
-            await fetchScholarships(newEnd);
+            await fetchScholarships(newStart); 
         }
     };
 
@@ -580,9 +580,8 @@ function EntireScholar() {
             <div style={styles.pagination}>
                  {/* 이전 페이지 화살표 */}
                 {pageRange.start > 1 ? (
-                    <span onClick={() => {
-                        handlePreviousPage();
-                    }}>
+                    <span onClick=
+                        {handlePreviousRange}>
                         <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
                     </span>
                 ) : (
@@ -631,10 +630,7 @@ function EntireScholar() {
                     )}
 
                     {currentPage < totalPages ? (
-                            <span onClick={() => {
-                                // 범위 끝에 도달했을 때만 다음 범위로 이동
-                                handleNextPage(); 
-                            }}>
+                            <span onClick={handleNextRange}>
                                 <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
                             </span>
                         ) : (
