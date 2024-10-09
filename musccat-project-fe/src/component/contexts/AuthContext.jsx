@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
                 return;
             }
 
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/mypage/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/mypage/view/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
                 }
