@@ -311,12 +311,14 @@ function EntireScholar() {
     const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
             setCurrentPage(pageNumber); // 먼저 페이지 상태 업데이트
+            await fetchScholarships(pageNumber, '', '', searchTerm);  // 검색어가 있을 경우 검색어 유지
         }
     };
 
     const handleNextPage = async () => {
         if (currentPage < pageRange.end) {
             goToNextPage(); // 다음 페이지로 이동
+            await fetchScholarships(currentPage + 1, '', '', searchTerm);  // 검색어 유지
         } else {
             await handleNextRange(); // 페이지 범위가 끝났을 때는 범위 변경
         }
@@ -325,6 +327,7 @@ function EntireScholar() {
     const handlePreviousPage = async () => {
         if (currentPage > pageRange.start) {
             goToPreviousPage(); // 이전 페이지로 이동
+            await fetchScholarships(currentPage - 1, '', '', searchTerm);  // 검색어 유지
         } else {
             await handlePreviousRange(); // 페이지 범위가 시작점일 때는 범위 변경
         }
