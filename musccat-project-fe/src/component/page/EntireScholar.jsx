@@ -283,7 +283,7 @@ function EntireScholar() {
             totalPages,
         } = useAuth();
 
-    const [searchTerm, setSearchTerm] = useState(''); // 단일 검색어 상태
+    const [search, setSearch] = useState(''); // 단일 검색어 상태
     const [filteredScholarships, setFilteredScholarships] = useState(scholarships); // 필터링된 장학금 목록
 
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -311,14 +311,14 @@ function EntireScholar() {
     const handlePageClick = async (pageNumber) => {
         if (pageNumber !== currentPage) {
             setCurrentPage(pageNumber); // 먼저 페이지 상태 업데이트
-            await fetchScholarships(pageNumber, '', '', searchTerm);  // 검색어가 있을 경우 검색어 유지
+            await fetchScholarships(pageNumber, '', '', search);  // 검색어가 있을 경우 검색어 유지
         }
     };
 
     const handleNextPage = async () => {
         if (currentPage < pageRange.end) {
             goToNextPage(); // 다음 페이지로 이동
-            await fetchScholarships(currentPage + 1, '', '', searchTerm);  // 검색어 유지
+            await fetchScholarships(currentPage + 1, '', '', search);  // 검색어 유지
         } else {
             await handleNextRange(); // 페이지 범위가 끝났을 때는 범위 변경
         }
@@ -327,7 +327,7 @@ function EntireScholar() {
     const handlePreviousPage = async () => {
         if (currentPage > pageRange.start) {
             goToPreviousPage(); // 이전 페이지로 이동
-            await fetchScholarships(currentPage - 1, '', '', searchTerm);  // 검색어 유지
+            await fetchScholarships(currentPage - 1, '', '', search);  // 검색어 유지
         } else {
             await handlePreviousRange(); // 페이지 범위가 시작점일 때는 범위 변경
         }
@@ -359,9 +359,9 @@ function EntireScholar() {
                 end: newEnd
             });
 
-            setCurrentPage(newEnd);
+            setCurrentPage(newStart); 
 
-            await fetchScholarships(newEnd);
+            await fetchScholarships(newStart); 
         }
     };
 
@@ -369,7 +369,14 @@ function EntireScholar() {
 
     useEffect(() => {
         setIsLoading(true);  
-        fetchScholarships(currentPage, searchTerm).finally(() => setIsLoading(false));  
+        fetchScholarships(1, search).finally(() => setIsLoading(false));  
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (currentPage !== 1) {
+            setIsLoading(true);  
+            fetchScholarships(currentPage, search).finally(() => setIsLoading(false));  // 페이지 변경 시 해당 페이지의 장학금 목록 가져오기
+        }
     }, [currentPage]);
     
     useEffect(() => {
@@ -379,22 +386,24 @@ function EntireScholar() {
     }, [scholarships]);
 
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);  // 검색어 설정
+        setSearch(e.target.value);  // 검색어 설정
     };
 
     // 검색 버튼 클릭 시 검색 수행
     const handleSearchButtonClick = async () => {
         setCurrentPage(1);  // 검색 시 첫 페이지로 이동
-        await fetchScholarships(1, '', '', searchTerm).finally(() => setIsLoading(false));  // 검색어에 맞는 장학금 목록 가져오기
+        await fetchScholarships(1, '', '', search).finally(() => setIsLoading(false));  // 검색어에 맞는 장학금 목록 가져오기
     };
 
     // 장학금 유형 선택 시 호출될 함수 추가
     const handleTypeOptionClick = (option) => {
         setTypeOption(option);  // 선택된 유형을 저장
         setTypeDropdownVisible(false);  // 드롭다운 닫기
-    
+
+        setCurrentPage(1);  // 첫 페이지로 이동
+
         // 선택된 유형을 기준으로 장학금을 다시 가져오는 로직
-        fetchScholarships(currentPage, option, sortOption, searchTerm);
+        fetchScholarships(currentPage, option, sortOption, search);
     };
 
 
@@ -402,29 +411,31 @@ function EntireScholar() {
         setSortOption(option);
         setDropdownVisible(false);
 
+        setCurrentPage(1);  // 첫 페이지로 이동
 
-    let orderOption = '';
-    switch (option) {
-        case '모집 종료 - 최신순':
-            orderOption = '-recruitment_end';
-            break;
-        case '모집 종료 - 오래된 순':
-            orderOption = 'recruitment_end';
-            break;
-        case '모집 시작 - 최신순':
-            orderOption = '-recruitment_start';
-            break;
-        case '모집 시작 - 오래된 순':
-            orderOption = 'recruitment_start';
-            break;
-        default:
-            orderOption = '';  // 기본값
-    }
 
-    // AuthContext에서 정렬 함수 호출
-    fetchScholarships(currentPage, '', orderOption, searchTerm);
+        let orderOption = '';
+        switch (option) {
+            case '모집 종료 - 최신순':
+                orderOption = '-recruitment_end';
+                break;
+            case '모집 종료 - 오래된 순':
+                orderOption = 'recruitment_end';
+                break;
+            case '모집 시작 - 최신순':
+                orderOption = '-recruitment_start';
+                break;
+            case '모집 시작 - 오래된 순':
+                orderOption = 'recruitment_start';
+                break;
+            default:
+                orderOption = '';  // 기본값
+        }
 
-    };
+        // AuthContext에서 정렬 함수 호출
+        fetchScholarships(1, typeOption, orderOption, search);
+
+        };
 
     const handleDropdownToggle = (dropdownType) => {
         if (dropdownType === 'sort') {
@@ -446,7 +457,7 @@ function EntireScholar() {
     };
 
 
-    const scholarshipsToDisplay = searchTerm.length > 0 ? filteredScholarships : scholarships;
+    const scholarshipsToDisplay = search.length > 0 ? filteredScholarships : scholarships;
 
     return (
         <>
@@ -464,7 +475,7 @@ function EntireScholar() {
                             placeholder="장학 사업명 검색" 
                             //placeholder="장학 사업명 또는 장학 재단명 검색"
                             style={styles.searchInput}
-                            value={searchTerm}
+                            value={search}
                             onChange={handleSearchChange} 
                         />
                         <button style={styles.searchButton} onClick={handleSearchButtonClick}>
@@ -569,9 +580,8 @@ function EntireScholar() {
             <div style={styles.pagination}>
                  {/* 이전 페이지 화살표 */}
                 {pageRange.start > 1 ? (
-                    <span onClick={() => {
-                        handlePreviousPage();
-                    }}>
+                    <span onClick=
+                        {handlePreviousRange}>
                         <div style={{ ...styles.triangleLeft, ...styles.triangleEnabledLeft }}></div>
                     </span>
                 ) : (
@@ -620,10 +630,7 @@ function EntireScholar() {
                     )}
 
                     {currentPage < totalPages ? (
-                            <span onClick={() => {
-                                // 범위 끝에 도달했을 때만 다음 범위로 이동
-                                handleNextPage(); 
-                            }}>
+                            <span onClick={handleNextRange}>
                                 <div style={{ ...styles.triangleRight, ...styles.triangleEnabledRight }}></div>
                             </span>
                         ) : (

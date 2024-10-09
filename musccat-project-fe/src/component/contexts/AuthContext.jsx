@@ -161,14 +161,20 @@ export const AuthProvider = ({ children }) => {
                 url += `&ordering=${encodeURIComponent(sortOption)}`;
             }
 
-            // 사업명 검색 추가
+            // 사업명 또는 재단명 검색 추가
+            let searchQuery = '';
             if (searchTerm) {
-                url += `&name=${encodeURIComponent(searchTerm)}`;
+                searchQuery += `${encodeURIComponent(searchTerm)}`;
             }
-
-            // 재단명 검색 추가
             if (foundationName) {
-                url += `&foundationname=${encodeURIComponent(foundationName)}`;
+                if (searchQuery) {
+                    searchQuery += ` ${encodeURIComponent(foundationName)}`; // 둘 다 있으면 공백으로 구분하여 합침
+                } else {
+                    searchQuery += `${encodeURIComponent(foundationName)}`; // 하나만 있을 때
+                }
+            }
+            if (searchQuery) {
+                url += `&search=${searchQuery}`;
             }
 
             const response = await axios.get(url, {
