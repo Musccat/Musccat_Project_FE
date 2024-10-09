@@ -95,7 +95,7 @@ const RecomScholarDate = () => {
     const { setScholarDate } = useAuth();
     const [recruitmentEnd, setRecruitmentEnd] = useState("");
     const [isFormValid, setIsFormValid] = useState(false);
-    const [today, setToday] = useState("");
+    const [today, setToday] = useState(""); // 오늘 날짜 저장을 위한 상태
     const [isLoading, setIsLoading] = useState(false); 
     const navigate = useNavigate(); 
 
@@ -155,7 +155,6 @@ const RecomScholarDate = () => {
                     type="date"
                     value={recruitmentEnd}
                     onChange={handleEndChange}
-                    min={today} 
                     placeholder="종료 날짜"
                 />
             </DateRow>
