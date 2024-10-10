@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUser = async (updatedData) => {
         try {
+            console.log("업데이트 데이터:", updatedData);
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/userinfo/mypage/update/`, updatedData, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`
@@ -104,10 +105,30 @@ export const AuthProvider = ({ children }) => {
             });
     
             if (response.status === 200) {
+                console.log("서버에서 받은 데이터:", response.data);
+                
                 // 서버에서 성공적으로 데이터를 업데이트했으면, 전역 user 상태도 즉시 업데이트
+                const residence = response.data.residence ? response.data.residence.split(' ') : ['', ''];
+                const familyStatus = response.data.familyStatus ? response.data.familyStatus.split(', ') : [];
+                const additionalInfo = response.data.additionalInfo || '';
+
                 setUser((prevUser) => ({
                     ...prevUser,
-                    ...updatedData, // 업데이트된 데이터를 기존 유저 데이터에 병합
+                    nickname: response.data.nickname,
+                    gender: response.data.gender,
+                    region: residence[0],  
+                    district: residence[1],
+                    residence: response.data.residence,
+                    income: response.data.income,
+                    univ_category: response.data.univ_category,
+                    university: response.data.university,
+                    major_category: response.data.major_category,
+                    major: response.data.major,
+                    semester: response.data.semester,
+                    totalGPA: response.data.totalGPA,
+                    familyStatus: familyStatus,  
+                    additionalInfo: additionalInfo,  
+                    etc: response.data.etc || ''
                 }));
                 alert("사용자 정보가 성공적으로 업데이트되었습니다.");
             } else {

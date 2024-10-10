@@ -169,7 +169,6 @@ const MyPage = () => {
             if (user) {
                 setFullName(user.fullname);
                 setUserName(user.username);
-                setUserNickname(user.nickname);
                 setUserBirthdate(user.birth);
                 setUserGender(user.gender);
                 setUserEmail(user.email);
@@ -183,12 +182,7 @@ const MyPage = () => {
      // 추가 정보는 isInfoSubmitted가 true일 때만 updateUser로 불러옴
     useEffect(() => {
         if (user) {
-            setFullName(user.fullname);
-            setUserName(user.username);
             setUserNickname(user.nickname);
-            setUserBirthdate(user.birth);
-            setUserGender(user.gender);
-            setUserEmail(user.email);
 
             const residence = user.residence ? user.residence : '';
             setUserResidence(residence);
