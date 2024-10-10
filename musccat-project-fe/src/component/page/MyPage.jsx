@@ -199,7 +199,7 @@ const MyPage = () => {
             setMajor(user.major);
             setSemester(user.semester);
             setTotalGPA(user.totalGPA);
-            setEtc(user.etc);
+            setEtc(user.etc || '');
         }
     }, [user]);
 
@@ -214,6 +214,13 @@ const MyPage = () => {
         localStorage.setItem('isInfoSubmitted', true);
         navigate("/users/meminfo", { state: { isInfoSubmitted } });
     };
+
+    // location.state.isUpdated가 true일 때 사용자 정보 다시 가져오기
+    useEffect(() => {
+        if (location.state?.isUpdated) {
+            fetchUserData(); // 사용자 정보 업데이트
+        }
+    }, [location.state?.isUpdated, fetchUserData]);
 
     return (
         <>
@@ -234,7 +241,7 @@ const MyPage = () => {
                             {isInfoSubmitted ? '기본 정보 수정' : '신규 정보 입력'}
                         </Button>
                         <Button onClick={() => navigate('/reviews')}>수혜 정보 제출</Button>
-                        <Button>내 관심목록</Button>
+                        <Button onClick={() => navigate('/users/myinterest')}>내 관심목록</Button>
                     </ButtonGroup>
                 </UserInfo>
                 </Header>
