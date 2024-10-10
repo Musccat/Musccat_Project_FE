@@ -104,7 +104,11 @@ export const AuthProvider = ({ children }) => {
             });
     
             if (response.status === 200) {
-                await fetchUserData(); // 서버에서 갱신된 정보를 다시 불러옴
+                // 서버에서 성공적으로 데이터를 업데이트했으면, 전역 user 상태도 즉시 업데이트
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    ...updatedData, // 업데이트된 데이터를 기존 유저 데이터에 병합
+                }));
                 alert("사용자 정보가 성공적으로 업데이트되었습니다.");
             } else {
                 alert("사용자 정보를 업데이트하는 데 실패했습니다.");

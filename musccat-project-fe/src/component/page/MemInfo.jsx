@@ -193,6 +193,7 @@ const MemInfo = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const isInfoSubmitted = state?.isInfoSubmitted || false;
+    const isUpdated = state?.isUpdated || false;
     const { user, fetchUserData, updateUser } = useAuth();
     const [formValid, setFormValid] = useState(false);
 
@@ -247,6 +248,27 @@ const MemInfo = () => {
             await fetchUserData();  // 사용자 데이터를 가져오는 비동기 함수 호출
             if (user) {
                 const [region, district] = user.residence ? user.residence.split(' ') : ['', ''];
+
+                // etc 문자열에서 familyStatus와 additionalInfo 분리
+                let familyStatus = [];
+                let additionalInfo = '';
+
+                if (user.etc) {
+                    const etcArray = user.etc.split(', ');
+    
+                    // 사전에 정의된 familyStatus 목록
+                    const validFamilyStatus = [
+                        "차상위계층", "다문화가정", "장애인가정", "농어촌자녀", "보훈대상자",
+                        "조부모가정", "다자녀가정", "한부모가정", "기초생활수급자", "새터민가정(탈북이주민)"
+                    ];
+    
+                    // familyStatus에 해당하는 항목은 validFamilyStatus에 있는 값만 필터링
+                    familyStatus = etcArray.filter(item => validFamilyStatus.includes(item));
+    
+                    // 추가 정보는 validFamilyStatus에 포함되지 않는 항목
+                    additionalInfo = etcArray.filter(item => !validFamilyStatus.includes(item)).join(', ');
+                }
+
                 setFormData((prevData) => ({
                     ...prevData,
                     fullname: user.fullname,
@@ -264,8 +286,8 @@ const MemInfo = () => {
                     major: user.major || '',
                     semester: user.semester || '',
                     totalGPA: user.totalGPA || '',
-                    familyStatus: user.familyStatus || '',
-                    additionalInfo: user.additionalInfo || '',
+                    familyStatus: familyStatus,
+                    additionalInfo: additionalInfo.trim() || '',
                 }));
             }
         };
@@ -312,6 +334,19 @@ const MemInfo = () => {
         // residence로 region과 district 합치기
         const residence = `${formData.region} ${formData.district}`;
 
+        // familyStatus 배열을 콤마로 구분된 문자열로 변환하고, 빈 항목 제거
+        const familyStatusStr = formData.familyStatus.filter(status => status.trim() !== '').join(', ');
+
+        // 추가 정보가 있는지 확인하여, 추가 정보가 있을 때만 추가
+        const etc = familyStatusStr
+            ? formData.additionalInfo.trim()
+                ? `${familyStatusStr}, ${formData.additionalInfo}` // familyStatus와 추가 정보 둘 다 있는 경우
+                : familyStatusStr // familyStatus만 있는 경우
+            : formData.additionalInfo.trim() // familyStatus가 없고, 추가 정보만 있는 경우
+            ? formData.additionalInfo
+            : ''; // 둘 다 없는 경우 빈 문자열
+
+
         // 필수 항목이 비어있지 않은지 확인
         const requiredFields = [
             'nickname','gender', 'region', 'district', 'income', 'univ_category','university', 'major_category', 'major', 'semester', 'totalGPA'];
@@ -321,12 +356,6 @@ const MemInfo = () => {
                 return;
             }
         }
-
-        // familyStatus 배열을 콤마로 구분된 문자열로 변환하고, 추가 정보와 함께 etc 문자열로 결합
-        const familyStatusStr = formData.familyStatus.join(', ');
-        const etc = familyStatusStr 
-            ? `${familyStatusStr}, ${formData.additionalInfo}` 
-            : formData.additionalInfo;
 
         console.log(formData);
 
@@ -342,10 +371,12 @@ const MemInfo = () => {
             major: formData.major,
             semester: formData.semester,
             totalGPA: formData.totalGPA,
+            familyStatus: formData.familyStatus,
+            additionalInfo: formData.additionalInfo,
             etc
         });
         
-        navigate("/users/mypage", { state: { isInfoSubmitted: true } });
+        navigate("/users/mypage", { state: { isInfoSubmitted: true, isUpdated: true } });
     };
 
     const handleTotalGPAChange = (e) => {
@@ -520,7 +551,7 @@ const MemInfo = () => {
                         value={formData.region} 
                         onChange={handleChange}>
                         <option value="">지역을 선택하세요</option>
-                        <option value="서울">서울특별시</option>
+                        <option value="서울특별시">서울특별시</option>
                         <option value="부산광역시">부산광역시</option>
                         <option value="대구광역시">대구광역시</option>
                         <option value="인천광역시">인천광역시</option>
