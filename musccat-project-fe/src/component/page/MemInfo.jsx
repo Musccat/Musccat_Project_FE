@@ -407,7 +407,7 @@ const MemInfo = () => {
 
     const semesterCategoryOptions = [
         { value: '대학신입생', label: '대학신입생' },
-        ...Array.from({ length: 7 }, (_, i) => ({ value: `대학${i + 2}학기`, label: `대학${i + 2}학기` })),
+        ...Array.from({ length: 6 }, (_, i) => ({ value: `대학${i + 2}학기`, label: `대학${i + 2}학기` })),
         { value: '대학8학기이상', label: '대학8학기이상' }
     ];
 
