@@ -32,17 +32,31 @@ export const AuthProvider = ({ children }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
+    const storedUser = JSON.parse(localStorage.getItem("user")) || null;
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const initializeUserData = async () => {
+            // 로컬 스토리지에서 사용자 데이터 불러오기
+            const storedUser = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
 
+            
+            if (storedUser) {
+                setUser(storedUser); // 로컬 스토리지에 저장된 데이터로 설정
+            } else if (authTokens && !user) {
+                // 로컬 스토리지에 사용자 데이터가 없고, 토큰이 존재할 때만 fetchUserData 호출
+                await fetchUserData();
+            }
+        };
+    
+        initializeUserData();
+    }, [authTokens]);
 
     const fetchUserData = async () => {
+        if (!authTokens || user) return;
+
         try {
-            // 사용자 정보가 이미 있을 경우 API 요청을 하지 않음
-            if (user) {
-                return;
-            }
 
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/mypage/view/`, {
                 headers: {
@@ -67,7 +81,7 @@ export const AuthProvider = ({ children }) => {
                 }
             }
 
-            setUser({
+            const userData = ({
                 id: response.data.id,
                 username: response.data.username,
                 fullname: response.data.fullname,
@@ -90,6 +104,8 @@ export const AuthProvider = ({ children }) => {
                 additionalInfo: additionalInfo || '',  
                 etc: response.data.etc || ''
             });
+            setUser(userData); // 상태에 설정
+            localStorage.setItem("user", JSON.stringify(userData)); // 로컬 스토리지에 저장
         } catch (error) {
             console.error("Failed to fetch user data", error);
         }
@@ -573,6 +589,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem("authTokens");
+        localStorage.removeItem("user");
         setIsAuthenticated(false);
         navigate("/");
     };
