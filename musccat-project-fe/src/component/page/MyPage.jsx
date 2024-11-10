@@ -297,7 +297,7 @@ const MyPage = () => {
                             <Space />
                         </InfoItem>
                         <InfoItem>
-                            <span>대학 유형</span>
+                            <span>대학 구분</span>
                             <span>{univCategory}</span>
                             <Space />
                         </InfoItem>

@@ -596,13 +596,13 @@ const MemInfo = () => {
                 </LinkContainer>
                 
                 <FormGroup>
-                    <label>대학 유형<RequiredIndicator>*</RequiredIndicator></label>
+                    <label>대학 구분<RequiredIndicator>*</RequiredIndicator></label>
                     <StyledSelect
                         name="univ_category" 
                         value={univCategoryOptions.find(option => option.value === formData.univ_category) || ''}
                         onChange={(option) => handleChange({ name: "univ_category", value: option.value })}
                         options={univCategoryOptions}
-                        placeholder="대학 유형 선택"
+                        placeholder="대학 구분 선택"
                     />
                 </FormGroup>
 
