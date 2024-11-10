@@ -174,6 +174,7 @@ const AddScholar = () => {
     };
 
     const univCategoryOptions = [
+        { value: '해당없음', label: '해당없음'},
         { value: '4년제(5~6년제포함)', label: '4년제(5~6년제포함)' },
         { value: '전문대(2~3년제)', label: '전문대(2~3년제)' },
         { value: '해외대학', label: '해외대학' },
@@ -184,6 +185,7 @@ const AddScholar = () => {
     ];
 
     const majorCategoryOptions = [
+        { value: '해당없음', label: '해당없음'},
         { value: '공학계열', label: '공학계열' },
         { value: '교육계열', label: '교육계열' },
         { value: '사회계열', label: '사회계열' },
@@ -194,6 +196,7 @@ const AddScholar = () => {
     ];
 
     const semesterCategoryOptions = [
+        { value: '해당없음', label: '해당없음'},
         { value: '대학신입생', label: '대학신입생' },
         ...Array.from({ length: 7 }, (_, i) => ({ value: `대학${i + 2}학기`, label: `대학${i + 2}학기` })),
         { value: '대학8학기이상', label: '대학8학기이상' }
@@ -296,13 +299,13 @@ const AddScholar = () => {
                     </FormRow>
 
                     <FormRow>
-                        <Label>대학 유형</Label>
+                        <Label>대학 구분</Label>
                         <StyledSelect
                             name="university_type" 
                             options={univCategoryOptions}
                             value={univCategoryOptions.find(option => option.value === formValues.university_type)} 
                             onChange={(selectedOption) => handleChange({ target: { name: 'university_type', value: selectedOption.value } })}
-                            placeholder="대학 유형"/>
+                            placeholder="대학 구분"/>
                     </FormRow>
                     <FormRow>
                         <Label>학과 구분</Label>  
@@ -331,82 +334,132 @@ const AddScholar = () => {
                     <FormRow>
                         <Label>선발방법 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="selection_method_details" 
                             value={formValues.selection_method_details} 
                             onChange={handleChange}
-                            placeholder="선발방법 상세 내용" />
+                            placeholder="선발방법 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>선발인원 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="number_of_recipients_details" 
                             value={formValues.number_of_recipients_details} 
                             onChange={handleChange}
-                            placeholder="선발인원 상세 내용" />
+                            placeholder="선발인원 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>성적기준 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="grade_criteria_details" 
                             value={formValues.grade_criteria_details} 
                             onChange={handleChange}
-                            placeholder="성적기준 상세 내용" />
+                            placeholder="성적기준 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>소득기준 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="income_criteria_details" 
                             value={formValues.income_criteria_details} 
                             onChange={handleChange} 
-                            placeholder="소득기준 상세 내용"/>
+                            placeholder="소득기준 상세 내용"
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>거주지역여부 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="residency_requirement_details" 
                             value={formValues.residency_requirement_details} 
                             onChange={handleChange} 
-                            placeholder="거주지역여부 상세 내용"/>
+                            placeholder="거주지역여부 상세 내용"
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>자격제한 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="eligibility_restrictions" 
                             value={formValues.eligibility_restrictions} 
                             onChange={handleChange}
-                            placeholder="자격제한 상세 내용" />
+                            placeholder="자격제한 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>제출서류 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="required_documents_details" 
                             value={formValues.required_documents_details} 
                             onChange={handleChange}
-                            placeholder="제출서류 상세 내용" />
+                            placeholder="제출서류 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>지원내역 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="support_details" 
                             value={formValues.support_details} 
                             onChange={handleChange}
-                            placeholder="지원내역 상세 내용" />
+                            placeholder="지원내역 상세 내용" 
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>추천필요여부 상세 내용</Label>
                         <Input 
+                            list="selectionOptions" 
                             name="recommendation_required" 
                             value={formValues.recommendation_required} 
                             onChange={handleChange} 
-                            placeholder="추천필요여부 상세 내용"/>
+                            placeholder="추천필요여부 상세 내용"
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
                     <FormRow>
                         <Label>특정자격 상세 내용</Label>
                         <Input
+                            list="selectionOptions" 
                             name="specific_qualification_details" 
                             value={formValues.specific_qualification_details} 
                             onChange={handleChange} 
-                            placeholder="특정자격 상세 내용"/>
+                            placeholder="특정자격 상세 내용"
+                            />
+                            <datalist id="selectionOptions">
+                                <option value="해당없음" />
+                            </datalist>
                     </FormRow>
 
                     <ButtonContainer>
