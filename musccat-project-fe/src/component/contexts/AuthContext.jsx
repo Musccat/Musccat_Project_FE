@@ -536,7 +536,7 @@ export const AuthProvider = ({ children }) => {
     
     const verifyCode = async (email, code) => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/verify-code/`, { email, "verify-code": code });
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/users/verify-code/`, { email, "verify-code": code });
             return response.data.valid;  // true if valid, false if not
         } catch (error) {
             console.error("Failed to verify code", error);
