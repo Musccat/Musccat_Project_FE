@@ -18,7 +18,6 @@ import MainPage from './component/page/MainPage';
 import EntireScholar from './component/page/EntireScholar';
 import RecomScholarDate from './component/page/RecomScholarDate';
 import RecomScholar from './component/page/RecomScholar';
-import RecomScholar_ from './component/page/RecomScholar_';
 import Notice from './component/page/Notice';
 import Notice_ from './component/page/Notice_';
 import MyPage from './component/page/MyPage';
@@ -47,7 +46,6 @@ function App() {
           <Route path="/users/myinterest" element={<MyInterest />}/> {/*나의 관심목록 페이지 */} 
           <Route path="/entirescholar" element={<EntireScholar />} /> {/*전체 장학금 목록 페이지 */}
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
-          <Route path="/recomscholar_" element={<RecomScholar_ />} /> {/*추천 장학금 목록 디자인 페이지 */}
           <Route path="/recomscholardate" element={<RecomScholarDate />} /> {/*추천 장학금 목록 기한 설정 페이지 */}
           <Route path="/notice/:product_id" element={<Notice />} /> {/*장학금 공고 페이지 */}
           <Route path="/notice_" element={<Notice_ />} /> {/*장학금 공고 디자인 페이지 */}

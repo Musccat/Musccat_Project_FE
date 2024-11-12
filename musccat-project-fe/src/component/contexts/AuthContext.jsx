@@ -248,8 +248,6 @@ export const AuthProvider = ({ children }) => {
         const newLikes = [...likes];
         const isLiked = newLikes[index];
 
-
-
         // 로컬 상태 먼저 업데이트
         newLikes[index] = !isLiked;
         setLikes(newLikes);
