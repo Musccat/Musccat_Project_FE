@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from '../ui/NavBar';
 import styled from 'styled-components';
-import coin from '../ui/Coin.jpeg'
+import coin from '../ui/Coin.jpeg';
+import axios from 'axios';
 
 const Container = styled.div`
     display: flex;
@@ -110,10 +111,71 @@ const PayButton = styled.button`
 const Points = () => {
     const [currentpoints, setCurrentPoints] = useState(0); 
     const [selectedAmount, setSelectedAmount] = useState(null); // 선택된 금액 
+    const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
+
+    const axiosInstance = axios.create({
+        withCredentials: true,
+        headers: {
+            'Authorization': `Bearer ${process.env.REACT_APP_API_KEY}`,
+        }
+    });
 
     const handleAmountChange = (event) => {
         setSelectedAmount(event.target.value); // 선택된 금액을 업데이트
     };
+
+    const handleCompleteOrder = () => {
+        if (selectedAmount) {
+            setIsPaymentTriggered(true);
+        } else {
+            alert("충전 금액을 선택해 주세요.");
+        }
+    };
+
+    useEffect(() => {
+        // 결제 창을 띄우는 로직
+        if (isPaymentTriggered && selectedAmount) {
+            handlePayment();
+        }
+    }, [isPaymentTriggered, selectedAmount]);
+
+    // 결제 창을 띄우는 함수
+    async function handlePayment() {
+        if (!window.IMP) {
+            console.error("아임포트 라이브러리가 로드되지 않았습니다.");
+            return;
+        }
+
+        
+        window.IMP.init(process.env.REACT_APP_IMP_KEY); // 아임포트 식별 코드 초기화
+        window.IMP.request_pay({
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: `order_${new Date().getTime()}`, // 주문 고유 번호
+            name: "포인트 충전",
+            amount: selectedAmount, // 선택된 결제 금액
+            buyer_name: "사용자 이름",  
+            buyer_tel: "010-1234-5678",
+            buyer_postcode: "12345",
+            buyer_addr: "서울특별시 강남구"
+        }, async (rsp) => {
+            if (rsp.success) {
+                try {
+                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/order/payment/${rsp.imp_uid}`, {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid,
+                        amount: selectedAmount,
+                    });
+                    console.log('결제 성공:', response.data);
+                    setIsPaymentTriggered(false); // 결제 상태 초기화
+                } catch (error) {
+                    console.error('결제 확인 오류:', error);
+                }
+            } else {
+                console.error('결제 실패:', rsp.error_msg);
+            }
+        });
+    }
 
     return (
         <>
@@ -180,7 +242,7 @@ const Points = () => {
                 </AmountContainer>
             </Section>
 
-            <PayButton>
+            <PayButton onClick={handleCompleteOrder}>
                 {selectedAmount ? `${selectedAmount}원 결제하기` : "0원 결제하기"}
             </PayButton>
         </Container>
