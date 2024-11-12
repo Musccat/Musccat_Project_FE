@@ -28,6 +28,7 @@ import BenefitInfo from './component/page/BenefitInfo';
 import BeneInfoRegister from './component/page/BeneInfoRegister';
 import BenefitInfo_c from './component/page/BenefitInfo_c';
 import AddScholar from './component/page/AddScholar';
+import Points from './component/page/Points';
 
 
 function App() {
@@ -53,7 +54,8 @@ function App() {
           <Route path="/reviews/view/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
           <Route path="/reviews" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
           <Route path="/reviewstest/:product_id" element={<BenefitInfo_c />} /> {/*이전 수혜자 정보 디자인 페이지 */}
-          <Route path="/addscholar" element={<AddScholar />} /> {/* 장학금 등록 페이지 */}
+          <Route path="/addscholar" element={<AddScholar />} /> {/*장학금 등록 페이지 */}
+          <Route path="/points" element={<Points />} /> {/*포인트 상세 페이지 */}
         </Routes>
         </AuthProvider>
         </div>
