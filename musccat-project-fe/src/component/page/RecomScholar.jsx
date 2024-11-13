@@ -271,6 +271,7 @@ return (
                                     </tr>
                                 ) : scholarships && scholarships.length > 0 ? (
                                     scholarships.map((item, index) => (
+                                        item && item.scholarship && item.scholarship.foundation_name ? (
                                         <tr key={index}>
                                             <td style={styles.thTd}>{item.scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
@@ -299,6 +300,7 @@ return (
                                                 </div>
                                             </td>
                                         </tr>
+                                        ) : null
                                     ))
                                 ) : (
                                     <tr>
