@@ -121,7 +121,7 @@ const MyInterest = () => {
 
     useEffect(() => {
          // authTokens가 존재할 때만 fetchLikedScholarships 호출
-         if (authTokens && authTokens.access) {
+        if (authTokens && authTokens.access) {
             fetchLikedScholarships();
         } else {
             console.error("No access token available.");

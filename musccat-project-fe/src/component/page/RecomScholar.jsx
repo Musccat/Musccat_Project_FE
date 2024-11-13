@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; 
 import NavBar from "../ui/NavBar";
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
@@ -192,6 +193,8 @@ const { user, scholarships, setScholarships, loadScholarships, fetchUserData, li
 const [isLoading, setIsLoading] = useState(true);
 const [hasFetchedData, setHasFetchedData] = useState(false); // 데이터가 이미 로드되었는지 확인
 
+const location = useLocation(); // 현재 위치 가져오기
+
     // 사용자 데이터와 장학금 데이터 불러오기
     useEffect(() => {
         const fetchData = async () => {
@@ -225,9 +228,15 @@ const [hasFetchedData, setHasFetchedData] = useState(false); // 데이터가 이
         }
     }, [authTokens, user, fetchUserData, loadScholarships, hasFetchedData]);
 
+    // 페이지를 벗어날 때 localStorage의 장학금 데이터 삭제
     useEffect(() => {
-        loadScholarships();  // 컴포넌트가 마운트될 때 장학금 데이터를 불러옴
-    }, [loadScholarships]);
+        return () => {
+            if (location.pathname !== "/recomscholar") {
+                localStorage.removeItem("scholarships"); // 로컬 스토리지에서 추천 장학금 데이터 삭제
+                setScholarships([]); // 상태 초기화
+            }
+        };
+    }, [location.pathname, setScholarships]);
 
     // 로딩 중일 때 보여줄 UI
     if (isLoading) {
@@ -262,6 +271,7 @@ return (
                                     </tr>
                                 ) : scholarships && scholarships.length > 0 ? (
                                     scholarships.map((item, index) => (
+                                        item && item.scholarship && item.scholarship.foundation_name ? (
                                         <tr key={index}>
                                             <td style={styles.thTd}>{item.scholarship.foundation_name}</td>
                                             <td style={{ ...styles.thTd, paddingRight: "20px" }}>
@@ -290,6 +300,7 @@ return (
                                                 </div>
                                             </td>
                                         </tr>
+                                        ) : null
                                     ))
                                 ) : (
                                     <tr>

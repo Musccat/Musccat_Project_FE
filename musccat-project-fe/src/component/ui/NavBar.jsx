@@ -108,7 +108,7 @@ function NavBar() {
                 <Link to={"/recomscholardate"}>추천 장학금 목록</Link>
                 <Link to={"/users/myinterest"}>내 관심 목록</Link>
                 <Link to={"/users/mypage"}>마이페이지</Link>
-                <Link to={"/points"}>포인트</Link>
+                <Link to={"/points"}>구독</Link>
                 <LogoutButton onClick={handleLogoutClick}>로그아웃</LogoutButton>
             </NavLinks>
             </NavContainer>

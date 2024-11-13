@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
 import styled from 'styled-components';
 import coin from '../ui/Coin.jpeg';
@@ -113,6 +114,12 @@ const Points = () => {
     const [selectedAmount, setSelectedAmount] = useState(null); // 선택된 금액 
     const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
 
+    const {  user, fetchUserData } = useAuth();
+
+    useEffect(() => {
+        fetchUserData(); // 컴포넌트가 마운트될 때 사용자 데이터 가져오기
+    }, [fetchUserData]);
+
     const axiosInstance = axios.create({
         withCredentials: true,
         headers: {
@@ -146,18 +153,16 @@ const Points = () => {
             return;
         }
 
-        
         window.IMP.init(process.env.REACT_APP_IMP_KEY); // 아임포트 식별 코드 초기화
         window.IMP.request_pay({
             pg: "html5_inicis",
             pay_method: "card",
             merchant_uid: `order_${new Date().getTime()}`, // 주문 고유 번호
-            name: "포인트 충전",
+            name: "SCHOLLI 구독 서비스",
             amount: selectedAmount, // 선택된 결제 금액
-            buyer_name: "사용자 이름",  
-            buyer_tel: "010-1234-5678",
-            buyer_postcode: "12345",
-            buyer_addr: "서울특별시 강남구"
+            buyer_name: user.fullname, 
+            buyer_email: user.email,
+            buyer_addr: user.residence
         }, async (rsp) => {
             if (rsp.success) {
                 try {
