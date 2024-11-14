@@ -126,13 +126,13 @@ const MyInterest = () => {
         } else {
             console.error("No access token available.");
         }
-    }, [authTokens, fetchLikedScholarships, logoutUser, navigate]);
+    }, [authTokens, fetchLikedScholarships]);
 
 
     useEffect(() => {
         // likedScholarships와 likes가 정의된 경우에만 필터링
         if (likedScholarships && likes) {
-            setFilteredScholarships(likedScholarships.filter((_, index) => likes[index]));
+            setFilteredScholarships(likedScholarships);
         }
     }, [likedScholarships, likes]);
 

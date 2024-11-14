@@ -268,16 +268,18 @@ export const AuthProvider = ({ children }) => {
                     headers: { Authorization: `Bearer ${authTokens.access}` }
                 });
             }
-            } catch (error) {
-                console.error("Error handling like click", error);
+            await fetchLikedScholarships();
 
-                // 요청이 실패한 경우 상태 롤백
-                newLikes[index] = isLiked;
-                setLikes(newLikes);
+        } catch (error) {
+            console.error("Error handling like click", error);
 
-                alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
-            }
-        };
+            // 요청이 실패한 경우 상태 롤백
+            newLikes[index] = isLiked;
+            setLikes(newLikes);
+
+            alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
+        }
+    };
 
         const fetchLikedScholarships = async () => {
             if (!authTokens || !authTokens.access) {
