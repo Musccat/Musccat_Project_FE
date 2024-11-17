@@ -123,16 +123,16 @@ const MyInterest = () => {
          // authTokens가 존재할 때만 fetchLikedScholarships 호출
         if (authTokens && authTokens.access) {
             fetchLikedScholarships();
-        } else {
-            console.error("No access token available.");
+            console.log("Fetched liked scholarships on MyInterest page.");
         }
-    }, [authTokens, fetchLikedScholarships, logoutUser, navigate]);
+    }, [authTokens]);
 
 
     useEffect(() => {
         // likedScholarships와 likes가 정의된 경우에만 필터링
         if (likedScholarships && likes) {
-            setFilteredScholarships(likedScholarships.filter((_, index) => likes[index]));
+            setFilteredScholarships(likedScholarships);
+            console.log("Setting filtered scholarships in MyInterest:", likedScholarships);
         }
     }, [likedScholarships, likes]);
 
