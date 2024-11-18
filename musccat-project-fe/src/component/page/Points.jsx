@@ -108,6 +108,7 @@ const Points = () => {
 
         const fixedAmount = 4900; // 고정 금액 설정
         const merchantUid = `merchant_${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 12)}`; // merchant_YYMMDDHHMM 형식
+        const paymentTime = new Date().toISOString(); // ISO 형식 시간 생성
 
         window.IMP.init(process.env.REACT_APP_IMP_KEY); // 아임포트 식별 코드 초기화
         window.IMP.request_pay({
@@ -122,12 +123,14 @@ const Points = () => {
         }, async (rsp) => {
             if (rsp.success) {
                 try {
-                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/payment/pay`, {
-                        imp_uid: rsp.imp_uid,
-                        merchant_uid: rsp.merchant_uid,
-                        amount: fixedAmount,
-                        status: "paid", // 결제 상태
-                        payment_time: new Date().toISOString() // ISO 형식의 현재 시간
+                    const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/payment/pay`, {
+                        params: {
+                            imp_uid: rsp.imp_uid,
+                            merchant_uid: rsp.merchant_uid,
+                            amount: fixedAmount,
+                            status: "paid", // 결제 상태
+                            payment_time: paymentTime
+                        }
                     });
                     console.log('결제 성공:', response.data);
                     setIsPaymentTriggered(false); // 결제 상태 초기화
