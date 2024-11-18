@@ -53,42 +53,6 @@ const PointsDisplay = styled.span`
     margin-left: 100px; 
 `;
 
-const AmountContainer = styled.div`
-    display: flex;
-    justify-content: center; // 중앙 정렬
-    width: 100%;
-`;
-
-
-const AmountTitle = styled.h3`
-    text-align: left; // h3만 왼쪽 정렬
-    margin: 30px 0 10px 0; // 필요에 따라 아래 여백 조정
-    padding-left: 60px
-`;
-
-const AmountSection = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 25px;
-    gap: 20px;
-    column-gap: 90px;
-    margin: 0 auto;
-    align-items: center;
-    max-width: 600px;
-`;
-
-const AmountOption = styled.label`
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-    cursor: pointer;
-    margin: 5px 0;
-    width: 100%;
-    input {
-        margin-right: 10px;
-    }
-`;
-
 const Divider = styled.hr`
     margin: 20px 0;
     border: none;
@@ -110,10 +74,7 @@ const PayButton = styled.button`
 
 
 const Points = () => {
-    const [currentpoints, setCurrentPoints] = useState(0); 
-    const [selectedAmount, setSelectedAmount] = useState(null); // 선택된 금액 
     const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
-
     const {  user, fetchUserData } = useAuth();
 
     useEffect(() => {
@@ -127,24 +88,16 @@ const Points = () => {
         }
     });
 
-    const handleAmountChange = (event) => {
-        setSelectedAmount(event.target.value); // 선택된 금액을 업데이트
-    };
-
     const handleCompleteOrder = () => {
-        if (selectedAmount) {
-            setIsPaymentTriggered(true);
-        } else {
-            alert("충전 금액을 선택해 주세요.");
-        }
+        setIsPaymentTriggered(true);
     };
 
     useEffect(() => {
         // 결제 창을 띄우는 로직
-        if (isPaymentTriggered && selectedAmount) {
+        if (isPaymentTriggered) {
             handlePayment();
         }
-    }, [isPaymentTriggered, selectedAmount]);
+    }, [isPaymentTriggered]);
 
     // 결제 창을 띄우는 함수
     async function handlePayment() {
@@ -153,23 +106,28 @@ const Points = () => {
             return;
         }
 
+        const fixedAmount = 4900; // 고정 금액 설정
+        const merchantUid = `merchant_${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 12)}`; // merchant_YYMMDDHHMM 형식
+
         window.IMP.init(process.env.REACT_APP_IMP_KEY); // 아임포트 식별 코드 초기화
         window.IMP.request_pay({
             pg: "html5_inicis",
             pay_method: "card",
-            merchant_uid: `order_${new Date().getTime()}`, // 주문 고유 번호
+            merchant_uid: merchantUid, // 주문 고유 번호
             name: "SCHOLLI 구독 서비스",
-            amount: selectedAmount, // 선택된 결제 금액
+            amount: fixedAmount, 
             buyer_name: user.fullname, 
             buyer_email: user.email,
             buyer_addr: user.residence
         }, async (rsp) => {
             if (rsp.success) {
                 try {
-                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/v1/order/payment/${rsp.imp_uid}`, {
+                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/payment/pay`, {
                         imp_uid: rsp.imp_uid,
                         merchant_uid: rsp.merchant_uid,
-                        amount: selectedAmount,
+                        amount: fixedAmount,
+                        status: "paid", // 결제 상태
+                        payment_time: new Date().toISOString() // ISO 형식의 현재 시간
                     });
                     console.log('결제 성공:', response.data);
                     setIsPaymentTriggered(false); // 결제 상태 초기화
@@ -179,6 +137,7 @@ const Points = () => {
             } else {
                 console.error('결제 실패:', rsp.error_msg);
             }
+            setIsPaymentTriggered(false);
         });
     }
 
@@ -194,61 +153,14 @@ const Points = () => {
                     </Icon>
                     <Title>
                         내 포인트
-                        <PointsDisplay>{currentpoints}</PointsDisplay>
                     </Title>
                 </Header>
 
                 <Divider />
-
-                    <AmountTitle>충전 금액</AmountTitle>
-                    <AmountContainer>
-                    <AmountSection>
-                    <AmountOption>
-                            <input type="radio" name="amount" value="1000" onChange={handleAmountChange} />
-                            <span>100 포인트: 1,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="2000" onChange={handleAmountChange} />
-                            <span>200 포인트: 2,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="3000" onChange={handleAmountChange} />
-                            <span>300 포인트: 3,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="4000" onChange={handleAmountChange} />
-                            <span>400 포인트: 4,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="5000" onChange={handleAmountChange} />
-                            <span>500 포인트: 5,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="6000" onChange={handleAmountChange} />
-                            <span>600 포인트: 6,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="7000" onChange={handleAmountChange} />
-                            <span>700 포인트: 7,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="8000" onChange={handleAmountChange} />
-                            <span>800 포인트: 8,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="9000" onChange={handleAmountChange} />
-                            <span>900 포인트: 9,000원</span>
-                        </AmountOption>
-                        <AmountOption>
-                            <input type="radio" name="amount" value="10000" onChange={handleAmountChange} />
-                            <span>1000 포인트: 10,000원</span>
-                        </AmountOption>
-                    </AmountSection>
-                </AmountContainer>
+                
             </Section>
-
             <PayButton onClick={handleCompleteOrder}>
-                {selectedAmount ? `${selectedAmount}원 결제하기` : "0원 결제하기"}
+                4,900원 결제하기
             </PayButton>
         </Container>
         </>
