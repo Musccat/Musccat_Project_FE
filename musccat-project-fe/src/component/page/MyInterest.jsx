@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 import { useAuth } from "../contexts/AuthContext";
+import axios from 'axios';
 
 const styles = {
     wrapper: {  
@@ -115,7 +116,7 @@ const ScholarshipLink = styled(Link)`
 `;
 
 const MyInterest = () => {
-    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, authTokens } = useAuth();
+    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, setLikedScholarships, fetchScholarships, authTokens, user } = useAuth();
     const navigate = useNavigate();
     const [filteredScholarships, setFilteredScholarships] = useState([]);
     const [localLikes, setLocalLikes] = useState([]);
@@ -137,11 +138,49 @@ const MyInterest = () => {
         }
     }, [likedScholarships]);
 
+    useEffect(() => {
+        // likedScholarships 상태 변화 시 filteredScholarships 업데이트
+        setFilteredScholarships(likedScholarships);
+    }, [likedScholarships]);
+
     const handleLikeAndRemove = async (index, scholarshipId) => {
-        await handleLikeClick(index, scholarshipId, true);
-        
-        setFilteredScholarships(prevFiltered => prevFiltered.filter((_, i) => i !== index));
-};
+        try {
+            const isLiked = likedScholarships.some(scholarship => scholarship.product_id === scholarshipId);
+    
+            if (isLiked) {
+                // 찜 삭제 요청
+                await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
+                    headers: { Authorization: `Bearer ${authTokens.access}` },
+                });
+    
+                // 상태 업데이트
+                setFilteredScholarships(prev =>
+                    prev.filter((_, i) => i !== index)
+                );
+                setLikedScholarships(prev =>
+                    prev.filter(scholarship => scholarship.product_id !== scholarshipId)
+                );
+
+                // 전체 장학금 상태 새로고침
+                await fetchScholarships();
+            } else {
+                // 좋아요 추가 요청
+                await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
+                    user: user.id,
+                    scholarship_id: scholarshipId,
+                    added_at: new Date().toISOString(),
+                }, {
+                    headers: { Authorization: `Bearer ${authTokens.access}` },
+                });
+    
+                // 상태를 다시 가져오기
+                await fetchLikedScholarships();
+            }
+        } catch (error) {
+            console.error("Error handling like click", error);
+            alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
+        }
+    };
 
     return (
         <>
