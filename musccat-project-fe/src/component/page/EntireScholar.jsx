@@ -548,7 +548,7 @@ function EntireScholar() {
                                         </Link>
                                         <button
                                             style={styles.heartButton}
-                                            onClick={() => handleLikeClick(index, scholarship.product_id)}
+                                            onClick={() => handleLikeClick(index, scholarship.product_id, likes[index], search)}
                                         >
                                             <img
                                                 src={likes[index] ? filledheart : emptyheart}
