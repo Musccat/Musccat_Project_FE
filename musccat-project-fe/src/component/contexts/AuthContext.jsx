@@ -256,7 +256,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
     
-    const handleLikeClick = async (index, scholarshipId) => {
+    const handleLikeClick = async (index, scholarshipId, fromInterestPage = false) => {
         const newLikes = [...likes];
         const isLiked = newLikes[index];
 
@@ -271,7 +271,7 @@ export const AuthProvider = ({ children }) => {
                     headers: { Authorization: `Bearer ${authTokens.access}` }
                 });
             } else {
-                // 찜 추가 요청
+                // 좋아요 추가 요청
                 await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
                     scholarship_id: scholarshipId,
@@ -280,7 +280,12 @@ export const AuthProvider = ({ children }) => {
                     headers: { Authorization: `Bearer ${authTokens.access}` }
                 });
             }
+            await fetchScholarships(currentPage);
             await fetchLikedScholarships();
+
+            // 로컬 스토리지에 업데이트된 좋아요 상태 저장
+            localStorage.setItem("likedScholarships", JSON.stringify(likedScholarships));
+            localStorage.setItem("likes", JSON.stringify(newLikes));
 
         } catch (error) {
             console.error("Error handling like click", error);
@@ -289,7 +294,12 @@ export const AuthProvider = ({ children }) => {
             newLikes[index] = isLiked;
             setLikes(newLikes);
 
-            alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
+            if (error.response && error.response.status === 401) {
+                alert("인증이 만료되었습니다. 다시 로그인해 주세요.");
+                logoutUser(); // 로그아웃 후 재로그인 유도
+            } else {
+                alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
+            }
         }
     };
 

@@ -115,9 +115,10 @@ const ScholarshipLink = styled(Link)`
 `;
 
 const MyInterest = () => {
-    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, authTokens, logoutUser } = useAuth();
+    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, authTokens } = useAuth();
     const navigate = useNavigate();
     const [filteredScholarships, setFilteredScholarships] = useState([]);
+    const [localLikes, setLocalLikes] = useState([]);
 
     useEffect(() => {
          // authTokens가 존재할 때만 fetchLikedScholarships 호출
@@ -129,16 +130,16 @@ const MyInterest = () => {
 
 
     useEffect(() => {
-        // likedScholarships와 likes가 정의된 경우에만 필터링
-        if (likedScholarships && likes) {
+        if (likedScholarships && likedScholarships.length > 0) {
             setFilteredScholarships(likedScholarships);
-            console.log("Setting filtered scholarships in MyInterest:", likedScholarships);
+            setLocalLikes(likedScholarships.map(() => true)); // 모든 좋아요를 true로 초기화
+            console.log("Setting filtered scholarships and likes in MyInterest:", likedScholarships);
         }
-    }, [likedScholarships, likes]);
+    }, [likedScholarships]);
 
-    const handleLikeAndRemove = (index, scholarshipId) => {
-        handleLikeClick(index, scholarshipId);
-        // 좋아요 해제 후 해당 항목 테이블에서 제거
+    const handleLikeAndRemove = async (index, scholarshipId) => {
+        await handleLikeClick(index, scholarshipId, true);
+        
         setFilteredScholarships(prevFiltered => prevFiltered.filter((_, i) => i !== index));
 };
 
@@ -178,7 +179,7 @@ const MyInterest = () => {
                                                 onClick={() => handleLikeAndRemove(index, scholarship.product_id)}
                                             >
                                                 <img
-                                                    src={likes[index] ? filledheart : emptyheart}
+                                                    src={localLikes[index] ? filledheart : emptyheart}
                                                     alt="heart"
                                                     style={styles.heartImage}
                                                 />
