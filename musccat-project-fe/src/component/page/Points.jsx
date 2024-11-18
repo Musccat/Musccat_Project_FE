@@ -123,14 +123,12 @@ const Points = () => {
         }, async (rsp) => {
             if (rsp.success) {
                 try {
-                    const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/payment/pay`, {
-                        params: {
+                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/payment/pay`, {
                             imp_uid: rsp.imp_uid,
                             merchant_uid: rsp.merchant_uid,
                             amount: fixedAmount,
                             status: "paid", // 결제 상태
                             payment_time: paymentTime
-                        }
                     });
                     console.log('결제 성공:', response.data);
                     setIsPaymentTriggered(false); // 결제 상태 초기화
