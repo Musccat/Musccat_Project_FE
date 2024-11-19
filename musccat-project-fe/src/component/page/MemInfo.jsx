@@ -546,36 +546,20 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>거주 지역<RequiredIndicator>*</RequiredIndicator></label>
-                    <select 
-                        name="region" 
-                        value={formData.region} 
-                        onChange={handleChange}>
-                        <option value="">지역을 선택하세요</option>
-                        <option value="서울특별시">서울특별시</option>
-                        <option value="부산광역시">부산광역시</option>
-                        <option value="대구광역시">대구광역시</option>
-                        <option value="인천광역시">인천광역시</option>
-                        <option value="광주광역시">광주광역시</option>
-                        <option value="대전광역시">대전광역시</option>
-                        {/* Add more options as needed */}
-                    </select>
-
-                    <select 
-                        name="district" 
-                        value={formData.district} 
-                        onChange={handleChange}>
-                        <option value="">구/군을 선택하세요</option>
-                        <option value="강남구">강남구</option>
-                        <option value="강동구">강동구</option>
-                        <option value="강북구">강북구</option>
-                        <option value="강서구">강서구</option>
-                        <option value="관악구">관악구</option>
-                        <option value="광진구">광진구</option>
-                        <option value="구로구">구로구</option>
-                        <option value="금천구">금천구</option>
-                        <option value="노원구">노원구</option>
-                        {/* Add more options as needed */}
-                    </select>
+                    <input
+                        type="text"
+                        name="region"
+                        value={formData.region}
+                        onChange={handleChange}
+                        placeholder="시/도 입력"
+                    />
+                    <input
+                        type="text"
+                        name="district"
+                        value={formData.district}
+                        onChange={handleChange}
+                        placeholder="구/군 입력"
+                    />
                 </FormGroup>
 
                 <FormGroup>
@@ -608,12 +592,12 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>대학명<RequiredIndicator>*</RequiredIndicator></label>
-                    <StyledSelect
-                        name="university" 
-                        value={universityOptions.find(option => option.value === formData.university) || ''}
-                        onChange={(option) => handleChange({ name: "university", value: option.value })}
-                        options={universityOptions}
-                        placeholder="대학명 선택"
+                    <input
+                        type="text"
+                        name="university"
+                        value={formData.university}
+                        onChange={handleChange}
+                        placeholder="대학명 입력"
                     />
                 </FormGroup>
 
@@ -630,12 +614,12 @@ const MemInfo = () => {
 
                 <FormGroup>
                     <label>학과명<RequiredIndicator>*</RequiredIndicator></label>
-                    <StyledSelect
-                        name="major" 
-                        value={majorOptions.find(option => option.value === formData.major) || ''}
-                        onChange={(option) => handleChange({ name: "major", value: option.value })}
-                        options={majorOptions}  
-                        placeholder="학과명 선택"
+                    <input
+                        type="text"
+                        name="major"
+                        value={formData.major}
+                        onChange={handleChange}
+                        placeholder="학과명 입력"
                     />
                 </FormGroup>
 
