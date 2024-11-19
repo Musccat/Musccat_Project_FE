@@ -96,7 +96,7 @@ const HighlightedText = styled.span`
 const BenefitsList = styled.ul`
     list-style: none;
     padding: 0;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
 
     li {
         display: flex;
@@ -116,6 +116,20 @@ const BenefitsList = styled.ul`
             background-position: center; /* 이미지 위치 */
         }
     }
+
+    /* 특정 li에만 margin-bottom 변경 */
+    li:nth-child(3) {
+        margin-bottom: 5px; /* 세 번째 li만 margin-bottom을 5px로 설정 */
+    }
+`;
+
+const AdditionalInfo = styled.span`
+    display: block; /* 줄바꿈 */
+    font-size: 14px; /* 작은 글씨 크기 */
+    color: #888; /* 더 연한 회색 텍스트 */
+    margin-top: 0px; /* 위쪽 간격 조정 */
+    margin-bottom: 15px;
+    margin-left: -55px; /* 왼쪽으로 들여쓰기 */
 `;
 
 const ImageBetween = styled.img`
@@ -256,6 +270,9 @@ const Points = () => {
                     <li>개인 맞춤형 추천 서비스 무제한 이용 가능</li>
                     <li>이전 수혜자 조언 무제한 열람 가능</li>
                     <li>관심있는 장학금 알림 기능 사용 가능</li>
+                    <AdditionalInfo>
+                        (마감 임박 알림, 제출 서류 알림)
+                    </AdditionalInfo>
                 </BenefitsList>
                 <PayButton onClick={handleCompleteOrder}>4,900원 / 월</PayButton>
             </ContentBox>
