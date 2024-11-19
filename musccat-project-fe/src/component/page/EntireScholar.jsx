@@ -281,6 +281,7 @@ function EntireScholar() {
             goToNextPage, 
             goToPreviousPage,
             totalPages,
+            stateChanged 
         } = useAuth();
 
     const [search, setSearch] = useState(''); // 단일 검색어 상태
@@ -384,6 +385,10 @@ function EntireScholar() {
             setFilteredScholarships(scholarships);  // 장학금 데이터가 배열일 때만 설정
         }
     }, [scholarships]);
+
+    useEffect(() => {
+        setFilteredScholarships(scholarships);
+    }, [stateChanged]);
 
     const handleSearchChange = (e) => {
         setSearch(e.target.value);  // 검색어 설정
