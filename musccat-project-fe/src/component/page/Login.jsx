@@ -3,14 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../contexts/AuthContext';
 import styled from 'styled-components';
 import logo from '../ui/SCHOLLI_logo.jpeg';
-import appleLogo from '../ui/Apple.jpeg';
-import googleLogo from '../ui/Google.jpeg';
-import kakaoLogo from '../ui/Kakao.jpeg';
-
-const User = {
-    username: 'kimkt',
-    pw: 'ewha1234@@'
-}
 
 const Page = styled.div`
     position: absolute;
@@ -115,94 +107,16 @@ const BottomButton = styled.button`
     }
 `;
 
-const OptionsWrap = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: 8px;
-`;
-
-const AutoLoginWrap = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    font-size: 12px;
-    color: #262626;
-    margin-left: 5px;
-
-    input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        width: 16px;
-        height: 16px;
-        border: 1px solid #348a8c;
-        border-radius: 50%; /* 둥근 체크박스 */
-        outline: none;
-        cursor: pointer;
-        margin-right: 8px; /* 체크박스와 텍스트 간의 간격 조정 */
-        display: inline-block;
-        vertical-align: middle;
-        position: relative;
-    }
-
-    input[type="checkbox"]:checked {
-        background-color: #348a8c;
-        border: none;
-    }
-
-    input[type="checkbox"]:checked::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 8px; /* 체크된 원의 크기 */
-        height: 8px;
-        background-color: white;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-
-    label {
-        display: flex;
-        align-items: center; /* 같은 줄에 배치 */
-    }
-`;
-
 const FindInfoWrap = styled.div`
     display: flex;
     justify-content: flex-end; /* 오른쪽 정렬 */
-    margin-right: 10px;
-
-    .separator {
-        margin: 0 8px;
-        color: #dadada; /* 구분선 색상 */
-    }
+    margin-top: 8px; /* 로그인 버튼과의 간격 */
+    margin-right: 10px; /* 오른쪽 여백 */
 
     a {
-        font-size: 12px;
+        font-size: 14px;
         color: #348a8c;
         text-decoration: none;
-    }
-`;
-
-const SocialLoginWrap = styled.div`
-    text-align: center;
-    margin-top: 16px;
-
-    p {
-        font-size: 14px;
-        color: #262626;
-        margin-bottom: 8px;
-    }
-
-    img {
-        width: 50px;
-        height: 50px;
-        margin: 0 8px;
-        cursor: pointer;
     }
 `;
 
@@ -294,30 +208,12 @@ export default function Login() {
                     로그인
                 </BottomButton>
                 </form>
-                <OptionsWrap>
-                <AutoLoginWrap>
-                    <label>
-                        <input type="checkbox" /> 자동 로그인
-                    </label>
-                </AutoLoginWrap>
 
                 <FindInfoWrap>
-                    <a href="#!">아이디 찾기</a>
-                    <span className="separator">|</span>
-                    <a href="#!">비밀번호 찾기</a>
-                    <span className="separator">|</span>
                     <a href="#!" onClick={handleSignUpClick} >회원가입</a>
                 </FindInfoWrap>
-                </OptionsWrap>
                 
                 <Space />
-                <SocialLoginWrap>
-                <p>sign up with</p>
-                <Space />
-                <img src={appleLogo} alt="Apple" />
-                <img src={googleLogo} alt="Google" />
-                <img src={kakaoLogo} alt="Kakao" />
-                </SocialLoginWrap>
             </ContentWrap>
 
         </Page>
