@@ -116,7 +116,7 @@ const ScholarshipLink = styled(Link)`
 `;
 
 const MyInterest = () => {
-    const { likes = [], fetchLikedScholarships, handleLikeClick, likedScholarships, setLikedScholarships, fetchScholarships, authTokens, user } = useAuth();
+    const { setScholarships,fetchLikedScholarships,likedScholarships, setLikedScholarships, authTokens, setStateChanged, stateChanged, user } = useAuth();
     const navigate = useNavigate();
     const [filteredScholarships, setFilteredScholarships] = useState([]);
     const [localLikes, setLocalLikes] = useState([]);
@@ -145,41 +145,27 @@ const MyInterest = () => {
 
     const handleLikeAndRemove = async (index, scholarshipId) => {
         try {
-            const isLiked = likedScholarships.some(scholarship => scholarship.product_id === scholarshipId);
-    
-            if (isLiked) {
-                // 찜 삭제 요청
                 await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
                 });
     
                 // 상태 업데이트
-                setFilteredScholarships(prev =>
-                    prev.filter((_, i) => i !== index)
-                );
                 setLikedScholarships(prev =>
                     prev.filter(scholarship => scholarship.product_id !== scholarshipId)
                 );
-
-                // 전체 장학금 상태 새로고침
-                await fetchScholarships();
-            } else {
-                // 좋아요 추가 요청
-                await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
-                    user: user.id,
-                    scholarship_id: scholarshipId,
-                    added_at: new Date().toISOString(),
-                }, {
-                    headers: { Authorization: `Bearer ${authTokens.access}` },
-                });
-    
-                // 상태를 다시 가져오기
+                setScholarships(prev =>
+                    prev.map(scholarship =>
+                        scholarship.product_id === scholarshipId
+                            ? { ...scholarship, isLiked: false }
+                            : scholarship
+                    )
+                );
+                // 관심 목록 즉시 다시 가져오기
                 await fetchLikedScholarships();
+            } catch (error) {
+                console.error("Error in handleLikeAndRemove:", error.response || error.message);
+                alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해 주세요.");
             }
-        } catch (error) {
-            console.error("Error handling like click", error);
-            alert("찜 상태를 업데이트하는 데 실패했습니다. 다시 시도해 주세요.");
-        }
     };
 
     return (

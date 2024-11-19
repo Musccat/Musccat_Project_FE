@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState('');
+    const [stateChanged, setStateChanged] = useState(false);
 
     const storedUser = JSON.parse(localStorage.getItem("user")) || null;
 
@@ -672,7 +673,9 @@ export const AuthProvider = ({ children }) => {
         RegisterScholarship,
         setScholarDate,
         fetchRecommendedScholarships, 
-        loadScholarships
+        loadScholarships,
+        stateChanged,
+        setStateChanged,
     };
 
 /*
