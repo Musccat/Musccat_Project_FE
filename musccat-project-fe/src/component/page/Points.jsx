@@ -178,7 +178,7 @@ const PayButton = styled.button`
 
 const Points = () => {
     const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
-    const {  user, fetchUserData } = useAuth();
+    const {  user, fetchUserData, authTokens } = useAuth();
 
     useEffect(() => {
         fetchUserData(); // 컴포넌트가 마운트될 때 사용자 데이터 가져오기
@@ -187,8 +187,8 @@ const Points = () => {
     const axiosInstance = axios.create({
         withCredentials: true,
         headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_API_KEY}`,
-        }
+            Authorization: authTokens?.access ? `Bearer ${authTokens.access}` : '', // 토큰이 없으면 빈 문자열
+        },
     });
 
     const handleCompleteOrder = () => {
@@ -237,11 +237,13 @@ const Points = () => {
                     setIsPaymentTriggered(false); // 결제 상태 초기화
                 } catch (error) {
                     console.error('결제 확인 오류:', error);
+                } finally {
+                    setIsPaymentTriggered(false); // 항상 상태 초기화
                 }
             } else {
                 console.error('결제 실패:', rsp.error_msg);
+                setIsPaymentTriggered(false);
             }
-            setIsPaymentTriggered(false);
         });
     }
 
