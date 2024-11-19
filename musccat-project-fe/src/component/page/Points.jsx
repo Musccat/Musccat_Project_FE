@@ -226,7 +226,7 @@ const Points = () => {
         }, async (rsp) => {
             if (rsp.success) {
                 try {
-                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/payment/pay`, {
+                    const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/payment/pay/`, {
                             imp_uid: rsp.imp_uid,
                             merchant_uid: rsp.merchant_uid,
                             amount: fixedAmount,
