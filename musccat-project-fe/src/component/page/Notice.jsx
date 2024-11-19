@@ -140,7 +140,7 @@ const Space = styled.div`
 const Notice = () => {
     const [scholarship, setScholarship] = useState(null);
     const { product_id } = useParams();
-    const { fetchScholarDetail, handleLikeClick, likedScholarships, likes } = useAuth(); 
+    const { fetchScholarDetail, handleLikeClick, likedScholarships } = useAuth(); 
     const [isHeartFilled, setIsHeartFilled] = useState(false);
     const [hasError, setHasError] = useState(false); 
 
@@ -167,9 +167,14 @@ const Notice = () => {
         setIsHeartFilled(isLiked);
     }, [likedScholarships, product_id]);
 
-    const handleHeartClick = () => {
-        handleLikeClick(isHeartFilled, product_id);
-        setIsHeartFilled(!isHeartFilled); // UI 즉시 반영
+    const handleHeartClick = async () => {
+        try {
+            // 현재 좋아요 상태에 따라 요청
+            await handleLikeClick(0, product_id, isHeartFilled);
+            setIsHeartFilled(!isHeartFilled); // UI 즉시 반영
+        } catch (error) {
+            console.error("좋아요 요청 처리 중 에러 발생:", error);
+        }
     };
 
     return (
