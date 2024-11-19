@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import bcoin from '../ui/coin_book.jpeg';
 import rcoin from '../ui/coin_right.jpeg';
 import lcoin from '../ui/coin_left.jpeg';
+import check from '../ui/check.jpeg';
 import axios from 'axios';
 
 const Wrapper = styled.div`
@@ -16,7 +17,7 @@ const Wrapper = styled.div`
 const BackgroundContainer = styled.div`
     background: linear-gradient(to right, #348a8c, #1A3D46); // 좌에서 우로 진해지는 그라데이션
     height: 220px;
-    width: 65%;
+    width: 58%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -28,15 +29,12 @@ const BackgroundContainer = styled.div`
     z-index: 1;
 `;
 const BelowContainer = styled.div`
-    width: 65%; // BackgroundContainer와 동x일한 너비
-    max-width: 1200px; // 최대 너비 제한
+    width: 58%; // BackgroundContainer와 동x일한 너비
     margin: -80px auto 0; // BackgroundContainer와 ContentBox 간의 간격 조정
     padding: 50px 20px;
     background: #f9f9f9;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); // 약간의 그림자 추가
     position: relative;
     z-index: 1; // ContentBox 아래 레이어로 설정
-
     display: flex;
     flex-direction: column; // 내부 요소를 세로로 배치
     justify-content: flex-start; // 내부 요소 위쪽 정렬
@@ -55,7 +53,7 @@ const ContentBox = styled.div`
     border-radius: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     padding: 30px;
-    width: 100%;
+    width: 50%;
     max-width: 600px;
     text-align: center;
     margin: -17px auto; // ContentBox를 중앙에 유지
@@ -85,7 +83,7 @@ const Title = styled.h1`
     font-size: 40px;
     font-weight: bold;
     color: white; 
-    margin-left: -330px; // 왼쪽으로 더 이동
+    margin-left: -280px; // 왼쪽으로 더 이동
     margin-top: -30px; // 위로 이동
     line-height: 1.2;
 `;
@@ -108,9 +106,14 @@ const BenefitsList = styled.ul`
         color: #333;
 
         &:before {
-            content: '✔️';
+            content: '';
+            display: inline-block;
+            width: 20px; /* 아이콘 크기 */
+            height: 20px; /* 아이콘 크기 */
             margin-right: 10px;
-            color: #2F6877;
+            background-image: url(${check});
+            background-size: cover; /* 이미지 크기 조정 */
+            background-position: center; /* 이미지 위치 */
         }
     }
 `;
@@ -120,7 +123,7 @@ const ImageBetween = styled.img`
     height: auto;
     position: absolute; // 위치를 독립적으로 설정
     top: 210px; // 위에서부터의 위치 설정
-    left: 66%; // 가로 중앙 정렬
+    left: 63%; // 가로 중앙 정렬
     transform: translate(-50%, -50px); // 위치 조정 (중앙 정렬 + 살짝 위로)
     z-index: 3; // ContentBox 위로 올라오도록 설정
 `;
@@ -129,7 +132,7 @@ const ImageBetween1 = styled.img`
     width: 140px;
     height: auto;
     position: absolute; 
-    margin-left: -950px;
+    margin-left: -870px;
     margin-bottom: 110px;
 `;
 
@@ -138,7 +141,7 @@ const ImageBetween2 = styled.img`
     height: auto;
     position: absolute; // 위치를 독립적으로 설정
     top: 18px; // 위에서부터의 위치 설정
-    left: 96%; // 가로 중앙 정렬
+    left: 97%; // 가로 중앙 정렬
     transform: translate(-50%, -50px); // 위치 조정 (중앙 정렬 + 살짝 위로)
     z-index: 2; // ContentBox 위로 올라오도록 설정
     clip-path: inset(0 0 0 0);
@@ -149,6 +152,7 @@ const PayButton = styled.button`
     padding: 15px 0;
     width: 250px;
     background-color: #348a8c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     color: white;
     font-size: 18px;
     border: none;
