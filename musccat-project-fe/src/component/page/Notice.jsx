@@ -140,7 +140,16 @@ const Space = styled.div`
 const Notice = () => {
     const [scholarship, setScholarship] = useState(null);
     const { product_id } = useParams();
-    const { fetchScholarDetail, handleLikeClick, likedScholarships } = useAuth(); 
+    const { fetchScholarDetail, 
+            handleLikeClick, 
+            likedScholarships, 
+            scholarships,
+            setScholarships, 
+            stateChanged, 
+            setStateChanged, 
+            fetchScholarships, 
+            currentPage 
+            } = useAuth(); 
     const [isHeartFilled, setIsHeartFilled] = useState(false);
     const [hasError, setHasError] = useState(false); 
 
@@ -167,15 +176,34 @@ const Notice = () => {
         setIsHeartFilled(isLiked);
     }, [likedScholarships, product_id]);
 
+    useEffect(() => {
+        setScholarships(prevScholarships => prevScholarships.map(scholarship => ({
+            ...scholarship,
+            isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
+        })));
+    }, [likedScholarships]);
+
     const handleHeartClick = async () => {
         try {
             // 현재 좋아요 상태에 따라 요청
             await handleLikeClick(0, product_id, isHeartFilled);
             setIsHeartFilled(!isHeartFilled); // UI 즉시 반영
+
+            // 현재 페이지 데이터 갱신
+            fetchScholarships(currentPage);
+
+            setStateChanged(true); // 상태 변경 알림
         } catch (error) {
             console.error("좋아요 요청 처리 중 에러 발생:", error);
         }
     };
+
+    useEffect(() => {
+        if (stateChanged) {
+            fetchScholarships(currentPage).finally(() => setStateChanged(false));
+        }
+    }, [stateChanged, currentPage]);
+
 
     return (
         <>

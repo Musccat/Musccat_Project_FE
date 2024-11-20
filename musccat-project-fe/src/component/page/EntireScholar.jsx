@@ -275,13 +275,15 @@ function EntireScholar() {
     const { fetchScholarships, 
             handleLikeClick,
             likes, 
+            likedScholarships,
             scholarships,
             currentPage,
             setCurrentPage, 
             goToNextPage, 
             goToPreviousPage,
             totalPages,
-            stateChanged 
+            stateChanged,
+            setStateChanged
         } = useAuth();
 
     const [search, setSearch] = useState(''); // 단일 검색어 상태
@@ -389,6 +391,21 @@ function EntireScholar() {
     useEffect(() => {
         setFilteredScholarships(scholarships);
     }, [stateChanged]);
+
+    useEffect(() => {
+        // likedScholarships를 기반으로 scholarships의 isLiked 필드 업데이트
+        const updatedScholarships = scholarships.map(scholarship => ({
+            ...scholarship,
+            isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
+        }));
+        setFilteredScholarships(updatedScholarships); // 필터링된 장학금 목록 업데이트
+    }, [likedScholarships, scholarships]); // likedScholarships가 변경될 때 실행
+
+    useEffect(() => {
+        if (stateChanged) {
+            fetchScholarships(currentPage).finally(() => setStateChanged(false)); // 상태 초기화
+        }
+    }, [stateChanged, currentPage]); // 상태 변경 감지
 
     const handleSearchChange = (e) => {
         setSearch(e.target.value);  // 검색어 설정

@@ -33,6 +33,8 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [stateChanged, setStateChanged] = useState(false);
+    const [filteredScholarships, setFilteredScholarships] = useState([]);
+
 
     const storedUser = JSON.parse(localStorage.getItem("user")) || null;
 
@@ -217,11 +219,10 @@ export const AuthProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${authTokens.access}` }
             });
             // 좋아요 상태와 동기화
-            const likedScholarshipIds = likedScholarships.map(scholarship => scholarship.product_id);
-
+            const likedIds = likedScholarships.map(like => like.product_id);
             const updatedScholarships = response.data.results.map(scholarship => ({
                 ...scholarship,
-                isLiked: likedScholarshipIds.includes(scholarship.product_id),
+                isLiked: likedIds.includes(scholarship.product_id),
             }));
 
             setScholarships(updatedScholarships);
@@ -661,6 +662,8 @@ export const AuthProvider = ({ children }) => {
         setLikedScholarships,
         likes,
         setLikes,
+        filteredScholarships,
+        setFilteredScholarships,
         fetchFoundations,
         fetchScholarshipsByFoundation,
         fetchScholarDetail,
