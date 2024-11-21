@@ -573,7 +573,7 @@ function EntireScholar() {
                                             onClick={() => handleLikeClick(index, scholarship.product_id, likes[index], search)}
                                         >
                                             <img
-                                                src={likes[index] ? filledheart : emptyheart}
+                                                src={scholarships[index]?.isLiked ? filledheart : emptyheart}
                                                 alt="heart"
                                                 style={styles.heartImage}
                                             />

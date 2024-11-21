@@ -218,14 +218,15 @@ export const AuthProvider = ({ children }) => {
             const response = await axios.get(url, {
                 headers: { Authorization: `Bearer ${authTokens.access}` }
             });
+
             // 좋아요 상태와 동기화
-            const likedIds = likedScholarships.map(like => like.product_id);
             const updatedScholarships = response.data.results.map(scholarship => ({
                 ...scholarship,
-                isLiked: likedIds.includes(scholarship.product_id),
+                isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
             }));
 
             setScholarships(updatedScholarships);
+            setLikes(updatedScholarships.map(s => s.isLiked));
             setTotalPages(Math.ceil(response.data.count / 10));
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
@@ -233,6 +234,16 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (scholarships.length > 0) {
+            const updatedScholarships = scholarships.map(scholarship => ({
+                ...scholarship,
+                isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
+            }));
+            setFilteredScholarships(updatedScholarships); // 업데이트된 데이터만 설정
+        }
+    }, [scholarships, likedScholarships]);
 
     const goToNextPage = async () => {
         if (nextPageUrl) {
@@ -266,7 +277,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
     
-    const handleLikeClick = async (index, scholarshipId, isLiked, search = '') => {
+    const handleLikeClick = async (index, scholarshipId, isLiked) => {
         try {
             if (isLiked) {
                 // 좋아요 삭제 요청 
@@ -283,14 +294,19 @@ export const AuthProvider = ({ children }) => {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
                 });
             }
+                // `scholarships` 상태 업데이트
+                setScholarships(prev =>
+                    prev.map((scholarship, idx) =>
+                        idx === index ? { ...scholarship, isLiked: !isLiked } : scholarship
+                    )
+                );
     
-            // likes 상태 업데이트
-            const updatedLikes = [...likes];
-            updatedLikes[index] = !isLiked;
-            setLikes(updatedLikes);
-    
-            // 전체 장학금 데이터를 다시 가져옴
-            await fetchScholarships(currentPage, '', '', search);
+            // 현재 페이지의 likes 상태 업데이트
+            setLikes(prev => {
+                const updatedLikes = [...prev];
+                updatedLikes[index] = !isLiked;
+                return updatedLikes;
+            });
         } catch (error) {
             console.error("Error updating like status", error);
             alert("찜 상태를 업데이트하는 데 실패했습니다.");
