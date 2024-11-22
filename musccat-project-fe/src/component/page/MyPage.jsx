@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
 import DefaultProfileImage from '../ui/ProfileImage.jpeg';
+import Calendar from "react-calendar"; // 캘린더 라이브러리
+
 
 const Container = styled.div`
     margin: 20px;
@@ -13,6 +15,102 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 `;
+
+const CalendarContainer = styled.div`
+    margin-bottom: 20px;
+    max-width: 600px;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+
+    .react-calendar {
+    all: unset; /* 기존 스타일 초기화 */
+    font-family: Arial, sans-serif;
+    border: none;
+    }
+    .react-calendar__navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .react-calendar__navigation button {
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        color: #4f4f4f;
+        cursor: pointer;
+    }
+    .react-calendar__navigation button:hover {
+        color: #c4c4c4; /* 비활성화 버튼 색상 */
+    }
+    .react-calendar__month-view__weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #888888;
+        margin-bottom: 10px;
+        text-align: left; /* 요일 왼쪽 정렬 */
+        padding-left: 30px;
+    }
+
+    .react-calendar__month-view__days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        justify-items: start;  
+        text-align: left;
+    }
+    .react-calendar__tile {
+        text-align: center;
+        padding: 10px;
+        background-color: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .react-calendar__tile--now {
+        background-color: #e6f7f7;
+        color: #348a8c;
+        font-weight: bold;
+        border-radius: 50%;
+    }
+    .react-calendar__tile--active {
+        background-color: #348a8c;
+        color: white;
+        border-radius: 50%;
+    }
+    .react-calendar__tile:hover {
+        background-color: #f0f8f8;
+        color: #348a8c;
+    }
+    .react-calendar__tile--active:hover {
+        background-color: #348a8c;
+        color: white;
+        border-radius: 50%;
+    }
+    .event {
+        background-color: #348a8c;
+        color: white;
+        font-size: 12px;
+        padding: 2px 4px;
+        border-radius: 5px;
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+`;
+
 
 const Header = styled.div`
     display: flex;
@@ -159,7 +257,9 @@ const MyPage = () => {
     const [semester, setSemester] = useState('');
     const [totalGPA, setTotalGPA] = useState('');
     const [etc, setEtc] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date()); // 캘린더 선택 날짜
     const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
+    
 
     // 장학 기본 정보는 fetchUserData로 불러옴
     useEffect(() => {
@@ -222,6 +322,11 @@ const MyPage = () => {
         }
     }, [location.state?.isUpdated, fetchUserData]);
 
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        console.log("Selected date:", date); // 디버깅용
+    };
+
     return (
         <>
             <NavBar />
@@ -245,6 +350,14 @@ const MyPage = () => {
                     </ButtonGroup>
                 </UserInfo>
                 </Header>
+
+                <CalendarContainer>
+                    <Calendar 
+                        value={selectedDate} 
+                        onChange={handleDateChange} 
+                        locale="en-US" // 영어 locale
+                    />
+                </CalendarContainer>
 
                 <Section>
                     <Title>장학 기본 정보</Title>
