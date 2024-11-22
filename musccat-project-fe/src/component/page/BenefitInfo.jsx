@@ -79,18 +79,6 @@ const ButtonGroup = styled.div`
     margin-left: auto;
 `;
 
-const LikeButton = styled.button`
-    background-color: #348a8c;
-    color: #348a8c;
-    border: none;
-    padding: 4px 8px;
-    font-size: 12px;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-left: 10px;
-`;
-
 const EditButton = styled.button`
     background-color: white;
     color: #348a8c;
@@ -253,7 +241,6 @@ const BenefitInfo = () => {
                             <CardHeader>
                                 수혜자 {index + 1}
                                 <ButtonGroup>
-                                <LikeButton>좋아요</LikeButton>
                                 {user?.username === info.user.username && (
                                     <>
                                         <EditButton onClick={() => handleEdit(info)}>수정</EditButton>
