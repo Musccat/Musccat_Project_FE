@@ -66,6 +66,8 @@ const CalendarContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column; /* 수직 정렬 */
+    justify-content: flex-start;
     position: relative;
     width: auto; /* 상위 요소 크기에 맞추기 */
     height: auto; /* 상위 요소 크기에 맞추기 */
@@ -468,6 +470,7 @@ const MyPage = () => {
             </Container>
         </>
     );
+
 };
 
 export default MyPage;
