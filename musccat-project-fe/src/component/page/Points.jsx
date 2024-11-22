@@ -174,11 +174,47 @@ const PayButton = styled.button`
     cursor: pointer;
 `;
 
+const Popup = styled.div`
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px; 
+    width: 300px; 
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    z-index: 1000;
+
+    p {
+        margin-bottom: 40px;
+        font-size: 18px;
+        color: #2f4858;
+    }
+
+    button {
+        background-color: #2a6d6e;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 10px;
+
+        &:hover {
+            background-color: #2a6d6e;
+        }
+    }
+`;
+
 
 
 const Points = () => {
     const [isPaymentTriggered, setIsPaymentTriggered] = useState(false);
     const {  user, fetchUserData, authTokens } = useAuth();
+    const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
         fetchUserData(); // 컴포넌트가 마운트될 때 사용자 데이터 가져오기
@@ -234,7 +270,7 @@ const Points = () => {
                             payment_time: paymentTime
                     });
                     console.log('결제 성공:', response.data);
-                    setIsPaymentTriggered(false); // 결제 상태 초기화
+                    setShowPopup(true); // 결제 성공 후 팝업 표시
                 } catch (error) {
                     console.error('결제 확인 오류:', error);
                 } finally {
@@ -242,10 +278,15 @@ const Points = () => {
                 }
             } else {
                 console.error('결제 실패:', rsp.error_msg);
+                alert(`결제에 실패했습니다: ${rsp.error_msg}`);
                 setIsPaymentTriggered(false);
             }
         });
-    }
+    };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
 
     return (
         <>
@@ -280,6 +321,12 @@ const Points = () => {
             </ContentBox>
             </BelowContainer>
         </Wrapper>
+        {showPopup && (
+                <Popup>
+                    <p>구독이 완료되었습니다.</p>
+                    <button onClick={handleClosePopup}>닫기</button>
+                </Popup>
+            )}
         </>
 
     );
