@@ -645,6 +645,21 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const checkSubscriptionStatus = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/checksubscibe/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+            return response.data.isSubscribed; // 구독 여부 반환 (true/false)
+        } catch (error) {
+            console.error("Failed to check subscription status", error);
+            throw error;
+        }
+    };
+    
+
     const setScholarDate = async (scholarshipPeriod) => {
         console.log("Scholarship period being set:", scholarshipPeriod);
 
@@ -727,6 +742,7 @@ export const AuthProvider = ({ children }) => {
         setSearch,
         RegisterScholarship,
         setScholarDate,
+        checkSubscriptionStatus,
         fetchRecommendedScholarships, 
         loadScholarships,
         calendarScholarships,
