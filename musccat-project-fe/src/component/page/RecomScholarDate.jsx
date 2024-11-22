@@ -127,7 +127,7 @@ const Popup = styled.div`
 
 
 const RecomScholarDate = () => {
-    const { setScholarDate} = useAuth();
+    const { setScholarDate, checkSubscriptionStatus} = useAuth();
     const [recruitmentEnd, setRecruitmentEnd] = useState("");
     const [isFormValid, setIsFormValid] = useState(false);
     const [today, setToday] = useState(""); // 오늘 날짜 저장을 위한 상태
@@ -152,37 +152,37 @@ const RecomScholarDate = () => {
     const handleSubmit = async() => {
         if (isLoading) return;
 
-    const scholarshipPeriod = { recruitment_end: recruitmentEnd };
-    console.log("Sending scholarship period:", scholarshipPeriod); // 날짜 전송 로그
+        try {
+            const isSubscribed = await checkSubscriptionStatus(); // 구독 여부 확인
+            if (isSubscribed) {
 
-    try {
+                // 구독 중이라면 추천 기간 설정
+                const scholarshipPeriod = { recruitment_end: recruitmentEnd };
+                console.log("Sending scholarship period:", scholarshipPeriod);
 
-        setIsLoading(true);
-        
-        // 로딩 시작 전 에러 체크
-        const response = await setScholarDate(scholarshipPeriod); // 서버에 요청 보내기
-        console.log("Response from setScholarDate:", response); // 서버 응답 로그
+                setIsLoading(true);
 
-        // 성공적인 응답 처리
-        if (response && response.status === 200) {
-            setTimeout(() => {
-                alert("추천 기간 설정이 완료되었습니다.");
-                navigate('/recomscholar');
-                setIsLoading(false); // 완료 후 로딩 상태 해제
-            }, 100);
-        } else {
-            alert("기간 설정에 실패하였습니다. 다시 시도해주세요.");
-        }
-    } catch (error) {
-        console.error("Error submitting data:", error);
-            setIsLoading(false);
-            setShowPopup(true); // 구독 관련 팝업 띄우기
-            
+                const response = await setScholarDate(scholarshipPeriod);
+
+                if (response.status === 200) {
+                    alert("추천 기간 설정이 완료되었습니다.");
+                    navigate("/recomscholar");
+                } else {
+                    alert("기간 설정에 실패하였습니다. 다시 시도해주세요.");
+                }
+            } else {
+                // 구독 중이 아닌 경우
+                setShowPopup(true);
+            }
+        } catch (error) {
+            console.error("Error during submission:", error);
+            alert("서버 요청 중 오류가 발생했습니다.");
         } finally {
-            setIsLoading(false); // 로딩 상태를 항상 해제
+            setIsLoading(false);
         }
     };
 
+    
     const handleClosePopup = () => {
         setShowPopup(false); // 팝업 닫기
     };
