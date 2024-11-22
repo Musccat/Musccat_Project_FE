@@ -196,7 +196,7 @@ const MyInterest = () => {
                                     <td style={{ ...styles.thTd, paddingRight: "90px" }}>~{scholarship.recruitment_end}</td>
                                     <td style={styles.thTd}>
                                         <div style={styles.flexContainer}>
-                                            <Link to={`/reviews/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
+                                            <Link to={`/reviews/view/${scholarship.product_id}`} style={{ textDecoration: "none" }}>
                                                 <button style={styles.infoButton}>정보 보러가기</button>
                                             </Link>
                                             <button
