@@ -83,7 +83,7 @@ const CalendarContainer = styled.div`
     background-color: #348a8c; /* 선택된 날짜의 배경색 */
     color: white; /* 선택된 날짜의 숫자 색상 */
     font-weight: bold;
-    border-radius: 50%; /* 선택된 날짜만 원형 */
+    border-radius: 0%; /* 선택된 날짜만 원형 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,10 +96,10 @@ const CalendarContainer = styled.div`
 .react-calendar__tile--active:hover {
     background-color: #348a8c;
     color: white;
-    border-radius: 50%;
+    border-radius: 0%;
 }
 .event {
-    background-color: #2d7374;
+    background-color: #2f4858;
     color: white;
     font-size: 12px;
     padding: 4px 6px;
@@ -362,16 +362,29 @@ const MyPage = () => {
                     locale="en-US"
                     tileContent={({ date }) => {
                         console.log("Tile date:", date.toDateString());
+
                         const scholarshipsForDate = calendarScholarships.filter((scholarship) => {
-                            const scholarshipDate = new Date(scholarship.recruitment_end).toISOString().split("T")[0];
-                            const calendarDate = date.toISOString().split("T")[0];
-                            return scholarshipDate === calendarDate;
+                            const scholarshipDate = new Date(scholarship.recruitment_end);
+                            const calendarDate = new Date(date);
+
+                            // 날짜의 연도, 월, 일 비교
+                            return (
+                                scholarshipDate.getFullYear() === calendarDate.getFullYear() &&
+                                scholarshipDate.getMonth() === calendarDate.getMonth() &&
+                                scholarshipDate.getDate() === calendarDate.getDate()
+                            );
                         });
 
                         return scholarshipsForDate.length > 0 ? (
                             <div className="event">
                                 {scholarshipsForDate.map((scholarship) => (
-                                    <span key={scholarship.scholarship_id}>{scholarship.name}</span>
+                                    <span 
+                                        key={scholarship.scholarship_id}
+                                        onClick={() => navigate(`/notice/${scholarship.scholarship_id}`)} // 페이지 이동 설정
+                                        style={{ cursor: "pointer" }} // 클릭 가능 스타일 추가
+                                    >
+                                        {scholarship.name}
+                                    </span>
                                 ))}
                             </div>
                         ) : null;
