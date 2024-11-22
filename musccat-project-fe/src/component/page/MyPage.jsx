@@ -58,44 +58,55 @@ const CalendarContainer = styled.div`
     margin-bottom: 10px;
 }
 
-.react-calendar__month-view__days {
-}
-
-
 .react-calendar__tile {
     text-align: center;
-    padding: 5px;
+    padding: 0;
     background-color: transparent;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    border-radius: 50%; /* 숫자 버튼을 둥글게 */
-    padding: 20px;
+    width: auto; /* 상위 요소 크기에 맞추기 */
+    height: auto; /* 상위 요소 크기에 맞추기 */
+    margin: 25px 0px;
 }
 
 .react-calendar__tile--now {
-    background-color: #e6f7f7;
-    color: #348a8c;
-    font-weight: bold;
-    border-radius: 50%;
+    color: #348a8c; /* 오늘 날짜의 숫자 색상 */
+    font-weight: bold; /* 강조 (선택 사항) */
 }
 
 .react-calendar__tile--active {
-        background-color: #348a8c;
-        color: white;
-        border-radius: 50%;
-    }
-    .react-calendar__tile:hover {
-        background-color: #f0f8f8;
-        color: #348a8c;
-    }
-    .react-calendar__tile--active:hover {
-        background-color: #348a8c;
-        color: white;
-        border-radius: 50%;
-    }
+    background-color: #348a8c; /* 선택된 날짜의 배경색 */
+    color: white; /* 선택된 날짜의 숫자 색상 */
+    font-weight: bold;
+    border-radius: 50%; /* 선택된 날짜만 원형 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    
+.react-calendar__tile:hover {
+    background-color: #f0f8f8;
+    color: #348a8c;
+}
+.react-calendar__tile--active:hover {
+    background-color: #348a8c;
+    color: white;
+    border-radius: 50%;
+}
+.event {
+    background-color: #2d7374;
+    color: white;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 5px;
+    text-align: center;
+}
+
 `;
 
 
@@ -227,7 +238,7 @@ const Space = styled.div`
 const MyPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const {  user, fetchUserData } = useAuth();
+    const {  user, fetchUserData, calendarScholarships, fetchCalendarScholarships } = useAuth();
 
     const [fullName, setFullName] = useState('');
     const [userName, setUserName] = useState('');
@@ -291,6 +302,10 @@ const MyPage = () => {
     }, [user]);
 
     useEffect(() => {
+        fetchCalendarScholarships();
+    }, []);
+
+    useEffect(() => {
         const infoSubmitted = localStorage.getItem('isInfoSubmitted') === 'true';
         if (infoSubmitted) {
             setIsInfoSubmitted(true);
@@ -339,11 +354,27 @@ const MyPage = () => {
                 </Header>
 
                 <CalendarContainer>
-                    <Calendar 
-                        value={selectedDate} 
-                        onChange={handleDateChange} 
-                        locale="en-US" // 영어 locale
-                    />
+                <Calendar
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                    locale="en-US"
+                    tileContent={({ date }) => {
+                        console.log("Tile date:", date.toDateString());
+                        const scholarshipsForDate = calendarScholarships.filter((scholarship) => {
+                            const scholarshipDate = new Date(scholarship.recruitment_end).toISOString().split("T")[0];
+                            const calendarDate = date.toISOString().split("T")[0];
+                            return scholarshipDate === calendarDate;
+                        });
+
+                        return scholarshipsForDate.length > 0 ? (
+                            <div className="event">
+                                {scholarshipsForDate.map((scholarship) => (
+                                    <span key={scholarship.scholarship_id}>{scholarship.name}</span>
+                                ))}
+                            </div>
+                        ) : null;
+                    }}
+                />
                 </CalendarContainer>
 
                 <Section>

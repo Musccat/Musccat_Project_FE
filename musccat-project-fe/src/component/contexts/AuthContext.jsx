@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
     const [search, setSearch] = useState('');
     const [stateChanged, setStateChanged] = useState(false);
     const [filteredScholarships, setFilteredScholarships] = useState([]);
+    const [calendarScholarships, setCalendarScholarships] = useState([]); // 캘린더 장학금 상태
 
 
     const storedUser = JSON.parse(localStorage.getItem("user")) || null;
@@ -405,6 +406,33 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);  // 로딩 완료
         }
     };
+
+    // 캘린더 장학금 데이터 가져오기
+    const fetchCalendarScholarships = async () => {
+        if (!authTokens || !authTokens.access) {
+            console.error("No access token available.");
+            return;
+        }
+
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/calendar/`, {
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                },
+            });
+
+            const scholarships = response.data.map((scholarship) => ({
+                ...scholarship,
+                recruitment_end: new Date(scholarship.recruitment_end), // 날짜 변환
+            }));
+
+            setCalendarScholarships(scholarships);
+            console.log("Calendar scholarships loaded:", scholarships); // 데이터 확인
+        } catch (error) {
+            console.error("Failed to fetch calendar scholarships:", error);
+        }
+    };
+
     
     const loginUser = async (username, password) => {
         console.log(process.env.REACT_APP_API_URL); 
@@ -701,6 +729,8 @@ export const AuthProvider = ({ children }) => {
         setScholarDate,
         fetchRecommendedScholarships, 
         loadScholarships,
+        calendarScholarships,
+        fetchCalendarScholarships,
         stateChanged,
         setStateChanged,
     };
