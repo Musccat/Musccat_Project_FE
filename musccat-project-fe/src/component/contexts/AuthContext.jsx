@@ -647,7 +647,7 @@ export const AuthProvider = ({ children }) => {
 
     const checkSubscriptionStatus = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/checksubscibe/`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/checksubscribe/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
