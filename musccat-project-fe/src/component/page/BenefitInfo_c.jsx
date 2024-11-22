@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import NavBar from "../ui/NavBar";
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import benefitinfo from "../data/benefitinfo";
 
 const PageWrapper = styled.div`
@@ -59,6 +58,7 @@ const Card = styled.div`
     width: 50%; 
     margin: 0 auto 20px auto;
 `;
+
 
 const CardHeader = styled.div`
     font-size: 18px;
@@ -133,23 +133,54 @@ const DarkGrayInfoLabel = styled(InfoLabel)`
     font-weight: normal;
 `;
 
+const InfoDetailWrapper = styled.div`
+    position: relative; /* OverlayMessage가 이 컨테이너를 기준으로 배치 */
+    flex-grow: 1;
+`;
+
 const InfoDetail = styled.div`
     color: #666;
     flex-grow: 1;
     white-space: normal;
+    filter: ${(props) => (props.isBlurred ? "blur(4px)" : "none")}; /* Blur 효과 */
+    transition: filter 0.3s ease-in-out; /* 부드러운 전환 효과 */
+`;
+
+const OverlayMessage = styled.div`
+    display: ${(props) => (props.showMessage ? "flex" : "none")};
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #2f4858; /* 문구는 뚜렷하게 */
+    background-color: rgba(255, 255, 255, 0.1); /* 반투명 배경 */
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1; /* 문구를 블러 처리 위에 표시 */
+    pointer-events: none; /* 문구가 클릭을 방해하지 않도록 */
 `;
 
 const BenefitInfo_c = () => {
     const { product_id } = useParams();  // URL에서 id 파라미터 가져오기
     const [benefitInfoData, setBenefitInfoData] = useState([]);
+    const [isBlurred, setIsBlurred] = useState(false); // Blur 상태 관리
     
     useEffect(() => {
         // product_id에 해당하는 수혜 정보 필터링
-        const filteredData = benefitinfo
-            .filter(info => info.scholarship.id.toString() === product_id);
-            //.sort((a, b) => a.benefit_id - b.benefit_id); // benefit_id 오름차순 정렬
+        const filteredData = benefitinfo.filter(
+            (info) => info.scholarship.id.toString() === product_id
+        );
         setBenefitInfoData(filteredData);
+
+        // 특정 조건에서 Blur 효과 자동 적용
+        if (filteredData.length > 0) {
+            setIsBlurred(true); // 자동으로 Blur 활성화
+        }
     }, [product_id]);
+
     
 
     return (
@@ -189,31 +220,34 @@ const BenefitInfo_c = () => {
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>소득 분위</InfoLabel>
-                                    <InfoDetail>{info.incomeBracket}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.incomeBracket}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>대학 유형</InfoLabel>
-                                    <InfoDetail>{info.univCategory}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.univCategory}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>학과 계열</InfoLabel>
-                                    <InfoDetail>{info.majorCategory}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.majorCategory}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>수료 학기</InfoLabel>
-                                    <InfoDetail>{info.semesterCategory}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.semesterCategory}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>전체 성적</InfoLabel>
-                                    <InfoDetail>{info.totalGPA}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.totalGPA}</InfoDetail>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>합격 팁</InfoLabel>
-                                    <InfoDetail>{info.advice}</InfoDetail>
+                                    <InfoDetailWrapper>
+                                    <InfoDetail isBlurred={isBlurred}>{info.advice}</InfoDetail>
+                                    <OverlayMessage showMessage={true}>구독 후 열람 가능합니다</OverlayMessage>
+                                    </InfoDetailWrapper>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>면접 팁</InfoLabel>
-                                    <InfoDetail>{info.interviewTip}</InfoDetail>
+                                    <InfoDetail isBlurred={isBlurred}>{info.interviewTip}</InfoDetail>
                                 </InfoSection>
                             </CardContent>
                         </Card>

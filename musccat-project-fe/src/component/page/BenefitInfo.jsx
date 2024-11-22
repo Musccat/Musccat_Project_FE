@@ -132,10 +132,38 @@ const DarkGrayInfoLabel = styled(InfoLabel)`
     font-weight: normal;
 `;
 
+const InfoDetailWrapper = styled.div`
+    position: relative; /* OverlayMessage가 이 컨테이너를 기준으로 배치 */
+    flex-grow: 1;
+`;
+
 const InfoDetail = styled.div`
     color: #666;
     flex-grow: 1;
-    white-space: normal;
+    white-space: pre-wrap; /* 줄바꿈과 공백을 유지하며 텍스트를 감쌈 */
+    word-break: break-word; /* 긴 단어가 넘치지 않도록 강제로 줄바꿈 */
+    overflow-wrap: break-word; /* 최신 브라우저 지원 */
+    overflow: hidden; /* 넘치는 내용을 숨김 */
+    display: block;
+    filter: ${(props) => (props.isBlurred ? "blur(4px)" : "none")}; /* Blur 효과 */
+    transition: filter 0.3s ease-in-out; /* 부드러운 전환 효과 */
+`;
+
+const OverlayMessage = styled.div`
+    display: ${(props) => (props.showMessage ? "flex" : "none")};
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #2f4858; /* 문구는 뚜렷하게 */
+    background-color: rgba(255, 255, 255, 0.1); /* 반투명 배경 */
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1; /* 문구를 블러 처리 위에 표시 */
+    pointer-events: none; /* 문구가 클릭을 방해하지 않도록 */
 `;
 
 const BenefitInfo = () => {
@@ -144,42 +172,44 @@ const BenefitInfo = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [scholarship, setScholarship] = useState(null);
+    const [benefitInfoData, setBenefitInfoData] = useState([]);
+    const [isSubscribed, setIsSubscribed] = useState(false); // 구독 여부 상태
+    const [isBlurred, setIsBlurred] = useState(false); // Blur 상태 관리
 
     useEffect(() => {
-        // product_id가 존재할 때만 API 호출
-        if (product_id) {
-            fetchBenefitInfos(product_id).finally(() => setLoading(false)); 
-        } else {
-            console.error("product_id is undefined");
-            setLoading(false);  // 로딩 상태 해제
-        }
-    }, [product_id, fetchBenefitInfos]);
+        // API 호출
+        const fetchData = async () => {
+            try {
+                if (product_id) {
+                    // Fetch benefit infos
+                    const response = await fetchBenefitInfos(product_id);
+                    setIsSubscribed(response.is_subscribed);
+                    setBenefitInfoData(response.reviews || []);
 
-    useEffect(() => {
-        // product_id에 해당하는 장학금 상세 정보를 불러오는 함수 호출
-        if (product_id) {
-            fetchScholarDetail(product_id)
-                .then((response) => {
-                    const data = response.scholarship;
-                    if (data) {
-                        setScholarship(data); // 데이터를 상태로 설정
-                    } else {
-                        console.error("Scholarship data is missing");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching scholarship detail:", error);
-                });
-        }
-    }, [product_id, fetchScholarDetail]);
+                    // 구독 상태에 따라 Blur 설정
+                    setIsBlurred(!response.is_subscribed);
+                    console.log("isBlurred set to:", !response.is_subscribed); // 디버깅용
+
+                    // Fetch scholarship details
+                    const scholarResponse = await fetchScholarDetail(product_id);
+                    setScholarship(scholarResponse.scholarship || null);
+                } else {
+                    console.error("product_id is undefined");
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [product_id, fetchBenefitInfos, fetchScholarDetail]);
+
 
     if (loading) {
         return <div>Loading...</div>;  // 로딩 중일 때 표시
     }
-
-    // benefitInfos에서 해당 product_id에 대한 정보 가져오기
-    const benefitInfoData = Array.isArray(benefitInfos[product_id]) ? benefitInfos[product_id] : [];
-
 
     // 장학 정보 삭제 핸들러 함수
     // benefit_id(수혜 정보 고유 id)
@@ -193,6 +223,10 @@ const BenefitInfo = () => {
     const handleEdit = (info) => {
         navigate("/reviews", { state: { info } }); // 수정할 데이터를 state로 전달
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -228,6 +262,9 @@ const BenefitInfo = () => {
                                 </ButtonGroup>
                             </CardHeader>
                             <CardContent>
+                                {isSubscribed ? (
+                                    <>
+                                {/* 구독한 사용자에게만 보이는 내용 */}
                                 <InfoSection>
                                     <DarkGrayInfoLabel>{info.year}년도 수혜자</DarkGrayInfoLabel>
                                 </InfoSection>
@@ -253,13 +290,55 @@ const BenefitInfo = () => {
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>합격 팁</InfoLabel>
+                                    <InfoDetailWrapper>
                                     <InfoDetail>{info.advice}</InfoDetail>
+                                    </InfoDetailWrapper>
                                 </InfoSection>
                                 <InfoSection>
                                     <InfoLabel>면접 팁</InfoLabel>
                                     <InfoDetail>{info.interviewTip}</InfoDetail>
                                 </InfoSection>
-                            </CardContent>
+                                </>
+                            ) : (
+                            <>
+                                {/* 구독하지 않은 사용자에게 보여주는 내용 */}
+                                <InfoSection>
+                                    <DarkGrayInfoLabel>{info.year}년도 수혜자</DarkGrayInfoLabel>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>소득 분위</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.income}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>대학 유형</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.univCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>학과 계열</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.majorCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>수료 학기</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.semesterCategory}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>전체 성적</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.totalGPA}</InfoDetail>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>합격 팁</InfoLabel>
+                                    <InfoDetailWrapper>
+                                    <InfoDetail isBlurred={isBlurred}>{info.advice}</InfoDetail>
+                                    <OverlayMessage showMessage={true}>구독 후 열람 가능합니다</OverlayMessage>
+                                    </InfoDetailWrapper>
+                                </InfoSection>
+                                <InfoSection>
+                                    <InfoLabel>면접 팁</InfoLabel>
+                                    <InfoDetail isBlurred={isBlurred}>{info.interviewTip}</InfoDetail>
+                                </InfoSection>
+                                </>
+                            )}
+                        </CardContent>
                         </Card>
                     ))
                 ) : (

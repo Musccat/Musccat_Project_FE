@@ -549,14 +549,22 @@ export const AuthProvider = ({ children }) => {
                 },
             });
 
-            const data = Array.isArray(response.data) ? response.data : [response.data];
+            // 서버에서 오는 데이터 분리
+            const { is_subscribed, reviews } = response.data;
 
+            // `benefitInfos` 상태를 업데이트
             setBenefitInfos(prevState => ({
                 ...prevState,
-                [product_id]: data,
+                [product_id]: {
+                    is_subscribed,
+                    reviews,
+                },
             }));
+            // 반환값으로 `is_subscribed`와 `reviews` 전달
+            return { is_subscribed, reviews };
         } catch (error) {
             console.error("Failed to fetch benefit information:", error);
+            throw error; // 에러를 호출한 곳으로 전달
         }
     };
 
