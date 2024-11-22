@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import NavBar from '../ui/NavBar';
 import DefaultProfileImage from '../ui/ProfileImage.jpeg';
+import Calendar from "react-calendar"; // 캘린더 라이브러리
+
 
 const Container = styled.div`
     margin: 20px;
@@ -13,6 +15,102 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 `;
+
+const CalendarContainer = styled.div`
+    margin-bottom: 20px;
+    max-width: 600px;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+
+    .react-calendar {
+    font-family: Arial, sans-serif;
+    border: none;
+}
+
+.react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.react-calendar__navigation button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4f4f4f;
+    cursor: pointer;
+}
+    .react-calendar__navigation button:hover {
+    color: #c4c4c4;
+}
+
+.react-calendar__month-view__weekdays {
+    display: grid;
+    font-size: 14px;
+    font-weight: bold;
+    color: #888888;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.react-calendar__tile {
+    text-align: center;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* 수직 정렬 */
+    justify-content: flex-start;
+    position: relative;
+    width: auto; /* 상위 요소 크기에 맞추기 */
+    height: auto; /* 상위 요소 크기에 맞추기 */
+    margin: 25px 0px;
+}
+
+.react-calendar__tile--now {
+    color: #348a8c; /* 오늘 날짜의 숫자 색상 */
+    font-weight: bold; /* 강조 (선택 사항) */
+}
+
+.react-calendar__tile--active {
+    background-color: #348a8c; /* 선택된 날짜의 배경색 */
+    color: white; /* 선택된 날짜의 숫자 색상 */
+    font-weight: bold;
+    border-radius: 0%; /* 선택된 날짜만 원형 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    
+.react-calendar__tile:hover {
+    background-color: #f0f8f8;
+    color: #348a8c;
+}
+.react-calendar__tile--active:hover {
+    background-color: #348a8c;
+    color: white;
+    border-radius: 0%;
+}
+.event {
+    background-color: #2f4858;
+    color: white;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 5px;
+    text-align: center;
+}
+
+`;
+
 
 const Header = styled.div`
     display: flex;
@@ -142,7 +240,7 @@ const Space = styled.div`
 const MyPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const {  user, fetchUserData } = useAuth();
+    const {  user, fetchUserData, calendarScholarships, fetchCalendarScholarships } = useAuth();
 
     const [fullName, setFullName] = useState('');
     const [userName, setUserName] = useState('');
@@ -159,7 +257,9 @@ const MyPage = () => {
     const [semester, setSemester] = useState('');
     const [totalGPA, setTotalGPA] = useState('');
     const [etc, setEtc] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date()); // 캘린더 선택 날짜
     const [isInfoSubmitted, setIsInfoSubmitted] = useState(false);
+    
 
     // 장학 기본 정보는 fetchUserData로 불러옴
     useEffect(() => {
@@ -204,6 +304,10 @@ const MyPage = () => {
     }, [user]);
 
     useEffect(() => {
+        fetchCalendarScholarships();
+    }, []);
+
+    useEffect(() => {
         const infoSubmitted = localStorage.getItem('isInfoSubmitted') === 'true';
         if (infoSubmitted) {
             setIsInfoSubmitted(true);
@@ -221,6 +325,11 @@ const MyPage = () => {
             fetchUserData(); // 사용자 정보 업데이트
         }
     }, [location.state?.isUpdated, fetchUserData]);
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        console.log("Selected date:", date); // 디버깅용
+    };
 
     return (
         <>
@@ -245,6 +354,43 @@ const MyPage = () => {
                     </ButtonGroup>
                 </UserInfo>
                 </Header>
+
+                <CalendarContainer>
+                <Calendar
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                    locale="en-US"
+                    tileContent={({ date }) => {
+                        console.log("Tile date:", date.toDateString());
+
+                        const scholarshipsForDate = calendarScholarships.filter((scholarship) => {
+                            const scholarshipDate = new Date(scholarship.recruitment_end);
+                            const calendarDate = new Date(date);
+
+                            // 날짜의 연도, 월, 일 비교
+                            return (
+                                scholarshipDate.getFullYear() === calendarDate.getFullYear() &&
+                                scholarshipDate.getMonth() === calendarDate.getMonth() &&
+                                scholarshipDate.getDate() === calendarDate.getDate()
+                            );
+                        });
+
+                        return scholarshipsForDate.length > 0 ? (
+                            <div className="event">
+                                {scholarshipsForDate.map((scholarship) => (
+                                    <span 
+                                        key={scholarship.scholarship_id}
+                                        onClick={() => navigate(`/notice/${scholarship.scholarship_id}`)} // 페이지 이동 설정
+                                        style={{ cursor: "pointer" }} // 클릭 가능 스타일 추가
+                                    >
+                                        {scholarship.name}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : null;
+                    }}
+                />
+                </CalendarContainer>
 
                 <Section>
                     <Title>장학 기본 정보</Title>
@@ -337,6 +483,7 @@ const MyPage = () => {
             </Container>
         </>
     );
+
 };
 
 export default MyPage;
