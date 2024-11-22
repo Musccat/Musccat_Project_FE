@@ -183,6 +183,7 @@ const BenefitInfo = () => {
                 if (product_id) {
                     // Fetch benefit infos
                     const response = await fetchBenefitInfos(product_id);
+                    console.log("Benefit Infos Response:", response); // 디버깅용
                     setIsSubscribed(response.is_subscribed);
                     setBenefitInfoData(response.reviews || []);
 
@@ -253,7 +254,7 @@ const BenefitInfo = () => {
                                 수혜자 {index + 1}
                                 <ButtonGroup>
                                 <LikeButton>좋아요</LikeButton>
-                                {user?.id === info.user.id && (
+                                {user?.username === info.user.username && (
                                     <>
                                         <EditButton onClick={() => handleEdit(info)}>수정</EditButton>
                                         <DeleteButton onClick={() => handleDelete(info.id)}>삭제</DeleteButton>
