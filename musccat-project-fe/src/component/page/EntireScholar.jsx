@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import styled from "styled-components";
 import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
+import { sharedMarginStyle } from "../ui/sharedStyle";
 
 
 const styles = {
@@ -16,14 +17,14 @@ const styles = {
         padding: "20px",  
         boxSizing: "border-box"  
     },
-    outerContainer: {  
-        border: "2px solid #348a8c", 
-        borderRadius: "8px", 
-        padding: "20px", 
-        maxWidth: "1200px", 
-        marginTop: "50px",
-        backgroundColor: "white", 
-        boxSizing: "border-box"
+    outerContainer: {
+        width: "1200px", // 고정된 가로 크기
+        border: "2px solid #348a8c",
+        borderRadius: "8px",
+        padding: "20px",
+        backgroundColor: "white",
+        boxSizing: "border-box",
+        ...sharedMarginStyle, // 공통 여백 적용
     },
     container: {
         margin: "20px",
@@ -78,7 +79,7 @@ const styles = {
         justifyContent: "center", 
         alignItems: "center", 
         margin: "20px auto", 
-        padding: "0 50px", 
+        padding: "0 50px",
         maxWidth: "1200px", 
     },
     table: {
@@ -192,8 +193,9 @@ const styles = {
         marginBottom: "20px",
         marginTop: "10px",  
     }
-
 };
+
+
 const ScholarshipLink = styled(Link)`
     text-decoration: none;
     color: inherit;
@@ -269,6 +271,7 @@ const Dropdown2 = styled.div`
     max-height: 200px;
     width: 180px;
 `;
+
 
 function EntireScholar() {
     // 상태 관리
@@ -434,7 +437,6 @@ function EntireScholar() {
         setDropdownVisible(false);
 
         setCurrentPage(1);  // 첫 페이지로 이동
-
 
         let orderOption = '';
         switch (option) {

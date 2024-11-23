@@ -29,10 +29,10 @@ const styles = {
         color: "black",
         marginBottom: "20px",  
         marginTop: "0px",
-        paddingLeft: "20px", 
+        paddingLeft: "70px", 
     },
     mainContainer: { 
-        maxWidth: "900px",  
+        maxWidth: "880px",  
         width: "100%",  
         margin: "0 auto",  
         padding: "20px",  // 상하단 여백만 추가
