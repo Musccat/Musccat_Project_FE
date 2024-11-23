@@ -22,7 +22,7 @@ const FullWidthSection = styled.div`
 const ScholarshipTitleWrapper = styled.div`
     display: flex;
     align-items: baseline;
-    margin-left: 200px;
+    margin-left: 280px;
     margin-right: 50px;
     justify-content: space-between;
     width: 100%;
@@ -67,7 +67,7 @@ const AnnouncementBar = styled(FullWidthSection)`
 
 const Section = styled.div`
     margin-top: 50px;
-    margin-left: 200px;
+    margin-left: 290px;
     margin-bottom: 50px;
 `;
 
@@ -110,8 +110,8 @@ const ListItem = styled.li`
     font-size: 1.2em;
 `;
 const HighlightBox = styled.div`
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 290px;
+    margin-right: 290px;
     background-color: rgba(52, 138, 140, 0.19);
     padding: 20px;
     border-radius: 5px;
@@ -119,8 +119,8 @@ const HighlightBox = styled.div`
 `;
 
 const WarningBox = styled.div`
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 290px;
+    margin-right: 290px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 5px;
@@ -136,6 +136,7 @@ const WarningBox = styled.div`
 const Space = styled.div`
     height: 20px; /* 여백 크기 설정 */
 `;
+
 
 const Notice = () => {
     const [scholarship, setScholarship] = useState(null);
@@ -203,7 +204,6 @@ const Notice = () => {
             fetchScholarships(currentPage).finally(() => setStateChanged(false));
         }
     }, [stateChanged, currentPage]);
-
 
     return (
         <>
