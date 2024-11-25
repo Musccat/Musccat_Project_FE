@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
             ? jwtDecode(JSON.parse(localStorage.getItem("authTokens")).access)
             : null
     );
+
+
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
@@ -45,6 +47,12 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const initializeUserData = async () => {
+
+            if (!authTokens || !authTokens.access) {
+                console.warn("Auth tokens are not available. Skipping data initialization.");
+                return;
+            }
+
             // 로컬 스토리지에서 사용자 데이터 불러오기
             console.log("Initializing user data...");
             const storedUser = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"));
@@ -59,7 +67,7 @@ export const AuthProvider = ({ children }) => {
             }
 
             // 좋아요 상태 초기화
-            if (storedLikedScholarships && storedLikes) {
+            if (storedLikedScholarships && storedLikedScholarships.length > 0) {
                 setLikedScholarships(storedLikedScholarships);
                 setLikes(storedLikes);
                 console.log("Liked scholarships loaded from localStorage:", storedLikedScholarships);
@@ -377,11 +385,16 @@ export const AuthProvider = ({ children }) => {
 
             setLikedScholarships(fetchedScholarships);
             localStorage.setItem("likedScholarships", JSON.stringify(fetchedScholarships));
-            
+            console.log("Successfully fetched liked scholarships:", fetchedScholarships);
         } catch (error) {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+
+    useEffect(() => {
+        console.log("Auth tokens on MyInterest mount:", authTokens);
+        console.log("Liked scholarships on mount:", likedScholarships);
+    }, [authTokens, likedScholarships]);
     
 
     const fetchScholarDetail = async (product_id) => {
@@ -483,6 +496,7 @@ export const AuthProvider = ({ children }) => {
     
                 // 로그인 후 사용자 데이터를 불러와서 설정
                 await fetchUserData();  
+                await fetchLikedScholarships();
     
                 // 로그인 상태를 true로 변경
                 setIsAuthenticated(true);

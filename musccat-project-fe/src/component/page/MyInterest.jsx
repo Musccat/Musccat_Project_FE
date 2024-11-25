@@ -122,17 +122,26 @@ const MyInterest = () => {
 
     useEffect(() => {
         const initializeLikedScholarships = async () => {
-            // 로컬 스토리지에서 likedScholarships 불러오기
-            const storedLikedScholarships = JSON.parse(localStorage.getItem('likedScholarships'));
+            if (!authTokens || !authTokens.access) {
+                console.warn("Auth tokens are not available. Skipping liked scholarships initialization.");
+                return;
+            }
+
+            try {
+                const storedLikedScholarships = JSON.parse(localStorage.getItem("likedScholarships"));
     
-            if (storedLikedScholarships && storedLikedScholarships.length > 0) {
-                setLikedScholarships(storedLikedScholarships);
-            } else if (authTokens && authTokens.access) {
-                // 로컬 스토리지에 데이터가 없으면 서버에서 데이터 불러오기
-                await fetchLikedScholarships();
+                if (storedLikedScholarships && storedLikedScholarships.length > 0) {
+                    console.log("Loaded from localStorage:", storedLikedScholarships);
+                    setLikedScholarships(storedLikedScholarships);
+                } else if (authTokens && authTokens.access) {
+                    console.log("Fetching liked scholarships from server...");
+                    await fetchLikedScholarships();
+                }
+            } catch (error) {
+                console.error("Error initializing liked scholarships:", error);
             }
         };
-    
+
         initializeLikedScholarships();
     }, [authTokens]);
 
@@ -163,6 +172,11 @@ const MyInterest = () => {
             alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해 주세요.");
         }
     };
+
+    useEffect(() => {
+        console.log("Auth tokens on MyInterest mount:", authTokens);
+        console.log("Liked scholarships on mount:", likedScholarships);
+    }, [authTokens, likedScholarships]);
 
     return (
         <>
