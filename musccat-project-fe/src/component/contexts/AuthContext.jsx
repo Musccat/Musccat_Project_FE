@@ -221,13 +221,12 @@ export const AuthProvider = ({ children }) => {
             });
 
             // 좋아요 상태와 동기화
-            const updatedScholarships = response.data.results.map(scholarship => ({
+            const updatedScholarships = response.data.results.map((scholarship) => ({
                 ...scholarship,
-                isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
+                isLiked: likedScholarships.some((liked) => liked.product_id === scholarship.product_id),
             }));
 
             setScholarships(updatedScholarships);
-            setLikes(updatedScholarships.map(s => s.isLiked));
             setTotalPages(Math.ceil(response.data.count / 10));
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
@@ -285,7 +284,15 @@ export const AuthProvider = ({ children }) => {
                 await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
                 });
+                
+                setLikedScholarships((prev) => {
+                    const updated = prev.filter((scholarship) => scholarship.product_id !== scholarshipId);
+                    localStorage.setItem("likedScholarships", JSON.stringify(updated));
+                    return updated;
+                });
+                
             } else {
+                const selectedScholarship = scholarships[index];
                 // 좋아요 추가 요청 
                 await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
@@ -294,20 +301,22 @@ export const AuthProvider = ({ children }) => {
                 }, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
                 });
+
+                if (selectedScholarship) {
+                    setLikedScholarships((prev) => [
+                        ...prev,
+                        { product_id: scholarshipId, name: selectedScholarship.name, foundation_name: selectedScholarship.foundation_name, recruitment_end: selectedScholarship.recruitment_end  },
+                    ]);
+                }
             }
-                // `scholarships` 상태 업데이트
-                setScholarships(prev =>
-                    prev.map((scholarship, idx) =>
-                        idx === index ? { ...scholarship, isLiked: !isLiked } : scholarship
-                    )
-                );
-    
-            // 현재 페이지의 likes 상태 업데이트
-            setLikes(prev => {
-                const updatedLikes = [...prev];
-                updatedLikes[index] = !isLiked;
-                return updatedLikes;
-            });
+            // `scholarships` 상태 업데이트
+            const updatedScholarships = scholarships.map((scholarship, idx) =>
+                idx === index ? { ...scholarship, isLiked: !isLiked } : scholarship
+            );
+            setScholarships(updatedScholarships);        
+
+            // 로컬 스토리지에 저장
+            localStorage.setItem('likedScholarships', JSON.stringify(likedScholarships));
         } catch (error) {
             console.error("Error updating like status", error);
             alert("찜 상태를 업데이트하는 데 실패했습니다.");
@@ -326,30 +335,46 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
+
+            const fetchedScholarships = response.data.map((liked) => ({
+                product_id: liked.scholarship_id,
+                foundation_name: liked.foundation_name,
+                name: liked.name,
+                recruitment_end: liked.recruitment_end,
+            }));
             
-            // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
-            const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
-
-            const filteredScholarships = scholarships.filter(scholarship =>
-                likedScholarshipIds.includes(scholarship.product_id)
-            );
-            
-            // likedScholarships 상태 업데이트
-            setLikedScholarships(filteredScholarships);
-
-            const updatedLikes = scholarships.map(scholarship =>
-                likedScholarshipIds.includes(scholarship.product_id)
-            );
-            setLikes(updatedLikes);
-
-            // 좋아요 상태를 localStorage에 저장
-            localStorage.setItem("likedScholarships", JSON.stringify(filteredScholarships));
-            localStorage.setItem("likes", JSON.stringify(updatedLikes));
-            console.log("Liked scholarships stored in localStorage:", filteredScholarships);
+            // 중복 제거 후 likedScholarships 업데이트
+            setLikedScholarships((prev) => {
+                const uniqueScholarships = [
+                    ...prev,
+                    ...fetchedScholarships.filter(
+                        (newScholarship) =>
+                            !prev.some((prevScholarship) => prevScholarship.product_id === newScholarship.product_id)
+                    ),
+                ];
+                localStorage.setItem("likedScholarships", JSON.stringify(uniqueScholarships));
+                return uniqueScholarships;
+            });
         } catch (error) {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+
+    useEffect(() => {
+        // 좋아요 상태를 로컬 스토리지에 저장
+        localStorage.setItem('likedScholarships', JSON.stringify(likedScholarships));
+    }, [likedScholarships]);
+    
+    useEffect(() => {
+        // 로컬 스토리지에서 좋아요 상태 불러오기
+        const storedLikes = JSON.parse(localStorage.getItem('likedScholarships'));
+        if (storedLikes) {
+            setLikedScholarships(storedLikes);
+        } else {
+            fetchLikedScholarships(); // 서버에서 초기 데이터 가져오기
+        }
+    }, []);
+    
 
     const fetchScholarDetail = async (product_id) => {
         try {
