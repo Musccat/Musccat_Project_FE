@@ -189,10 +189,10 @@ const Title = styled.h2`
 
 function RecomScholar(props) {
 
-const { user, scholarships, setScholarships, loadScholarships, fetchUserData, likes, handleLikeClick, authTokens  } = useAuth(); 
+const { user, scholarships, setScholarships, loadScholarships, fetchUserData, likes, handleLikeClick, likedScholarships, authTokens  } = useAuth(); 
 const [isLoading, setIsLoading] = useState(true);
 const [hasFetchedData, setHasFetchedData] = useState(false); // 데이터가 이미 로드되었는지 확인
-
+const [filteredScholarships, setFilteredScholarships] = useState([]);
 const location = useLocation(); // 현재 위치 가져오기
 
     // 사용자 데이터와 장학금 데이터 불러오기
@@ -209,8 +209,15 @@ const location = useLocation(); // 현재 위치 가져오기
                 const scholarshipsData = await loadScholarships();
                 console.log("Scholarships data:", scholarshipsData);
                 if (Array.isArray(scholarshipsData)) {
-                    setScholarships(scholarshipsData);
-                    console.log("Scholarships loaded:", scholarshipsData);
+                    // 데이터를 가공하여 `likedScholarships`와 연동
+                    const processedScholarships = scholarshipsData.map((item) => ({
+                        ...item.scholarship,
+                        product_id: item.product_id,
+                        isLiked: likedScholarships.some((liked) => liked.product_id === item.product_id),
+                    }));
+
+                    setScholarships(processedScholarships);
+                    setFilteredScholarships(processedScholarships); // 필터링된 데이터에도 반영
                 } else {
                     console.error("Scholarships data is not an array");
                 }
@@ -222,11 +229,10 @@ const location = useLocation(); // 현재 위치 가져오기
             }
         };
 
-        // authTokens가 존재하고, 데이터가 로드되지 않았으면 fetchData 실행
         if (authTokens && !hasFetchedData) {
             fetchData();
         }
-    }, [authTokens, user, fetchUserData, loadScholarships, hasFetchedData]);
+    }, [authTokens, user, fetchUserData, loadScholarships, likedScholarships, hasFetchedData]);
 
     // 페이지를 벗어날 때 localStorage의 장학금 데이터 삭제
     useEffect(() => {
@@ -289,7 +295,13 @@ return (
                                                 </Link>
                                                     <button
                                                         style={styles.heartButton}
-                                                        onClick={() => handleLikeClick(index, item.scholarship.product_id || item.product_id)}
+                                                        onClick={() => handleLikeClick(
+                                                            index,
+                                                            item.scholarship.name,
+                                                            item.scholarship.product_id,
+                                                            item.scholarship.foundation_name,
+                                                            item.scholarship.recruitment_end,
+                                                            likes[index])}
                                                     >
                                                         <img
                                                             src={likes[index] ? filledheart : emptyheart}
