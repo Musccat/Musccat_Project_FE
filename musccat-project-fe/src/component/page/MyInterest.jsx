@@ -2,7 +2,6 @@ import React, { useEffect,useState } from 'react';
 import NavBar from '../ui/NavBar';
 import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
-import emptyheart from "../ui/emptyheart.jpeg";
 import filledheart from "../ui/filledheart.jpeg";
 import { useAuth } from "../contexts/AuthContext";
 import axios from 'axios';
@@ -122,51 +121,62 @@ const MyInterest = () => {
     const [localLikes, setLocalLikes] = useState([]);
 
     useEffect(() => {
-         // authTokens가 존재할 때만 fetchLikedScholarships 호출
-        if (authTokens && authTokens.access) {
-            fetchLikedScholarships();
-            console.log("Fetched liked scholarships on MyInterest page.");
-        }
+        const initializeLikedScholarships = async () => {
+            if (!authTokens || !authTokens.access) {
+                console.warn("Auth tokens are not available. Skipping liked scholarships initialization.");
+                return;
+            }
+
+            try {
+                const storedLikedScholarships = JSON.parse(localStorage.getItem("likedScholarships"));
+    
+                if (storedLikedScholarships && storedLikedScholarships.length > 0) {
+                    console.log("Loaded from localStorage:", storedLikedScholarships);
+                    setLikedScholarships(storedLikedScholarships);
+                } else if (authTokens && authTokens.access) {
+                    console.log("Fetching liked scholarships from server...");
+                    await fetchLikedScholarships();
+                }
+            } catch (error) {
+                console.error("Error initializing liked scholarships:", error);
+            }
+        };
+
+        initializeLikedScholarships();
     }, [authTokens]);
 
 
     useEffect(() => {
         if (likedScholarships && likedScholarships.length > 0) {
             setFilteredScholarships(likedScholarships);
-            setLocalLikes(likedScholarships.map(() => true)); // 모든 좋아요를 true로 초기화
-            console.log("Setting filtered scholarships and likes in MyInterest:", likedScholarships);
+            localStorage.setItem('likedScholarships', JSON.stringify(likedScholarships));
         }
     }, [likedScholarships]);
 
-    useEffect(() => {
-        // likedScholarships 상태 변화 시 filteredScholarships 업데이트
-        setFilteredScholarships(likedScholarships);
-    }, [likedScholarships]);
-
-    const handleLikeAndRemove = async (index, scholarshipId) => {
+    const handleUnlike = async (scholarshipId) => {
         try {
-                await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
-                    headers: { Authorization: `Bearer ${authTokens.access}` },
-                });
-    
-                // 상태 업데이트
-                setLikedScholarships(prev =>
-                    prev.filter(scholarship => scholarship.product_id !== scholarshipId)
-                );
-                setScholarships(prev =>
-                    prev.map(scholarship =>
-                        scholarship.product_id === scholarshipId
-                            ? { ...scholarship, isLiked: false }
-                            : scholarship
-                    )
-                );
-                // 관심 목록 즉시 다시 가져오기
-                await fetchLikedScholarships();
-            } catch (error) {
-                console.error("Error in handleLikeAndRemove:", error.response || error.message);
-                alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해 주세요.");
-            }
+            await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
+                headers: { Authorization: `Bearer ${authTokens.access}` },
+            });
+
+            // 상태 업데이트
+            setLikedScholarships((prev) =>
+                prev.filter((scholarship) => scholarship.product_id !== scholarshipId)
+            );
+
+            setFilteredScholarships((prev) =>
+                prev.filter((scholarship) => scholarship.product_id !== scholarshipId)
+            );
+        } catch (error) {
+            console.error("Error in handleUnlike:", error.response || error.message);
+            alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해 주세요.");
+        }
     };
+
+    useEffect(() => {
+        console.log("Auth tokens on MyInterest mount:", authTokens);
+        console.log("Liked scholarships on mount:", likedScholarships);
+    }, [authTokens, likedScholarships]);
 
     return (
         <>
@@ -201,13 +211,13 @@ const MyInterest = () => {
                                             </Link>
                                             <button
                                                 style={styles.heartButton}
-                                                onClick={() => handleLikeAndRemove(index, scholarship.product_id)}
+                                                onClick={() => handleUnlike(scholarship.product_id)}
                                             >
                                                 <img
-                                                    src={localLikes[index] ? filledheart : emptyheart}
-                                                    alt="heart"
-                                                    style={styles.heartImage}
-                                                />
+                                                        src={filledheart}
+                                                        alt="heart"
+                                                        style={styles.heartImage}
+                                                    />
                                             </button>
                                         </div>
                                     </td>
