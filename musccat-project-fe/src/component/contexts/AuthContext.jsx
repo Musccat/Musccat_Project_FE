@@ -17,8 +17,6 @@ export const AuthProvider = ({ children }) => {
             ? jwtDecode(JSON.parse(localStorage.getItem("authTokens")).access)
             : null
     );
-
-
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
@@ -39,7 +37,6 @@ export const AuthProvider = ({ children }) => {
     const [stateChanged, setStateChanged] = useState(false);
     const [filteredScholarships, setFilteredScholarships] = useState([]);
     const [calendarScholarships, setCalendarScholarships] = useState([]); // 캘린더 장학금 상태
-
 
     const storedUser = JSON.parse(localStorage.getItem("user")) || null;
 
@@ -237,6 +234,7 @@ export const AuthProvider = ({ children }) => {
             }));
 
             setScholarships(updatedScholarships);
+            setLikes(updatedScholarships.map(s => s.isLiked));
             setTotalPages(Math.ceil(response.data.count / 10));
         } catch (error) {
             console.error("Failed to fetch scholarships", error);
@@ -304,7 +302,7 @@ export const AuthProvider = ({ children }) => {
                 await axios.delete(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/delete/${scholarshipId}/`, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
                 });
-                
+
                 // likedScholarships와 scholarships 업데이트
                 setLikedScholarships((prev) => {
                     const updatedLikes = prev.filter((scholarship) => scholarship.product_id !== scholarshipId);
@@ -319,7 +317,6 @@ export const AuthProvider = ({ children }) => {
                             : scholarship
                     )
                 );
-                
             } else {
                 const selectedScholarship = scholarships[index];
                 // 좋아요 추가 요청 
@@ -350,13 +347,13 @@ export const AuthProvider = ({ children }) => {
                         scholarship.product_id === scholarshipId
                             ? { ...scholarship, isLiked: true }
                             : scholarship
-                    )
-                );
-            }
-            } catch (error) {
-                console.error("Error updating like status", error);
-                alert("찜 상태를 업데이트하는 데 실패했습니다.");
-            }
+                )
+            );
+        }
+        } catch (error) {
+            console.error("Error updating like status", error);
+            alert("찜 상태를 업데이트하는 데 실패했습니다.");
+        }
     };
 
     useEffect(() => {
@@ -375,6 +372,9 @@ export const AuthProvider = ({ children }) => {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
+            
+            // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
+            const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
 
             const fetchedScholarships = response.data.map((liked) => ({
                 product_id: liked.scholarship_id,
@@ -395,7 +395,6 @@ export const AuthProvider = ({ children }) => {
         console.log("Auth tokens on MyInterest mount:", authTokens);
         console.log("Liked scholarships on mount:", likedScholarships);
     }, [authTokens, likedScholarships]);
-    
 
     const fetchScholarDetail = async (product_id) => {
         try {
@@ -497,7 +496,7 @@ export const AuthProvider = ({ children }) => {
                 // 로그인 후 사용자 데이터를 불러와서 설정
                 await fetchUserData();  
                 await fetchLikedScholarships();
-    
+
                 // 로그인 상태를 true로 변경
                 setIsAuthenticated(true);
     
