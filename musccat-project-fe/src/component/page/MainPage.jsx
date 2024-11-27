@@ -21,6 +21,7 @@ import Mainpage9 from '../ui/mainpage9.jpeg';
 import Mainpage10 from '../ui/mainpage10.jpeg';
 import Mainpage11 from '../ui/mainpage11.jpeg';
 import Mainpage12 from '../ui/mainpage12.jpeg';
+import Scholli_logo from '../ui/SCHOLLI_logo.jpeg';
 
 //#348a8c #2f6877 #2f4858
 
@@ -168,7 +169,7 @@ const ImageText5 = styled.h2`
 
 const ImageText6 = styled.h2`
     font-size: 30px; /* 텍스트 크기 */
-    color: black; /* 텍스트 색상을 흰색으로 변경 */
+    color: #777777; /* 텍스트 색상을 흰색으로 변경 */
     padding: 8px 16px; /* 텍스트 주위 여백 추가 */
     border-radius: 8px; /* 배경의 모서리를 둥글게 */
     width: 100%; /* 컨테이너의 너비를 늘림 (필요에 따라 조정 가능) */
@@ -204,7 +205,7 @@ const ImageText7 = styled.h2`
 
 const ImageText8 = styled.h2`
     font-size: 30px; /* 텍스트 크기 */
-    color: black; /* 텍스트 색상을 흰색으로 변경 */
+    color: #777777; /* 텍스트 색상을 흰색으로 변경 */
     padding: 8px 16px; /* 텍스트 주위 여백 추가 */
     border-radius: 8px; /* 배경의 모서리를 둥글게 */
     width: 100%; /* 컨테이너의 너비를 늘림 (필요에 따라 조정 가능) */
@@ -383,6 +384,51 @@ const LoginText3 = styled.p`
     z-index: 10;
 `;
 
+const Footer = styled.footer`
+    width: 100%;
+    background-color: #ffffff; /* 하얀색 배경 */
+    display: flex;
+    justify-content: center; /* 양쪽 정렬 */
+    align-items: center;
+    padding: 20px; /* 상하 및 좌우 패딩 */
+    border-top: 1px solid #ccc; /* 상단에 얇은 선 추가 */
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #333;
+`;
+const FooterLogo = styled.img`
+    width: 100px; /* 로고 크기 설정 */
+    height: auto; /* 비율 유지 */
+    margin-right: 20px; /* 로고와 텍스트 사이 여백 */
+    transform: translate(-130px, -10px);
+`;
+
+const FooterWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: flex-start; /* 위쪽 정렬 */
+    transform: translateX(80px); /* 오른쪽으로 이동 */
+`;
+
+const FooterLeft = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-right: 160px;
+`;
+
+const FooterCenter = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 102px;
+`;
+
+const FooterRight = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 160px;
+    margin-bottom: 102px;
+`;
 
 
 
@@ -561,11 +607,27 @@ function MainPage(props) {
                     }}
                 />
             </MainImageContainer2>
-
-
-
-
-
+            {/* Footer 추가 */}
+            <Footer>
+                <FooterLogo src={Scholli_logo} alt="Footer Logo" />
+                <FooterWrapper>
+                <FooterLeft>
+                    <p>㈜스콜리</p>
+                    <p>대표 000</p>
+                    <p>서울시 서대문구 이화여대길 52</p>
+                    <p>사업자등록번호 123-45-67890</p>
+                </FooterLeft>
+                <FooterCenter>
+                    <p>scholli@google.com</p>
+                    <p>02-1234-5678</p>
+                </FooterCenter>
+                <FooterRight>
+                    <p>서비스이용약관</p>
+                    <p>개인정보처리방침</p>
+                    <p>고객센터</p>
+                </FooterRight>
+                </FooterWrapper>
+            </Footer>
         </>
     );
 }
