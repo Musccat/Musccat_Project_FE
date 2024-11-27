@@ -227,6 +227,18 @@ const TextContainer5 = styled.div`
     text-align: center; /* 텍스트를 가운데 정렬 */
 `;
 
+const TextContainer5_1 = styled.div`
+    position: absolute; 
+    top: 50%; /* 컨테이너 기준 중앙 */
+    left: 50%; 
+    transform: translate(-50%, -450%); /* 중앙 정렬 */
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 텍스트를 중앙 정렬 */
+    gap: 5px; /* 두 텍스트 사이의 공백 */
+    width: 80%; /* 컨테이너의 너비를 늘림 (필요에 따라 조정 가능) */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+`;
 const ImageText9 = styled.h2`
     font-size: 50px; /* 텍스트 크기 */
     color: black; 
@@ -337,7 +349,7 @@ const SubImage2 = styled.img`
     max-width: 800px; /* 각 이미지의 최대 너비 */
     height: auto;
     margin: 0px; /* 이미지 간 간격 */
-    transform: translate(-490px, -960px); /* 왼쪽으로 10px 이동 */
+    transform: translate(-350px, -960px); /* 왼쪽으로 10px 이동 */
     z-index: 1; /* SubImage1보다 아래에 배치 */
 `;
 const SubImage3 = styled.img`
@@ -354,7 +366,7 @@ const SubImage4 = styled.img`
     max-width: 800px; /* 각 이미지의 최대 너비 */
     height: auto;
     margin: 0px; /* 이미지 간 간격 */
-    transform: translate(650px, -2000px); /* 왼쪽으로 10px 이동 */
+    transform: translate(790px, -2000px); /* 왼쪽으로 10px 이동 */
     z-index: 1; /* SubImage1보다 아래에 배치 */
     margin: 0px;
 `;
@@ -447,7 +459,7 @@ function MainPage(props) {
 
     const handleRecomScholarButtonClick = () => {
         if (isAuthenticated) {
-            navigate('/recomscholar'); // 로그인 상태이면 /recomscholar로 이동
+            navigate('/recomscholardate'); // 로그인 상태이면 /recomscholar로 이동
         } else {
             navigate('/users/login'); // 로그인 상태가 아니면 /users/login로 이동
         }
@@ -462,17 +474,145 @@ function MainPage(props) {
     };
 
     const handleRegisterScholarButtonClick = () => {
-        if (isAuthenticated) {
-            navigate('/addscholar'); // 로그인 상태이면 /addscholar로 이동
-        } else {
-            navigate('/users/login'); // 로그인 상태가 아니면 /users/login로 이동
-        }
+            navigate('/addscholar'); // 로그인 유무에 상관없이 /addscholar로 이동
     }
     
     return (
         <>
             {isAuthenticated ? <NavBar /> : <NavBarB />}
+            {isAuthenticated ? (
+            <>
             <MainImageContainer1>
+                <TextContainer1>
+                    <ImageText1>스콜리,</ImageText1>
+                    <ImageText2>나의 맞춤 장학금을 만나다</ImageText2>
+                </TextContainer1>
+                <Arrow1 src={Mainpage12} alt="Main page illustration2"/>
+                <TextContainer2>
+                <ImageText3>장학금을 알아보고 계신가요?</ImageText3>
+                <ImageText4>분산된 장학금 정보를 한눈에 확인하고,</ImageText4>
+                <ImageText4>나의 상황에 적합한 장학금을 추천받아 편리하게 지원하세요.</ImageText4>
+                </TextContainer2>
+                <MainImage1 src={Mainpage1} alt="Main page illustration1" />
+                <MainImage1 src={Mainpage2} alt="Main page illustration2" />
+            </MainImageContainer1>
+            <Section>
+                <SubImage1 src={Mainpage3} alt="Section Image 3" />
+                <SubImage2 src={Mainpage6} alt="Section Image 6" />
+                <TextContainer3>
+                    <ImageText5>다양한 기관과 단체의 장학금을</ImageText5>
+                    <ImageText5>한눈에 확인</ImageText5>
+                    <ImageText6>분산되어 있는 장학금 정보를</ImageText6>
+                    <ImageText6>통합하여 제공합니다.</ImageText6>
+                </TextContainer3>
+                <img
+                src={Mainpage4} 
+                alt="Additional illustration below text" 
+                style={{
+                    marginTop: '13px', // 텍스트와의 간격
+                    width: '80%', // 이미지 폭
+                    maxWidth: '350px', // 최대 너비 제한
+                    height: 'auto', // 비율 유지 
+                    transform: 'translate(-255%, -1475%)',
+                    zIndex: 10, 
+                }}
+                onClick={handleEntireScholarButtonClick} 
+                />
+                <SubImage3 src={Mainpage5} alt="Section Image 5" />
+                <SubImage4 src={Mainpage7} alt="Section Image 7" 
+                    style={{
+                        marginBottom: '0px', // SubImage4의 하단 여백을 제거
+                    }}
+                />
+                <TextContainer4>
+                    <ImageText7>나의 상황에 딱 맞는</ImageText7>
+                    <ImageText7>장학금 추천</ImageText7>
+                    <ImageText8>사용자 프로필을 분석하여</ImageText8>
+                    <ImageText8>장학금을 추천해드립니다.</ImageText8>
+                </TextContainer4>
+                <img
+                src={Mainpage4} 
+                alt="Additional illustration below text" 
+                style={{
+                    marginTop: '13px', // 텍스트와의 간격
+                    width: '80%', // 이미지 폭
+                    maxWidth: '350px', // 최대 너비 제한
+                    height: 'auto', // 비율 유지 
+                    transform: 'translate(35%, -2350%)',
+                    zIndex: 10, 
+                }}
+                onClick={handleRecomScholarButtonClick} 
+                />
+                {!isAuthenticated && (
+                    <LoginText3>* 로그인 후 이용하실 수 있는 서비스입니다.</LoginText3>
+                )}
+            </Section>
+            <MainImageContainer2>
+                <MainImage2 
+                    src={Mainpage8} 
+                    alt="Main page illustration8"
+                    style={{
+                        marginTop: '0px',
+                        marginBottom: '10px', // 하단 여백 추가
+                    }}
+                />
+                <MainImage3 
+                    src={Mainpage10} 
+                    alt="Main page illustration10" 
+                    style={{
+                        marginTop: '10px', // 상단 여백 추가
+                    }}
+                />
+                <TextContainer5_1>
+                <ImageText9>장학 수혜 정보를 입력하고 서비스를 직접 체험해보세요. </ImageText9>
+                <img
+                src={Mainpage9} 
+                alt="Additional illustration below text" 
+                style={{
+                    marginTop: '16px', // 텍스트와의 간격
+                    width: '80%', // 이미지 폭
+                    maxWidth: '400px', // 최대 너비 제한
+                    height: 'auto', // 비율 유지 
+                }}
+                onClick={handleBenifitButtonClick} 
+                />
+                </TextContainer5_1>
+                <TextContainer6>
+                <ImageText10>장학 재단이신가요?</ImageText10>
+                <ImageText11>직접 장학 사업명을 등록할 수 있어요</ImageText11>
+                <img
+                src={Mainpage4} 
+                alt="Additional illustration below text" 
+                style={{
+                    marginTop: '13px', // 텍스트와의 간격
+                    width: '80%', // 이미지 폭
+                    maxWidth: '350px', // 최대 너비 제한
+                    height: 'auto', // 비율 유지 
+                }}
+                onClick={handleRegisterScholarButtonClick} 
+                />
+                </TextContainer6>
+                <img
+                    src={Mainpage11} // 추가할 이미지의 경로
+                    alt="mainpage11 illustration below text"
+                    style={{
+                        marginTop: '10px', // 위 요소와의 간격
+                        width: '80%', // 이미지 폭
+                        maxWidth: '1000px', // 최대 너비 제한
+                        height: 'auto', // 비율 유지
+                        zIndex: 2,
+                        position: 'absolute', // 위치 기준 설정
+                        left: '50%', // 부모 기준 가로 중앙
+                        top: '50%', // 부모 기준 세로 중앙
+                        transform: 'translate(-50%, 20%)'// 중앙 정렬 및 위치 조정
+                    }}
+                    />
+                </MainImageContainer2>
+            </>
+        ) : (
+            // 비로그인 상태일 때
+            <>
+                <MainImageContainer1>
                 <TextContainer1>
                     <ImageText1>스콜리,</ImageText1>
                     <ImageText2>나의 맞춤 장학금을 만나다</ImageText2>
@@ -587,9 +727,6 @@ function MainPage(props) {
                 }}
                 onClick={handleRegisterScholarButtonClick} 
                 />
-                {!isAuthenticated && (
-                    <LoginText>* 로그인 후 이용하실 수 있는 서비스입니다.</LoginText>
-                )}
                 </TextContainer6>
                 <img
                     src={Mainpage11} // 추가할 이미지의 경로
@@ -605,8 +742,10 @@ function MainPage(props) {
                         top: '50%', // 부모 기준 세로 중앙
                         transform: 'translate(-50%, 20%)'// 중앙 정렬 및 위치 조정
                     }}
-                />
-            </MainImageContainer2>
+                    />
+                </MainImageContainer2>
+            </>
+        )}
             {/* Footer 추가 */}
             <Footer>
                 <FooterLogo src={Scholli_logo} alt="Footer Logo" />
