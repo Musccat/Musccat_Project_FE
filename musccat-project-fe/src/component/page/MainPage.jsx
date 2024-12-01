@@ -145,9 +145,8 @@ const ImageText4 = styled.h2`
 
 const TextContainer3 = styled.div`
     position: absolute; /* 컨테이너를 이미지 위로 배치 */
-    top: 63%; /* 컨테이너의 상단 위치 */
-    left: 50%; /* 컨테이너의 가로 중앙 */
-    transform: translate(-55%, 610%); /* 중앙 정렬 */
+    transform: translate(-80px, -2350px); 
+    z-index: 3;
     display: flex;
     flex-direction: column; /* 세로 방향으로 정렬 */
     align-items: center; /* 텍스트를 중앙 정렬 */
@@ -180,16 +179,14 @@ const ImageText6 = styled.h2`
 
 const TextContainer4 = styled.div`
     position: absolute; /* 컨테이너를 이미지 위로 배치 */
-    top: 63%; /* 컨테이너의 상단 위치 */
-    left: 50%; /* 컨테이너의 가로 중앙 */
-    transform: translate(-43%, 890%); /* 중앙 정렬 */
+    transform: translate(80px, -1250px); 
+    z-index: 10;
     display: flex;
     flex-direction: column; /* 세로 방향으로 정렬 */
     align-items: center; /* 텍스트를 중앙 정렬 */
     gap: 0px; /* 두 텍스트 사이의 공백 */
     width: 80%; /* 컨테이너의 너비를 늘림 (필요에 따라 조정 가능) */
     text-align: center; /* 텍스트를 가운데 정렬 */
-    z-index: 10;
 `;
 
 const ImageText7 = styled.h2`
@@ -383,7 +380,7 @@ const LoginText2 = styled.p`
     font-size: 25px; /* Adjust font size as needed */
     color: #666; /* Use a slightly muted color for the text */
     text-align: left;
-    transform: translate(-500px, -1950px);
+    transform: translate(-420px, 0px);
     z-index: 10;
 `;
 
@@ -392,7 +389,7 @@ const LoginText3 = styled.p`
     font-size: 25px; /* Adjust font size as needed */
     color: #666; /* Use a slightly muted color for the text */
     text-align: left;
-    transform: translate(520px, -2965px);
+    transform: translate(430px, -0px);
     z-index: 10;
 `;
 
@@ -504,7 +501,6 @@ function MainPage(props) {
                     <ImageText5>한눈에 확인</ImageText5>
                     <ImageText6>분산되어 있는 장학금 정보를</ImageText6>
                     <ImageText6>통합하여 제공합니다.</ImageText6>
-                </TextContainer3>
                 <img
                 src={Mainpage4} 
                 alt="Additional illustration below text" 
@@ -513,11 +509,12 @@ function MainPage(props) {
                     width: '80%', // 이미지 폭
                     maxWidth: '350px', // 최대 너비 제한
                     height: 'auto', // 비율 유지 
-                    transform: 'translate(-255%, -1475%)',
+                    transform: 'translate(-125%, 0%)',
                     zIndex: 10, 
                 }}
                 onClick={handleEntireScholarButtonClick} 
                 />
+                </TextContainer3>
                 <SubImage3 src={Mainpage5} alt="Section Image 5" />
                 <SubImage4 src={Mainpage7} alt="Section Image 7" 
                     style={{
@@ -529,23 +526,21 @@ function MainPage(props) {
                     <ImageText7>장학금 추천</ImageText7>
                     <ImageText8>사용자 프로필을 분석하여</ImageText8>
                     <ImageText8>장학금을 추천해드립니다.</ImageText8>
-                </TextContainer4>
                 <img
                 src={Mainpage4} 
                 alt="Additional illustration below text" 
                 style={{
                     marginTop: '13px', // 텍스트와의 간격
-                    width: '80%', // 이미지 폭
+                    width: '100%', // 이미지 폭
                     maxWidth: '350px', // 최대 너비 제한
                     height: 'auto', // 비율 유지 
-                    transform: 'translate(35%, -2350%)',
-                    zIndex: 10, 
+                    transform: 'translate(125%, 0%)',
+                    alignItems: 'left',
+                    zIndex: 15, 
                 }}
                 onClick={handleRecomScholarButtonClick} 
                 />
-                {!isAuthenticated && (
-                    <LoginText3>* 로그인 후 이용하실 수 있는 서비스입니다.</LoginText3>
-                )}
+                </TextContainer4>
             </Section>
             <MainImageContainer2>
                 <MainImage2 
@@ -634,7 +629,6 @@ function MainPage(props) {
                     <ImageText5>한눈에 확인</ImageText5>
                     <ImageText6>분산되어 있는 장학금 정보를</ImageText6>
                     <ImageText6>통합하여 제공합니다.</ImageText6>
-                </TextContainer3>
                 <img
                 src={Mainpage4} 
                 alt="Additional illustration below text" 
@@ -643,7 +637,7 @@ function MainPage(props) {
                     width: '80%', // 이미지 폭
                     maxWidth: '350px', // 최대 너비 제한
                     height: 'auto', // 비율 유지 
-                    transform: 'translate(-255%, -1475%)',
+                    transform: 'translate(-125%, 0%)',
                     zIndex: 10, 
                 }}
                 onClick={handleEntireScholarButtonClick} 
@@ -651,6 +645,7 @@ function MainPage(props) {
                 {!isAuthenticated && (
                     <LoginText2>* 로그인 후 이용하실 수 있는 서비스입니다.</LoginText2>
                 )}
+                </TextContainer3>
                 <SubImage3 src={Mainpage5} alt="Section Image 5" />
                 <SubImage4 src={Mainpage7} alt="Section Image 7" 
                     style={{
@@ -662,23 +657,24 @@ function MainPage(props) {
                     <ImageText7>장학금 추천</ImageText7>
                     <ImageText8>사용자 프로필을 분석하여</ImageText8>
                     <ImageText8>장학금을 추천해드립니다.</ImageText8>
-                </TextContainer4>
                 <img
                 src={Mainpage4} 
                 alt="Additional illustration below text" 
                 style={{
                     marginTop: '13px', // 텍스트와의 간격
-                    width: '80%', // 이미지 폭
+                    width: '100%', // 이미지 폭
                     maxWidth: '350px', // 최대 너비 제한
                     height: 'auto', // 비율 유지 
-                    transform: 'translate(35%, -2400%)',
-                    zIndex: 10, 
+                    transform: 'translate(125%, 0%)',
+                    alignItems: 'left',
+                    zIndex: 15, 
                 }}
                 onClick={handleRecomScholarButtonClick} 
                 />
                 {!isAuthenticated && (
                     <LoginText3>* 로그인 후 이용하실 수 있는 서비스입니다.</LoginText3>
                 )}
+                </TextContainer4>
             </Section>
             <MainImageContainer2>
                 <MainImage2 
