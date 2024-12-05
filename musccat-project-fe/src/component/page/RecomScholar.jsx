@@ -127,46 +127,6 @@ const ScholarshipLink = styled(Link)`
     }
 `;
 
-const SortButtonContainer = styled.div`
-    position: relative;
-    margin-right: 10px;
-`;
-
-const SortButton = styled.button`
-    width: 140px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: ${props => props.bgColor || "#348a8c"};
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    position: relative; 
-    z-index: 2;
-    text-align: center;
-`;
-
-const DropdownItem = styled.div`
-    padding: 10px 20px;
-    cursor: pointer;
-    white-space: nowrap;
-`;
-
-const Dropdown = styled.div`
-    position: absolute;
-    top: calc(100% + 4px); // 버튼 바로 아래에 위치하도록 설정
-    left: 50%;
-    transform: translateX(-50%); // 중앙 정렬
-    background-color: white;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    z-index: 3;
-    border-radius: 4px;
-    overflow-y: auto;
-    max-height: 200px;
-    width: max-content;
-`;
-
-
 const WarningBox = styled.div`
     background-color: #ffffff;
     padding: 20px;
