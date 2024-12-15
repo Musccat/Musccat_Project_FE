@@ -19,7 +19,6 @@
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent" alt="Minju's GitHub stats" width="350px"/>
         </td>
-
         <!-- 두 번째 팀원 -->
         <td align="center" width="50%">
             <img src="https://avatars.githubusercontent.com/hayeong" alt="Avatar" width="100px"/><br/>
