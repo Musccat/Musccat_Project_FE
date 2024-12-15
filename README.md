@@ -5,10 +5,10 @@
 ## 👩‍💻 팀원
 <table border="1" cellspacing="0" cellpadding="0" width="90%">
     <tr>
-        <td align="center"><a href="https://github.com/judymoody59">채민주</a></td>
+        <td align="left"><img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/></td>
     </tr>
     <tr>
-        <td align="left"><img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/></td>
+        <td align="center"><a href="https://github.com/judymoody59">채민주</a></td>
     </tr>
 </table>
 
