@@ -19,6 +19,8 @@
     </tr>
 </table>
 
+![Minju's GitHub stats](https://github-readme-stats.vercel.app/api?judymoody59=anuraghazra&show_icons=true&theme=transparent)
+
 <br/>
 
 ## 🛠️ 기술 스택
