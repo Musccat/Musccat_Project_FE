@@ -49,6 +49,11 @@ npm install react-router-dom // useNavigate를 사용하기 위해 React Router 
 npm install axios // API 호출을 위해 사용
 npm install jwt-decode // JWT 토큰을 디코딩하기 위해 사용
 npm install dotenv // process.env.REACT_APP_API_URL와 같은 환경 변수를 사용하기 위해 설치
+```
 
+```
+npm install styled-components // 컴포넌트 스타일링을 위해 사용
+npm install react-select // 드롭다운 선택 기능을 위해 사용
+npm install react-calendar // 달력 UI를 위한 라이브러리
 ```
 
