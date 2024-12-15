@@ -45,5 +45,10 @@ npm start // 애플리케이션 실행
 
 
 ```
+npm install react-router-dom // useNavigate를 사용하기 위해 React Router 설치
+npm install axios // API 호출을 위해 사용
+npm install jwt-decode // JWT 토큰을 디코딩하기 위해 사용
+npm install dotenv // process.env.REACT_APP_API_URL와 같은 환경 변수를 사용하기 위해 설치
+
 ```
 
