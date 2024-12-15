@@ -15,9 +15,12 @@
         <!-- 프로필 이미지 및 링크 -->
         <td align="center" width="50%">
             <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/>
+            <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/>
             <br/>
             <tr>
-            <td align="center"><a href="https://github.com/judymoody59">채민주</a>            </td>
+            <td align="center"><a href="https://github.com/judymoody59">채민주</a>
+            <td align="center"><a href="https://github.com/judymoody59">변하영</a>
+            </td>
             </tr>
         </td>
         </td>
