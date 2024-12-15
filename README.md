@@ -21,7 +21,7 @@
         </td>
         <!-- 두 번째 팀원 -->
         <td align="center" width="50%">
-            <img src="https://avatars.githubusercontent.com/hayeong" alt="Avatar" width="100px"/><br/>
+            <img src="https://avatars.githubusercontent.com/hayong39" alt="Avatar" width="100px"/><br/>
             <a href="https://github.com/hayong39">변하영</a>
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=hayong39&show_icons=true&theme=transparent" alt="Hayeong's GitHub stats" width="350px"/>
