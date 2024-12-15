@@ -29,35 +29,33 @@
 
 ## 📂 프로젝트 아키텍처
 
+```
 src/
 ├── component/                   # 프로젝트 주요 컴포넌트 폴더
-│   ├── contexts/                # Context API 관련 코드
-│   │   └── AuthContext.jsx      # 인증 관련 Context
-│   ├── data/                    # (데이터 관련 폴더, 필요 시 설명 추가)
-│   ├── list/                    # 리스트 관련 컴포넌트 (필요 시 추가 설명)
+│   ├── contexts/                
+│   │   └── AuthContext.jsx      # Context API 관련 코드
+│   ├── data/                   
+│   ├── list/                    
 │   └── page/                    # 페이지 단위 컴포넌트
-│       ├── AddScholar.jsx       # 장학금 추가 페이지
-│       ├── BenefitInfo.jsx      # 혜택 정보 조회 페이지
-│       ├── BenefitInfo_c.jsx    # 혜택 정보 수정 페이지
-│       ├── BeneInfoRegister.jsx # 혜택 정보 등록 페이지
-│       ├── EntireScholar.jsx    # 전체 장학금 조회 페이지
+│       ├── AddScholar.jsx       # 장학금 등록 페이지
+│       ├── BenefitInfo.jsx      # 수혜 정보 조회 페이지
+│       ├── BeneInfoRegister.jsx # 수혜 정보 등록 페이지
+│       ├── EntireScholar.jsx    # 전체 장학금 목록 페이지
 │       ├── Login.jsx            # 로그인 페이지
 │       ├── MainPage.jsx         # 메인 페이지
-│       ├── MemInfo.jsx          # 회원 정보 관리 페이지
-│       ├── MyInterest.jsx       # 관심 장학금 페이지
-│       ├── MyPage.jsx           # 사용자 마이페이지
+│       ├── MemInfo.jsx          # 프로필 관리 페이지
+│       ├── MyInterest.jsx       # 관심목록 페이지
+│       ├── MyPage.jsx           # 마이페이지
 │       ├── Notice.jsx           # 공고 상세 페이지
-│       ├── Notice_.jsx          # 공고 수정 페이지
-│       ├── Points.jsx           # 포인트 및 구독 관리 페이지
+│       ├── Points.jsx           # 구독 페이지
 │       ├── ProtectedPage.js     # 인증이 필요한 페이지를 보호하는 컴포넌트
-│       ├── RecomScholar.jsx     # 추천 장학금 리스트 페이지
+│       ├── RecomScholar.jsx     # 추천 장학금 목록 페이지
 │       ├── RecomScholarDate.jsx # 추천 장학금 기간 설정 페이지
 │       └── Register.jsx         # 회원가입 페이지
 ├── ui/                          # UI 컴포넌트 및 스타일링
     ├── NavBar.jsx               # 로그인 전 네비게이션 바 컴포넌트
 │   └── NavBarB.jsx              # 로그인 후 네비게이션 바 컴포넌트
-
-
+```
 <br/>
 
 ## ⚙️ 개발환경 설정
