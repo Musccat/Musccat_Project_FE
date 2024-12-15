@@ -16,8 +16,9 @@
         <td align="center" width="50%">
             <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/>
             <br/>
-            <hr style="width: 50%; border: 1px solid #ccc; margin-top: 10px;"/>
-            <a href="https://github.com/judymoody59"><strong>채민주</strong></a>
+            <tr>
+            <td align="center"><a href="https://github.com/judymoody59">채민주</a>            </td>
+            </tr>
         </td>
         </td>
         <!-- GitHub Stats -->
