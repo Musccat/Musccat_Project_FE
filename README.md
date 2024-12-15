@@ -10,17 +10,20 @@
 
 
 ## 👩‍💻 팀원
-<table border="1" cellspacing="0" cellpadding="0" width="90%">
+<table>
     <tr>
-        <td align="left"><img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/></td>
-    </tr>
-    <tr>
-        <td align="center"><a href="https://github.com/judymoody59">채민주</a></td>
+        <!-- 프로필 이미지 및 링크 -->
+        <td align="center" width="50%">
+            <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/>
+            <br/>
+            <a href="https://github.com/judymoody59"><strong>채민주</strong></a>
+        </td>
+        <!-- GitHub Stats -->
+        <td align="center" width="50%">
+            <img src="https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent" alt="Minju's GitHub stats"/>
+        </td>
     </tr>
 </table>
-
-![Minju's GitHub stats](https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent)
-
 <br/>
 
 ## 🛠️ 기술 스택
