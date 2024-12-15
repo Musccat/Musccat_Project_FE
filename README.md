@@ -39,30 +39,30 @@
 
 ```
 src/
-├── component/                   # 프로젝트 주요 컴포넌트 폴더
+├── component/                           # 프로젝트 주요 컴포넌트 폴더
 │   ├── contexts/                
-│   │   └── AuthContext.jsx      # Context API 관련 코드
+│   │   └── AuthContext.jsx              # Context API 관련 코드
 │   ├── data/                   
 │   ├── list/                    
-│   └── page/                    # 페이지 단위 컴포넌트
-│       ├── AddScholar.jsx       # 장학금 등록 페이지
-│       ├── BenefitInfo.jsx      # 수혜 정보 조회 페이지
-│       ├── BeneInfoRegister.jsx # 수혜 정보 등록 페이지
-│       ├── EntireScholar.jsx    # 전체 장학금 목록 페이지
-│       ├── Login.jsx            # 로그인 페이지
-│       ├── MainPage.jsx         # 메인 페이지
-│       ├── MemInfo.jsx          # 프로필 관리 페이지
-│       ├── MyInterest.jsx       # 관심목록 페이지
-│       ├── MyPage.jsx           # 마이페이지
-│       ├── Notice.jsx           # 공고 상세 페이지
-│       ├── Points.jsx           # 구독 페이지
-│       ├── ProtectedPage.js     # 인증이 필요한 페이지를 보호하는 컴포넌트
-│       ├── RecomScholar.jsx     # 추천 장학금 목록 페이지
-│       ├── RecomScholarDate.jsx # 추천 장학금 기간 설정 페이지
-│       └── Register.jsx         # 회원가입 페이지
-├── ui/                          # UI 컴포넌트 및 스타일링
-    ├── NavBar.jsx               # 로그인 전 네비게이션 바 컴포넌트
-│   └── NavBarB.jsx              # 로그인 후 네비게이션 바 컴포넌트
+│   └── page/                            # 페이지 단위 컴포넌트
+│       ├── AddScholar.jsx               # 장학금 등록 페이지
+│       ├── BenefitInfo.jsx              # 수혜 정보 조회 페이지
+│       ├── BeneInfoRegister.jsx         # 수혜 정보 등록 페이지
+│       ├── EntireScholar.jsx            # 전체 장학금 목록 페이지
+│       ├── Login.jsx                    # 로그인 페이지
+│       ├── MainPage.jsx                 # 메인 페이지
+│       ├── MemInfo.jsx                  # 프로필 관리 페이지
+│       ├── MyInterest.jsx               # 관심목록 페이지
+│       ├── MyPage.jsx                   # 마이페이지
+│       ├── Notice.jsx                   # 공고 상세 페이지
+│       ├── Points.jsx                   # 구독 페이지
+│       ├── ProtectedPage.js             # 인증이 필요한 페이지를 보호하는 컴포넌트
+│       ├── RecomScholar.jsx             # 추천 장학금 목록 페이지
+│       ├── RecomScholarDate.jsx         # 추천 장학금 기간 설정 페이지
+│       └── Register.jsx                 # 회원가입 페이지
+├── ui/                                  # UI 컴포넌트 및 스타일링
+    ├── NavBar.jsx                       # 로그인 전 네비게이션 바 컴포넌트
+│   └── NavBarB.jsx                      # 로그인 후 네비게이션 바 컴포넌트
 ```
 <br/>
 
@@ -77,22 +77,22 @@ create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어
 
 설치가 모두 완료되었다면 npx 명령어를 통해 CRA 프로젝트를 생성하여 실행할 수 있다.
 ```
-npx create-react-app <프로젝트 이름> // React 웹 애플리케이션 프로그램 생성
-npm start // 애플리케이션 실행
+npx create-react-app <프로젝트 이름>         // React 웹 애플리케이션 프로그램 생성
+npm start                                // 애플리케이션 실행
 ```
 
 #### 라이브러리 설치 및 설정
 ```
-npm install react-router-dom // useNavigate를 사용하기 위해 React Router 설치
-npm install axios // API 호출을 위해 사용
-npm install jwt-decode // JWT 토큰을 디코딩하기 위해 사용
-npm install dotenv // process.env.REACT_APP_API_URL와 같은 환경 변수를 사용하기 위해 설치
+npm install react-router-dom            // useNavigate를 사용하기 위해 React Router 설치
+npm install axios                       // API 호출을 위해 사용
+npm install jwt-decode                  // JWT 토큰을 디코딩하기 위해 사용
+npm install dotenv                      // process.env.REACT_APP_API_URL와 같은 환경 변수를 사용하기 위해 설치
 ```
 
 #### 추가적인 UI 및 기능 라이브러리 설치
 ```
-npm install styled-components // 컴포넌트 스타일링을 위해 사용
-npm install react-select // 드롭다운 선택 기능을 위해 사용
-npm install react-calendar // 달력 UI를 위한 라이브러리
+npm install styled-components           // 컴포넌트 스타일링을 위해 사용
+npm install react-select                // 드롭다운 선택 기능을 위해 사용
+npm install react-calendar              // 달력 UI를 위한 라이브러리
 ```
 
