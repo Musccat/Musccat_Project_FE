@@ -30,9 +30,9 @@
 
 ## ⚙️ 개발환경 설정
 
-#### - 프론트엔드 실행 터미널
+#### 프론트엔드 실행 터미널
 
-create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어있어야 한다.
+create-react-app(CRA)를 생성하기 위해선 Node.js 와 npm 설치가 되어있어야 한다.
 
 - npm(node package manager) v6. 14.0 이상
 - Node.js (JavaScript runtime) 14.0.0 이상
@@ -41,5 +41,8 @@ create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어
 ```
 npx create-react-app <프로젝트 이름> // React 웹 애플리케이션 프로그램 생성
 npm start // 애플리케이션 실행
+```
+
+```
 ```
 
