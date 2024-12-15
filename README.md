@@ -3,15 +3,16 @@
 
 
 ## 👩‍💻 팀원
-<table border="1" cellspacing="0" cellpadding="0" width="90%">
-<tr width="100%">
-<td width="10%" align="center"><a href= "https://github.com/judymoody59" width="100px">채민주</a></td>
-    </tr>
-
-<tr width="100%">
-<td width="10%" align="center"><img src = "https://avatars.githubusercontent.com/judymoody59"/></td>
-    </tr>
-</table>
+<div align="center">
+    <table border="1" cellspacing="0" cellpadding="0" width="90%">
+        <tr>
+            <td align="center"><a href="https://github.com/judymoody59">채민주</a></td>
+        </tr>
+        <tr>
+            <td align="center"><img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/></td>
+        </tr>
+    </table>
+</div>
 
 
 ## 🛠️ 기술 스택
