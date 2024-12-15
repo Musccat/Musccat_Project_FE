@@ -12,36 +12,20 @@
 ## 👩‍💻 팀원
 <table>
     <tr>
-        <!-- 첫 번째 팀원: 채민주 -->
+        <!-- 첫 번째 팀원 -->
         <td align="center" width="50%">
-            <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/>
+            <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/><br/>
+            <a href="https://github.com/judymoody59">채민주</a>
             <br/>
-            <tr>
-                <td align="center">
-                    <a href="https://github.com/judymoody59">채민주</a>
-                </td>
-            </tr>
+            <img src="https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent" alt="Minju's GitHub stats" width="350px"/>
         </td>
-        <!-- 두 번째 팀원 추가 -->
+
+        <!-- 두 번째 팀원 -->
         <td align="center" width="50%">
-            <img src="https://avatars.githubusercontent.com/hayong39" alt="Avatar" 
-width="100px"/>
+            <img src="https://avatars.githubusercontent.com/hayeong" alt="Avatar" width="100px"/><br/>
+            <a href="https://github.com/hayeong">변하영</a>
             <br/>
-            <tr>
-                <td align="center">
-                    <a href="https://github.com/new-member">변하영</a>
-                </td>
-            </tr>
-        </td>
-    </tr>
-    <tr>
-        <!-- 첫 번째 팀원의 GitHub Stats -->
-        <td align="center" width="50%">
-            <img src="https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent" alt="Minju's GitHub stats"/>
-        </td>
-        <!-- 두 번째 팀원의 GitHub Stats -->
-        <td align="center" width="50%">
-            <img src="https://github-readme-stats.vercel.app/api?username=hayong39&show_icons=true&theme=transparent" alt="New Member's GitHub stats"/>
+            <img src="https://github-readme-stats.vercel.app/api?username=hayeong&show_icons=true&theme=transparent" alt="Hayeong's GitHub stats" width="350px"/>
         </td>
     </tr>
 </table>
