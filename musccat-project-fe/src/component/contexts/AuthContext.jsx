@@ -334,7 +334,16 @@ export const AuthProvider = ({ children }) => {
                     )
                 );
             } else {
-                const selectedScholarship = scholarships[index];
+                // 현재 product_id에 맞는 장학금 찾기
+                const selectedScholarship = scholarships.find(
+                    (scholarship) => scholarship.product_id === scholarshipId
+                );
+
+                if (!selectedScholarship) {
+                    console.error("Selected scholarship not found");
+                    return;
+                }
+                
                 // 좋아요 추가 요청 
                 await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
@@ -381,31 +390,33 @@ export const AuthProvider = ({ children }) => {
             console.error("No access token available.");
             return;
         }
-
+    
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
-            
-            // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
-            const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
-
+    
+            console.log("Raw liked scholarships data:", response.data); // 서버 응답 데이터 구조 확인
+    
+            // 서버에서 받은 데이터를 확인 후 올바르게 매핑
             const fetchedScholarships = response.data.map((liked) => ({
-                product_id: liked.scholarship_id,
+                product_id: liked.scholarship_id, // 서버 응답의 필드 이름과 매핑
                 foundation_name: liked.foundation_name,
                 name: liked.name,
                 recruitment_end: liked.recruitment_end,
             }));
-
+    
+            console.log("Mapped liked scholarships:", fetchedScholarships); // 매핑 결과 확인
+    
             setLikedScholarships(fetchedScholarships);
             localStorage.setItem("likedScholarships", JSON.stringify(fetchedScholarships));
-            console.log("Successfully fetched liked scholarships:", fetchedScholarships);
         } catch (error) {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+    
 
     useEffect(() => {
         console.log("Auth tokens on MyInterest mount:", authTokens);

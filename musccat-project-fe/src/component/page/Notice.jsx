@@ -156,54 +156,41 @@ const Notice = () => {
 
     useEffect(() => {
         const loadScholarship = async () => {
-            try{
-                const response = await fetchScholarDetail(product_id); // product_id로 장학금 정보 호출
-                const data = response.scholarship;
-                if (data) {
-                    setScholarship(data); // 데이터를 상태로 설정
-                } else {
-                    setHasError(true); // 오류 상태 설정
-                }
+            try {
+                const response = await fetchScholarDetail(product_id);
+                console.log("Fetched scholarship detail:", response.scholarship); // 데이터 검증
+                setScholarship(response.scholarship);
             } catch (error) {
-                setHasError(true); // 오류 상태 설정
+                console.error("Scholarship detail fetch error:", error);
             }
         };
         loadScholarship();
     }, [product_id, fetchScholarDetail]);
-
-    // 좋아요 상태를 likedScholarships로부터 설정
+    
     useEffect(() => {
+        console.log("Liked scholarships updated:", likedScholarships); // likedScholarships 로그
         const isLiked = likedScholarships.some((sch) => sch.product_id === product_id);
         setIsHeartFilled(isLiked);
     }, [likedScholarships, product_id]);
-
-    useEffect(() => {
-        setScholarships(prevScholarships => prevScholarships.map(scholarship => ({
-            ...scholarship,
-            isLiked: likedScholarships.some(like => like.product_id === scholarship.product_id),
-        })));
-    }, [likedScholarships]);
-
+    
     const handleHeartClick = async () => {
         try {
-            // 현재 좋아요 상태에 따라 요청
+            console.log("Current like state before toggle:", isHeartFilled);
             await handleLikeClick(0, product_id, isHeartFilled);
-            setIsHeartFilled(!isHeartFilled); // UI 즉시 반영
-
-            // 현재 페이지 데이터 갱신
-            fetchScholarships(currentPage);
-
-            setStateChanged(true); // 상태 변경 알림
+            setIsHeartFilled(!isHeartFilled);
+    
+            const updatedScholarships = await fetchScholarships(currentPage); // 최신 데이터 가져오기
+            console.log("Updated scholarships after like:", updatedScholarships);
         } catch (error) {
-            console.error("좋아요 요청 처리 중 에러 발생:", error);
+            console.error("Error toggling like:", error);
         }
     };
-
+    
     useEffect(() => {
-        if (stateChanged) {
-            fetchScholarships(currentPage).finally(() => setStateChanged(false));
-        }
-    }, [stateChanged, currentPage]);
+        const matchedScholarship = likedScholarships.find((sch) => sch.product_id === product_id);
+        console.log("Current scholarship after like toggle:", matchedScholarship);
+    }, [likedScholarships, product_id]);
+    
 
     return (
         <>
