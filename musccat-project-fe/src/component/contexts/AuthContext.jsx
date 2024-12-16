@@ -7,16 +7,26 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [authTokens, setAuthTokens] = useState(() =>
-        localStorage.getItem("authTokens")
-            ? JSON.parse(localStorage.getItem("authTokens"))
-            : null
-    );
-    const [user, setUser] = useState(() =>
-        localStorage.getItem("authTokens")
-            ? jwtDecode(JSON.parse(localStorage.getItem("authTokens")).access)
-            : null
-    );
+    const [authTokens, setAuthTokens] = useState(() => {
+        const tokens = localStorage.getItem("authTokens");
+        try {
+            return tokens ? JSON.parse(tokens) : null;
+        } catch (error) {
+            console.error("Error parsing authTokens from localStorage:", error);
+            return null; // Return null if parsing fails
+        }
+    });
+    
+    const [user, setUser] = useState(() => {
+        const tokens = localStorage.getItem("authTokens");
+        try {
+            return tokens ? jwtDecode(JSON.parse(tokens).access) : null;
+        } catch (error) {
+            console.error("Error decoding user from authTokens:", error);
+            return null; // Return null if decoding fails
+        }
+    });
+
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
@@ -25,9 +35,15 @@ export const AuthProvider = ({ children }) => {
     // 장학금 목록 
     const [scholarships, setScholarships] = useState([]);
     const [likes, setLikes] = useState([]);
-    const [likedScholarships, setLikedScholarships] = useState(() =>
-        JSON.parse(localStorage.getItem("likedScholarships")) || []
-    );
+    const [likedScholarships, setLikedScholarships] = useState(() => {
+    const likedData = localStorage.getItem("likedScholarships");
+        try {
+            return likedData ? JSON.parse(likedData) : [];
+        } catch (error) {
+            console.error("Error parsing likedScholarships from localStorage:", error);
+            return [];
+        }
+    });
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
