@@ -143,5 +143,8 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 ## 🗄️ 소스코드 설명
 
+- src/contexts/AuthContext.js
+React Context API를 이용해 인증 상태와 사용자 데이터를 관리합니다.
 
+- 
 
