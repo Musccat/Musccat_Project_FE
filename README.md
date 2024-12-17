@@ -98,7 +98,7 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 ```
 
 #### 환경변수 설정
-   <br><br>**3.1 .env 파일 생성**
+   <br>**3.1 .env 파일 생성**
    <br>    root 폴더 (Musccat_Project_FE/musccat-project-fe)에 해당 파일 생성 
    <br><br> **3.2 .env 파일 내용 작성**
    <br>    아래 형식에 맞춰 내용 작성 
