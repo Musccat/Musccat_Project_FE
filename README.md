@@ -162,7 +162,6 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 
 <br/>
-<br/>
 
 #### 전체 장학금 목록 페이지
 
@@ -176,7 +175,6 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 
 <br/>
-<br/>
 
 #### 추천 장학금 목록 페이지
 - src/contexts/RecomScholar.jsx :    AuthContext.jsx에서 제공하는 loadScholarships 함수를 호출해 추천 장학금 목록 데이터를 가져옵니다.
@@ -184,7 +182,6 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
     - handleHeartClick : 좋아요 버튼 클릭시 장학금의 좋아요 상태를 추가하거나 제거합니다.
 
 
-<br/>
 <br/>
 
 #### 장학금 상세 정보 및 수혜 팁 조회 페이지
