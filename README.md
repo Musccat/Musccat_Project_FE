@@ -88,11 +88,13 @@ npm start                                // 애플리케이션 실행
 
 
 명령 프롬프트 창에 아래 명령어를 입력하여 프로젝트를 클론합니다.
+
 '''
 git clone https://github.com/Musccat/Musccat_Project_FE.git
 '''
 
 클론이 완료되었다면 해당 프로젝트 경로로 이동합니다.
+
 ```
 cd Musccat_Project_FE
 ```
