@@ -19,13 +19,11 @@ import EntireScholar from './component/page/EntireScholar';
 import RecomScholarDate from './component/page/RecomScholarDate';
 import RecomScholar from './component/page/RecomScholar';
 import Notice from './component/page/Notice';
-import Notice_ from './component/page/Notice_';
 import MyPage from './component/page/MyPage';
 import MemInfo from './component/page/MemInfo';
 import MyInterest from './component/page/MyInterest';
 import BenefitInfo from './component/page/BenefitInfo';
 import BeneInfoRegister from './component/page/BeneInfoRegister';
-import BenefitInfo_c from './component/page/BenefitInfo_c';
 import AddScholar from './component/page/AddScholar';
 import Points from './component/page/Points';
 
@@ -48,10 +46,8 @@ function App() {
           <Route path="/recomscholar" element={<RecomScholar />} /> {/*추천 장학금 목록 페이지 */}
           <Route path="/recomscholardate" element={<RecomScholarDate />} /> {/*추천 장학금 목록 기한 설정 페이지 */}
           <Route path="/notice/:product_id" element={<Notice />} /> {/*장학금 공고 페이지 */}
-          <Route path="/notice_" element={<Notice_ />} /> {/*장학금 공고 디자인 페이지 */}
           <Route path="/reviews/view/:product_id" element={<BenefitInfo />} /> {/*이전 수혜자 정보 페이지 */}
           <Route path="/reviews" element={<BeneInfoRegister />} /> {/*이전 수혜자 정보 입력 페이지 */}
-          <Route path="/reviewstest/:product_id" element={<BenefitInfo_c />} /> {/*이전 수혜자 정보 디자인 페이지 */}
           <Route path="/addscholar" element={<AddScholar />} /> {/*장학금 등록 페이지 */}
           <Route path="/points" element={<Points />} /> {/*포인트 상세 페이지 */}
         </Routes>

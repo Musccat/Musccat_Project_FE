@@ -7,16 +7,26 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [authTokens, setAuthTokens] = useState(() =>
-        localStorage.getItem("authTokens")
-            ? JSON.parse(localStorage.getItem("authTokens"))
-            : null
-    );
-    const [user, setUser] = useState(() =>
-        localStorage.getItem("authTokens")
-            ? jwtDecode(JSON.parse(localStorage.getItem("authTokens")).access)
-            : null
-    );
+    const [authTokens, setAuthTokens] = useState(() => {
+        const tokens = localStorage.getItem("authTokens");
+        try {
+            return tokens ? JSON.parse(tokens) : null;
+        } catch (error) {
+            console.error("Error parsing authTokens from localStorage:", error);
+            return null; // Return null if parsing fails
+        }
+    });
+    
+    const [user, setUser] = useState(() => {
+        const tokens = localStorage.getItem("authTokens");
+        try {
+            return tokens ? jwtDecode(JSON.parse(tokens).access) : null;
+        } catch (error) {
+            console.error("Error decoding user from authTokens:", error);
+            return null; // Return null if decoding fails
+        }
+    });
+
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(!!authTokens);
 
@@ -25,9 +35,15 @@ export const AuthProvider = ({ children }) => {
     // 장학금 목록 
     const [scholarships, setScholarships] = useState([]);
     const [likes, setLikes] = useState([]);
-    const [likedScholarships, setLikedScholarships] = useState(() =>
-        JSON.parse(localStorage.getItem("likedScholarships")) || []
-    );
+    const [likedScholarships, setLikedScholarships] = useState(() => {
+    const likedData = localStorage.getItem("likedScholarships");
+        try {
+            return likedData ? JSON.parse(likedData) : [];
+        } catch (error) {
+            console.error("Error parsing likedScholarships from localStorage:", error);
+            return [];
+        }
+    });
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
     const [nextPageUrl, setNextPageUrl] = useState(null);  // 다음 페이지 URL
     const [previousPageUrl, setPreviousPageUrl] = useState(null);  // 이전 페이지 URL
@@ -318,11 +334,23 @@ export const AuthProvider = ({ children }) => {
                     )
                 );
             } else {
-                const selectedScholarship = scholarships[index];
+                // 현재 product_id에 맞는 장학금 찾기
+                const selectedScholarship = scholarships.find(
+                    (scholarship) => scholarship.product_id === scholarshipId
+                );
+
+                if (!selectedScholarship) {
+                    console.error("Selected scholarship not found");
+                    return;
+                }
+                
                 // 좋아요 추가 요청 
                 await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
                     scholarship_id: scholarshipId,
+                    name: selectedScholarship.name,
+                    foundation_name: selectedScholarship.foundation_name,
+                    recruitment_end: selectedScholarship.recruitment_end,
                     added_at: new Date().toISOString(),
                 }, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },
@@ -365,31 +393,33 @@ export const AuthProvider = ({ children }) => {
             console.error("No access token available.");
             return;
         }
-
+    
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/`, {
                 headers: {
                     Authorization: `Bearer ${authTokens.access}`,
                 },
             });
-            
-            // 서버에서 받은 좋아요 상태를 이용해 likes 배열을 업데이트
-            const likedScholarshipIds = response.data.map(liked => liked.scholarship_id);
-
+    
+            console.log("Raw liked scholarships data:", response.data); // 서버 응답 데이터 구조 확인
+    
+            // 서버에서 받은 데이터를 확인 후 올바르게 매핑
             const fetchedScholarships = response.data.map((liked) => ({
-                product_id: liked.scholarship_id,
+                product_id: liked.scholarship_id, // 서버 응답의 필드 이름과 매핑
                 foundation_name: liked.foundation_name,
                 name: liked.name,
                 recruitment_end: liked.recruitment_end,
             }));
-
+    
+            console.log("Mapped liked scholarships:", fetchedScholarships); // 매핑 결과 확인
+    
             setLikedScholarships(fetchedScholarships);
             localStorage.setItem("likedScholarships", JSON.stringify(fetchedScholarships));
-            console.log("Successfully fetched liked scholarships:", fetchedScholarships);
         } catch (error) {
             console.error("Failed to fetch liked scholarships:", error);
         }
     };
+    
 
     useEffect(() => {
         console.log("Auth tokens on MyInterest mount:", authTokens);
