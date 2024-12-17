@@ -348,6 +348,9 @@ export const AuthProvider = ({ children }) => {
                 await axios.post(`${process.env.REACT_APP_API_URL}/userinfo/wishlist/add/`, {
                     user: user.id,
                     scholarship_id: scholarshipId,
+                    name: selectedScholarship.name,
+                    foundation_name: selectedScholarship.foundation_name,
+                    recruitment_end: selectedScholarship.recruitment_end,
                     added_at: new Date().toISOString(),
                 }, {
                     headers: { Authorization: `Bearer ${authTokens.access}` },

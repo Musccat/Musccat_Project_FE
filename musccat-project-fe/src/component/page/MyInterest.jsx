@@ -118,7 +118,6 @@ const MyInterest = () => {
     const { setScholarships,fetchLikedScholarships,likedScholarships, setLikedScholarships, authTokens, setStateChanged, stateChanged, user } = useAuth();
     const navigate = useNavigate();
     const [filteredScholarships, setFilteredScholarships] = useState([]);
-    const [localLikes, setLocalLikes] = useState([]);
 
     useEffect(() => {
         const initializeLikedScholarships = async () => {
@@ -128,15 +127,7 @@ const MyInterest = () => {
             }
 
             try {
-                const storedLikedScholarships = JSON.parse(localStorage.getItem("likedScholarships"));
-    
-                if (storedLikedScholarships && storedLikedScholarships.length > 0) {
-                    console.log("Loaded from localStorage:", storedLikedScholarships);
-                    setLikedScholarships(storedLikedScholarships);
-                } else if (authTokens && authTokens.access) {
-                    console.log("Fetching liked scholarships from server...");
-                    await fetchLikedScholarships();
-                }
+                await fetchLikedScholarships();
             } catch (error) {
                 console.error("Error initializing liked scholarships:", error);
             }
@@ -172,6 +163,16 @@ const MyInterest = () => {
             alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해 주세요.");
         }
     };
+
+    useEffect(() => {
+        const storedLikes = JSON.parse(localStorage.getItem("likedScholarships")) || [];
+        setFilteredScholarships(storedLikes);
+    }, [likedScholarships]); // likedScholarships 변경 시 최신화
+    
+
+    useEffect(() => {
+        setFilteredScholarships(likedScholarships);
+    }, [likedScholarships]); // likedScholarships 상태를 감지하고 즉시 반영
 
     useEffect(() => {
         console.log("Auth tokens on MyInterest mount:", authTokens);
