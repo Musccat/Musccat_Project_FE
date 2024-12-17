@@ -204,6 +204,20 @@ const location = useLocation(); // 현재 위치 가져오기
         };
     }, [location.pathname, setScholarships]);
 
+    useEffect(() => {
+        if (likedScholarships && scholarships) {
+            // likedScholarships와 현재 scholarships를 동기화
+            const updatedScholarships = scholarships.map((scholarship) => ({
+                ...scholarship,
+                isLiked: likedScholarships.some((liked) => liked.product_id === scholarship.product_id),
+            }));
+    
+            // 상태 업데이트
+            setFilteredScholarships(updatedScholarships);
+        }
+    }, [likedScholarships, scholarships]);
+    
+
     // 로딩 중일 때 보여줄 UI
     if (isLoading) {
         return <div>로딩 중...</div>;
@@ -257,14 +271,11 @@ return (
                                                         style={styles.heartButton}
                                                         onClick={() => handleLikeClick(
                                                             index,
-                                                            item.scholarship.name,
                                                             item.scholarship.product_id,
-                                                            item.scholarship.foundation_name,
-                                                            item.scholarship.recruitment_end,
-                                                            likes[index])}
+                                                            item.isLiked)}
                                                     >
                                                         <img
-                                                            src={likes[index] ? filledheart : emptyheart}
+                                                            src={item.isLiked ? filledheart : emptyheart}
                                                             alt="heart"
                                                             style={styles.heartImage}
                                                         />
