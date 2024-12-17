@@ -150,6 +150,7 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 <br/>
 <br/>
+
 - src/contexts/EntireScholar.jsx:   AuthContext.jsx에서 제공하는 fetchScholarships 함수를 호출해 전체 장학금 목록 데이터를 가져옵니다.
 
 <img src="https://github.com/user-attachments/assets/a7965f1b-4261-4063-8cd6-2e26a05487aa" width="300" height="300" />
