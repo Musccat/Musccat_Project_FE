@@ -187,5 +187,8 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 <br/>
 <br/>
 
-#### 마이 페이지
-- src/contexts/RecomScholar.jsx :    AuthContext.jsx에서 제공하는 
+#### 장학금 상세 정보 및 수혜 팁 조회 페이지
+- src/contexts/Notice.jsx :    AuthContext.jsx에서 제공하는 fetchScholarDetail 함수를 호출해 해당하는 장학금 id(product_id)에 따른 장학금 상세 정보 및 수혜 팁 데이터를 가져옵니다.
+    - useEffect(데이터 로딩) : product_id를 기반으로 장학금 세부 정보를 불러오며 fetchScholarDetail 함수 호출 후 데이터를 상태에 저장합니다.
+    - useEffect(좋아요 상태 동기화) : likedScholarships에 product_id가 있는지 확인하여 isHeartFilled 상태를 설정합니다.
+    - handleLikeClick : 좋아요 상태를 토글하고 최신 장학금 데이터를 다시 가져와 상태를 갱신합니다.
