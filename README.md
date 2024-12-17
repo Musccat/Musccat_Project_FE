@@ -143,6 +143,8 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 ## 🗄️ 소스코드 설명
 
+#### React Context API 관리
+
 - src/contexts/AuthContext.jsx :   React Context API를 이용해 인증 상태와 사용자 데이터, 장학금 데이터 등을 관리합니다.
     - registerUser : 사용자 회원가입 요청을 보내고 성공 시 로그인 페이지로 이동합니다.
     - loginUser : 사용자 로그인 요청을 보내고 성공 시 인증 토큰과 사용자 데이터를 저장합니다.
@@ -153,6 +155,7 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
     - handleLikeClick : 좋아요 추가 또는 취소 시 서버에 요청을 보내고 상태 및 로컬 스토리지를 업데이트합니다.
     - fetchScholarDetail : 특정 장학금의 상세 공고를 서버에서 가져옵니다.
     - fetchRecommendedScholarships : 추천 장학금 데이터를 서버에서 가져옵니다.
+    - loadScholarships : 추천 장학금 데이터를 상태에 저장합니다.
     - fetchBenefitInfos : 특정 장학금의 혜택 정보를 서버에서 가져와 상태에 저장합니다.
     - RegisterScholarship : 새로운 장학금 정보를 서버에 등록합니다.
     - checkSubscriptionStatus : 사용자의 구독 여부를 서버에서 확인합니다.
@@ -161,11 +164,28 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 <br/>
 <br/>
 
-- src/contexts/EntireScholar.jsx :   AuthContext.jsx에서 제공하는 fetchScholarships 함수를 호출해 전체 장학금 목록 데이터를 가져옵니다.
+#### 전체 장학금 목록 페이지
 
+- src/contexts/EntireScholar.jsx :   AuthContext.jsx에서 제공하는 fetchScholarships 함수를 호출해 전체 장학금 목록 데이터를 가져옵니다. 
+    - handleLikeClick : 장학금 좋아요(찜하기) 상태를 추가하거나 제거합니다.
+    - handlePageClick : 페이지 번호 클릭 시 해당 페이지의 장학금 목록을 가져옵니다.
+    - handleNextRange / handlePreviousRange : 다음/이전 페이지로 이동하며 장학금 데이터를 불러옵니다.
+    - handleSearchChange, handleSearchButtonClick : 검색어 입력 시 상태에 반영하고 검색 버튼 클릭 시 입력된 검색어를 기준으로 장학금 데이터를 가져옵니다.
+    - handleTypeOptionClick : 장학금 유형 옵션 선택 시 해당 옵션에 맞는 데이터를 불러옵니다.
+    - handleSortOptionClick : 장학금 모집 기한 옵션 선택 시 선택된 조건에 따라 데이터를 정렬합니다.
 
 
 <br/>
 <br/>
 
-- 
+#### 추천 장학금 목록 페이지
+- src/contexts/RecomScholar.jsx :    AuthContext.jsx에서 제공하는 loadScholarships 함수를 호출해 추천 장학금 목록 데이터를 가져옵니다.
+    - useEffect(데이터 로딩) : 사용자 데이터를 불러오고 추천 장학금 데이터를 서버에서 가져옵니다.
+    - handleHeartClick : 좋아요 버튼 클릭시 장학금의 좋아요 상태를 추가하거나 제거합니다.
+
+
+<br/>
+<br/>
+
+#### 마이 페이지
+- src/contexts/RecomScholar.jsx :    AuthContext.jsx에서 제공하는 
