@@ -144,18 +144,26 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 ## 🗄️ 소스코드 설명
 
 - src/contexts/AuthContext.jsx :   React Context API를 이용해 인증 상태와 사용자 데이터, 장학금 데이터 등을 관리합니다.
-    - fetchUserData : 사용자 데이터를 가져옵니다.
+    - registerUser : 사용자 회원가입 요청을 보내고 성공 시 로그인 페이지로 이동합니다.
+    - loginUser : 사용자 로그인 요청을 보내고 성공 시 인증 토큰과 사용자 데이터를 저장합니다.
+    - fetchUserData : 사용자 데이터를 서버에서 가져와 상태에 저장하고 로컬 스토리지에 저장합니다.
+    - updateUser : 사용자 데이터를 서버에 업데이트하고 상태를 갱신합니다.
+    - fetchScholarships : 장학금 데이터를 서버에서 가져오고 좋아요 상태와 동기화하여 상태에 저장합니다.
+    - fetchLikedScholarships : 사용자가 좋아요한 장학금 목록을 서버에서 가져와 상태 및 로컬 스토리지에 저장합니다.
+    - handleLikeClick : 좋아요 추가 또는 취소 시 서버에 요청을 보내고 상태 및 로컬 스토리지를 업데이트합니다.
+    - fetchScholarDetail : 특정 장학금의 상세 공고를 서버에서 가져옵니다.
+    - fetchRecommendedScholarships : 추천 장학금 데이터를 서버에서 가져옵니다.
+    - fetchBenefitInfos : 특정 장학금의 혜택 정보를 서버에서 가져와 상태에 저장합니다.
+    - RegisterScholarship : 새로운 장학금 정보를 서버에 등록합니다.
+    - checkSubscriptionStatus : 사용자의 구독 여부를 서버에서 확인합니다.
 
-<img src="https://github.com/user-attachments/assets/5ff21b0b-0052-4d31-89db-0f871222ca54" width="300" height="300" />
-<img src="https://github.com/user-attachments/assets/5ff21b0b-0052-4d31-89db-0f871222ca54" width="300" height="300" />
 
 <br/>
 <br/>
 
 - src/contexts/EntireScholar.jsx :   AuthContext.jsx에서 제공하는 fetchScholarships 함수를 호출해 전체 장학금 목록 데이터를 가져옵니다.
 
-<img src="https://github.com/user-attachments/assets/a7965f1b-4261-4063-8cd6-2e26a05487aa" width="300" height="300" />
-<img src="https://github.com/user-attachments/assets/42c56975-1356-4dc3-a97e-b4825579b046" width="300" height="300" />
+
 
 <br/>
 <br/>
