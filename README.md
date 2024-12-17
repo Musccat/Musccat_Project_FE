@@ -42,9 +42,7 @@
 src/
 ├── component/                           # 프로젝트 주요 컴포넌트 폴더
 │   ├── contexts/                
-│   │   └── AuthContext.jsx              # Context API 관련 코드
-│   ├── data/                   
-│   ├── list/                    
+│   │   └── AuthContext.jsx              # Context API 관련 코드                   
 │   └── page/                            # 페이지 단위 컴포넌트
 │       ├── AddScholar.jsx               # 장학금 등록 페이지
 │       ├── BenefitInfo.jsx              # 수혜 정보 조회 페이지
