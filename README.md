@@ -69,7 +69,7 @@ src/
 
 ## ⚙️ 개발환경 설정
 
-#### 프론트엔드 실행 터미널
+#### 1. 프론트엔드 실행 터미널
 
 create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어있어야 한다.
 
@@ -82,7 +82,7 @@ npx create-react-app <프로젝트 이름>         // React 웹 애플리케이�
 npm start                                // 애플리케이션 실행
 ```
 
-#### 라이브러리 설치 및 설정
+#### 2. 라이브러리 설치 및 설정
 ```
 npm install react-router-dom            // useNavigate를 사용하기 위해 React Router 설치
 npm install axios                       // API 호출을 위해 사용
@@ -90,17 +90,17 @@ npm install jwt-decode                  // JWT 토큰을 디코딩하기 위해 
 npm install dotenv                      // process.env.REACT_APP_API_URL와 같은 환경 변수를 사용하기 위해 설치
 ```
 
-#### 추가적인 UI 및 기능 라이브러리 설치
+#### 3. 추가적인 UI 및 기능 라이브러리 설치
 ```
 npm install styled-components           // 컴포넌트 스타일링을 위해 사용
 npm install react-select                // 드롭다운 선택 기능을 위해 사용
 npm install react-calendar              // 달력 UI를 위한 라이브러리
 ```
 
-#### 환경변수 설정
-   <br>**3.1 .env 파일 생성**
+#### 4. 환경변수 설정
+   <br>**4.1 .env 파일 생성**
    <br>    root 폴더 (Musccat_Project_FE/musccat-project-fe)에 해당 파일 생성 
-   <br><br> **3.2 .env 파일 내용 작성**
+   <br><br> **4.2 .env 파일 내용 작성**
    <br>    아래 형식에 맞춰 내용 작성 
    <br> 파일 키는 메일로 교수님께 보내드렸습니다. 
    ```
