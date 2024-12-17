@@ -111,6 +111,8 @@ npm start
 ```
 
 #### 2. 라이브러리 설치 및 설정
+프로젝트에서 사용하는 라이브러리를 사용하기 위해선 아래 라이브러리들을 설치해야 합니다.
+아래 명령어들을 명령 프롬프트에 입력합니다.
 ```
 npm install react-router-dom            // useNavigate를 사용하기 위해 React Router 설치
 npm install axios                       // API 호출을 위해 사용
@@ -119,6 +121,7 @@ npm install dotenv                      // process.env.REACT_APP_API_URL와 같�
 ```
 
 #### 3. 추가적인 UI 및 기능 라이브러리 설치
+추가적인 UI 및 기능을 위한 라이브러리 또한 설치합니다.
 ```
 npm install styled-components           // 컴포넌트 스타일링을 위해 사용
 npm install react-select                // 드롭다운 선택 기능을 위해 사용
@@ -127,9 +130,9 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
 
 #### 4. 환경변수 설정
    <br>**4.1 .env 파일 생성**
-   <br>    root 폴더 (Musccat_Project_FE/musccat-project-fe)에 해당 파일 생성 
+   <br>    root 폴더 (Musccat_Project_FE/musccat-project-fe)에 해당 파일(.env) 생성 
    <br><br> **4.2 .env 파일 내용 작성**
-   <br>    아래 형식에 맞춰 내용 작성 
+   <br>    아래 형식에 맞춰 키 값을 작성합니다.
    <br> 파일 키는 메일로 교수님께 보내드렸습니다. 
    ```
     REACT_APP_API_URL=""
