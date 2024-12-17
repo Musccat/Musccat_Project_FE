@@ -69,17 +69,44 @@ src/
 
 ## ⚙️ 개발환경 설정
 
-#### 1. 프론트엔드 실행 터미널
-
-create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어있어야 한다.
+#### 0. 프로젝트 생성 (프로젝트 클론 시에는 하지 않으셔도 됩니다.)
+create-react-app(CRA)를 사용하기 위해선 Node.js 와 npm 설치가 되어있어야 합니다.
 
 - npm(node package manager) v6. 14.0 이상
 - Node.js (JavaScript runtime) 14.0.0 이상
 
-설치가 모두 완료되었다면 npx 명령어를 통해 CRA 프로젝트를 생성하여 실행할 수 있다.
+설치가 모두 완료되었다면 npx 명령어를 통해 CRA 프로젝트를 생성하여 실행할 수 있습니다.
 ```
 npx create-react-app <프로젝트 이름>         // React 웹 애플리케이션 프로그램 생성
 npm start                                // 애플리케이션 실행
+```
+
+
+#### 1. 프론트엔드 프로젝트 클론
+
+깃 클론을 진행하기 위해선 컴퓨터에 Git이 설치되어 있어야 합니다.
+
+<br/>
+
+명령 프롬프트 창에 아래 명령어를 입력하여 프로젝트를 클론합니다.
+'''
+git clone https://github.com/Musccat/Musccat_Project_FE.git
+'''
+
+클론이 완료되었다면 해당 프로젝트 경로로 이동합니다.
+```
+cd Musccat_Project_FE
+```
+
+클론한 프로젝트는 React 프론트엔드 프레임워크를 사용하므로 의존성을 설치해야 합니다.
+
+```
+npm install
+```
+
+의존성 설치 완료 후 npm 명령어를 이용해서 프로젝트를 실행합니다.
+```
+npm start
 ```
 
 #### 2. 라이브러리 설치 및 설정
@@ -108,3 +135,8 @@ npm install react-calendar              // 달력 UI를 위한 라이브러리
     REACT_APP_API_KEY=""
     REACT_APP_IMP_KEY=""
    ```
+<br/>
+## 🗄️ 소스코드 설명
+
+
+
